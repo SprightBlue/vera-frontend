@@ -8,18 +8,29 @@ function StatCard({ title, value }: Props) {
         <div style={{
             backgroundColor: "#111827",
             color: "white",
-            padding: "20px",
-            borderRadius: "10px",
-            width: "200px"
+            padding: "25px",
+            borderRadius: "16px",
+            minWidth: "220px",
+            flex: 1
         }}>
-            <h3>{title}</h3>
+
+            <h3 style={{
+                margin: 0,
+                color: "#9CA3AF",
+                fontSize: "16px"
+            }}>
+                {title}
+            </h3>
 
             <p style={{
-                fontSize: "24px",
-                fontWeight: "bold"
+                fontSize: "36px",
+                fontWeight: "bold",
+                marginTop: "15px",
+                marginBottom: 0
             }}>
                 {value}
             </p>
+
         </div>
     );
 }
