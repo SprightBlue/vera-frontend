@@ -1,9 +1,6 @@
 export async function getDashboardData() {
 
-    return {
-        alerts: 3,
-        analyses: 15,
-        highRisk: 1
-    };
+    const response = await fetch("http://localhost:8080/dashboard");
 
+    return response.json();
 }
