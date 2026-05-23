@@ -1,20 +1,44 @@
-import type {SaludoResponse} from '../../domain/models/auth.types';
+import axios from 'axios';
+import type { LoginRequest, RegisterRequest, AuthResponse } from '../auth.types';
 
+// Lee la URL del .env.development — si no existe, usa localhost
 const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080';
 
+// Instancia de axios configurada para toda la app.
+// Equivalente a crear un cliente fetch con baseURL en Node.
+export const apiClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Interceptor: agrega el JWT a cada request automáticamente
+// si el usuario está autenticado. Equivalente al middleware
+// que ponías en Express para verificar el token.
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('vera_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const authRepository = {
-    async obtenerHolaMundo(): Promise<SaludoResponse> {
-        try {
-            const response = await fetch(`${API_URL}/api/hola`);
 
-            if (!response.ok) {
-                throw new Error(`Error en el servidor: ${response.status}`);
-            }
+  async login(credentials: LoginRequest): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>(
+      '/api/v1/auth/login',
+      credentials
+    );
+    return response.data;
+  },
 
-            return (await response.json()) as SaludoResponse;
-        } catch (error) {
-            console.error("Error en authRepository al conectar con el Back:", error);
-            throw error;
-        }
-    }
+  async register(data: RegisterRequest): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>(
+      '/api/v1/auth/register',
+      data
+    );
+    return response.data;
+  },
 };
