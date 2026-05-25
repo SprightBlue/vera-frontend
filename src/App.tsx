@@ -1,9 +1,36 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import type { ReactNode } from "react";
+
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Navigate
+} from "react-router-dom";
+
+import { useAuth } from "./presentation/context/AuthContext";
 
 import Home from "./presentation/pages/Home";
+import Login from "./presentation/pages/Login";
+import Register from "./presentation/pages/Register";
+
 import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Alerts from "./presentation/pages/alerts/Alerts";
 import Settings from "./presentation/pages/settings/Settings";
+
+
+// Protege rutas privadas
+function PrivateRoute({
+    children
+}: {
+    children: ReactNode;
+}) {
+
+    const { isAuthenticated } = useAuth();
+
+    return isAuthenticated
+        ? children
+        : <Navigate to="/login" replace />;
+}
 
 function App() {
 
@@ -13,25 +40,48 @@ function App() {
 
             <Routes>
 
+                {/* Públicas */}
                 <Route
                     path="/"
                     element={<Home />}
                 />
 
                 <Route
+                    path="/login"
+                    element={<Login />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
+
+                {/* Privadas */}
+                <Route
                     path="/dashboard"
-                    element={<Dashboard />}
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    }
                 />
 
                 <Route
                     path="/alerts"
-                    element={<Alerts />}
+                    element={
+                        <PrivateRoute>
+                            <Alerts />
+                        </PrivateRoute>
+                    }
                 />
 
-            
                 <Route
                     path="/settings"
-                    element={<Settings />}
+                    element={
+                        <PrivateRoute>
+                            <Settings />
+                        </PrivateRoute>
+                    }
                 />
 
             </Routes>
