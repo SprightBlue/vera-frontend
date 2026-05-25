@@ -92,7 +92,7 @@ return (
 
             {
 
-                alerts.map((alert) => (
+               Array.isArray(alerts) && alerts.map((alert) => (
 
                     <div
                         key={alert.id}

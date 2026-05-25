@@ -78,17 +78,17 @@ return (
 
                     <StatCard
                         title="Alertas hoy"
-                        value={data.alerts.toString()}
+                        value={String(data.alerts ?? 0)}
                     />
 
                     <StatCard
                         title="Mensajes analizados"
-                        value={data.analyses.toString()}
+                        value={String(data.analyses ?? 0)}
                     />
 
                     <StatCard
                         title="Amenazas bloqueadas"
-                        value={data.highRisk.toString()}
+                        value={String(data.highRisk ?? 0)}
                     />
 
                 </div>
