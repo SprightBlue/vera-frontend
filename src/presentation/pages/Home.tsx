@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { authRepository } from '../../infrastructure/api/auth.repository';
+import AlertsList from "../components/dashboard/RecentAlerts";
 
 export default function Home() {
     const [saludo, setSaludo] = useState<string>("");
@@ -89,6 +90,7 @@ export default function Home() {
                         React + Vite + TypeScript + Tailwind
                     </p>
                 </div>
+                <AlertsList />
             </div>
         </div>
     );
