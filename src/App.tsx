@@ -1,10 +1,11 @@
-import Home from './presentation/pages/Home';
+import React from 'react';
+import AlertsView from './components/AlertsView';
 
 function App() {
   return (
-      <>
-        <Home />
-      </>
+    <div className="App">
+      <AlertsView />
+    </div>
   );
 }
 
