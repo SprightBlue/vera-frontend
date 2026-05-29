@@ -16,6 +16,7 @@ import Register from "./presentation/pages/Register";
 import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Alerts from "./presentation/pages/alerts/Alerts";
 import Settings from "./presentation/pages/settings/Settings";
+import AddPerson from "./presentation/pages/people/AddPerson";
 
 
 // Protege rutas privadas
@@ -80,6 +81,15 @@ function App() {
                     element={
                         
                             <Settings />
+                        
+                    }
+                />
+
+                <Route
+                    path="/addperson"
+                    element={
+                        
+                            <AddPerson />
                         
                     }
                 />
