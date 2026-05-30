@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../presentation/components/Sidebar';
 import Header from '../presentation/components/Header';
+import { useAuth } from '../presentation/context/AuthContext';
 
 interface Alert {
   id: string;
@@ -12,13 +13,35 @@ interface Alert {
 }
 
 const AlertsView: React.FC = () => {
+  const { user } = useAuth();
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/alerts')
-      .then(response => response.json())
-      .then(data => setAlerts(data))
-      .catch(error => console.error(error));
+    const token = localStorage.getItem('token'); 
+
+    fetch('http://localhost:8080/api/alerts', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error de conexión');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setAlerts(data);
+        } else {
+          setAlerts([]);
+        }
+      })
+      .catch(() => {
+        setAlerts([]);
+      });
   }, []);
 
   const getRiskColorClass = (level: string) => {
@@ -53,26 +76,15 @@ const AlertsView: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-[#050816] text-slate-200 font-sans selection:bg-indigo-500/30">
-      
-      {/* SIDEBAR COMPARTIDO */}
       <Sidebar />
-
-      {/* MAIN */}
       <main className="flex-1 flex flex-col min-w-0">
-        
-        {/* HEADER COMPARTIDO */}
-        <Header userName="Usuario" />
-
-        {/* CONTENT */}
+        <Header userName={user?.fullName || "Usuario"} />
         <div className="p-8">
-          
-          {/* Título de la sección */}
           <div className="mb-8">
             <h1 className="text-2xl font-bold tracking-tight text-slate-100">Historial de Alertas</h1>
             <p className="mt-1 text-sm text-slate-400">Monitorea y gestiona el registro completo de actividad sospechosa detectada.</p>
           </div>
 
-          {/* Tarjetas de Métricas (Específicas de esta vista) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             <div className="p-5 rounded-xl bg-slate-900/50 border border-slate-800/60 shadow-lg shadow-black/20">
               <p className="text-xs font-semibold text-slate-500 tracking-wider uppercase mb-1">Alertas Totales</p>
@@ -92,7 +104,6 @@ const AlertsView: React.FC = () => {
             </div>
           </div>
 
-          {/* Filtros */}
           <div className="flex flex-wrap gap-2 mb-6">
             <button className="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white shadow-sm hover:bg-indigo-500 transition-colors">Todas</button>
             <button className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition-colors">Alto Riesgo</button>
@@ -100,11 +111,9 @@ const AlertsView: React.FC = () => {
             <button className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition-colors">Bajo Riesgo</button>
           </div>
 
-          {/* Lista de Alertas */}
           <div className="flex flex-col gap-4">
             {alerts.map(alert => (
               <div key={alert.id} className="p-6 rounded-xl bg-slate-900/50 border border-slate-800/60 shadow-lg shadow-black/20 transition-all hover:border-slate-700 group">
-                
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center ${getRiskColorClass(alert.riskLevel)} shadow-inner`}>
@@ -138,7 +147,6 @@ const AlertsView: React.FC = () => {
                     Marcar Seguro
                   </button>
                 </div>
-
               </div>
             ))}
 
@@ -152,7 +160,6 @@ const AlertsView: React.FC = () => {
               </div>
             )}
           </div>
-
         </div>
       </main>
     </div>

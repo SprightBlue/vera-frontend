@@ -8,6 +8,7 @@ import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Settings from "./presentation/pages/settings/Settings";
 import AlertsView from "./components/AlertsView";
 import AddPerson from "./presentation/pages/people/AddPerson";
+import Alerts from "./presentation/pages/alerts/Alerts";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
