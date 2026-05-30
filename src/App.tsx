@@ -8,7 +8,7 @@ import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Settings from "./presentation/pages/settings/Settings";
 import AlertsView from "./components/AlertsView";
 import AddPerson from "./presentation/pages/people/AddPerson";
-import Alerts from "./presentation/pages/alerts/Alerts";
+import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -19,12 +19,6 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                <Route path="/alerts" element={<PrivateRoute><AlertsView /></PrivateRoute>} />
-                <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
 
                 {/* Públicas */}
                 <Route
@@ -45,41 +39,32 @@ function App() {
                 {/* Privadas */}
                 <Route
                     path="/dashboard"
-                    element={
-                        
-                            <Dashboard />
-                        
-                    }
+                    element={<Dashboard />}
                 />
 
                 <Route
                     path="/alerts"
-                    element={
-                        
-                            <Alerts/>
-                        
-                    }
+                    element={<PrivateRoute><AlertsView /></PrivateRoute>}
+                />
+
+
+                <Route
+                    path="/alerts/:alertId"
+                    element={<AlertDetail />}
                 />
 
                 <Route
                     path="/settings"
-                    element={
-                        
-                            <Settings />
-                        
-                    }
+                    element={<Settings />}
                 />
 
                 <Route
                     path="/addperson"
-                    element={
-                        
-                            <AddPerson />
-                        
-                    }
+                    element={<AddPerson />}
                 />
 
             </Routes>
+
         </BrowserRouter>
     );
 }

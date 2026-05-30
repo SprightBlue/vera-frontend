@@ -1,7 +1,14 @@
+import { apiClient } from "./auth.repository";
+import type { AlertDetail } from "../../domain/models/AlertDetail";
+
 export async function getAlerts() {
+    const response = await apiClient.get("/api/alerts");
+    return response.data;
+}
 
-    const response = await fetch("http://localhost:8080/alerts");
-
-    return response.json();
-
+export async function getAlertDetail(alertId: string): Promise<AlertDetail> {
+    const response = await apiClient.get<AlertDetail>(
+        `/api/v1/risk-alerts/${alertId}`
+    );
+    return response.data;
 }

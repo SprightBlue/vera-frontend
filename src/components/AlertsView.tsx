@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../presentation/components/Sidebar';
 import Header from '../presentation/components/Header';
 import { useAuth } from '../presentation/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { getAlerts } from '../infrastructure/api/alerts-api';
 
 interface Alert {
   id: string;
@@ -15,33 +17,18 @@ interface Alert {
 const AlertsView: React.FC = () => {
   const { user } = useAuth();
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); 
-
-    fetch('http://localhost:8080/api/alerts', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error de conexión');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (Array.isArray(data)) {
-          setAlerts(data);
-        } else {
+    getAlerts()
+        .then((data) => {
+          setAlerts(Array.isArray(data) ? data : []);
+        })
+        .catch((err) => {
+          console.error('Error cargando alertas:', err);
           setAlerts([]);
-        }
-      })
-      .catch(() => {
-        setAlerts([]);
-      });
+        });
   }, []);
 
   const getRiskColorClass = (level: string) => {
@@ -140,7 +127,7 @@ const AlertsView: React.FC = () => {
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3">
-                  <button className="px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white shadow-sm hover:bg-indigo-500 transition-colors">
+                  <button onClick={() => navigate(`/alerts/${alert.id}`)} className="px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white ...">
                     Ver Detalles
                   </button>
                   <button className="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-950 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
