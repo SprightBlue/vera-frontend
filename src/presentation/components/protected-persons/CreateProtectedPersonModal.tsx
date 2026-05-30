@@ -1,187 +1,33 @@
 import { useState } from "react";
-
-import ProtectedPersonForm from "./ProtectedPersonForm";
 import InviteOptions from "./InviteOptions";
+import ProtectedPersonForm from "./ProtectedPersonForm";
 import InviteLinkCard from "./InviteLinkCard";
 
-import { createProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+export default function CreateProtectedPersonModal() {
+    const [selectedTab, setSelectedTab] = useState<"manual" | "invite">("manual");
 
-interface Props {
-
-    onClose: () => void;
-
-    onSuccess: () => void;
-
-}
-
-function CreateProtectedPersonModal({
-
-    onClose,
-    onSuccess
-
-}: Props) {
-
-    const [mode, setMode] =
-        useState<"manual" | "invite">("manual");
-
-    const [inviteLink, setInviteLink] =
-        useState("");
-
-    async function handleCreate(data: {
-        fullName: string;
-        relationshipType: string;
-        phone: string;
-        email: string;
-    }) {
-
-        try {
-
-            await createProtectedPerson({
-
-                ...data,
-
-                highRiskAlertsEnabled: true,
-
-                weeklySummaryEnabled: false,
-
-                notificationSensitivity: "MEDIUM"
-
-            });
-
-            onSuccess();
-
-            onClose();
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
-    }
-
-    function generateInviteLink() {
-
-        const fakeLink =
-            `https://vera.care/invite/${crypto.randomUUID()}`;
-
-        setInviteLink(fakeLink);
-
-    }
+    const handleManualSubmit = async (data: any) => {
+       console.log("Datos del formulario manual:", data);
+       alert("Perfil guardado manual (Aún no conectado al back)");
+    };
 
     return (
-
-        <div className="
-    fixed
-    inset-0
-    bg-black/70
-
-    flex
-    items-center
-    justify-center
-
-    p-4
-
-    z-50
-">
-
-            <div className="
-    w-full
-    max-w-4xl
-    max-h-[90vh]
-    overflow-y-auto
-
-    bg-[#0f172a]
-    border
-    border-[#1e293b]
-
-    rounded-3xl
-
-    p-6
-    md:p-8
-">
-
-                <div className="
-                    flex
-                    items-center
-                    justify-between
-                    mb-6
-                ">
-
-                    <h2 className="
-                        text-2xl
-                        font-bold
-                        text-white
-                    ">
-                        Añadir protegido
-                    </h2>
-
-                    <button
-                        onClick={onClose}
-                        className="
-                            text-slate-400
-                            hover:text-white
-                        "
-                    >
-                        ✕
-                    </button>
-
-                </div>
-
-                <InviteOptions
-                    selected={mode}
-                    onChange={setMode}
-                />
-
-                {
-                    mode === "manual" ? (
-
-                        <ProtectedPersonForm
-                            onSubmit={handleCreate}
-                        />
-
-                    ) : (
-
-                        <div className="flex flex-col gap-5">
-
-                            {
-                                inviteLink ? (
-
-                                    <InviteLinkCard
-                                        inviteLink={inviteLink}
-                                        onClose={onClose}
-                                    />
-
-                                ) : (
-
-                                    <button
-                                        onClick={generateInviteLink}
-                                        className="
-                                            bg-blue-600
-                                            hover:bg-blue-700
-                                            rounded-xl
-                                            py-3
-                                            text-white
-                                            font-semibold
-                                        "
-                                    >
-                                        Generar enlace seguro
-                                    </button>
-
-                                )
-                            }
-
-                        </div>
-
-                    )
-                }
-
+        <div className="bg-[#0b1220] p-8 w-full max-w-2xl mx-auto rounded-3xl border border-[#1f2937]">
+            {/* Cabecera */}
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-white text-3xl font-bold">Añadir protegido</h1>
+                <button className="text-slate-400 hover:text-white transition-colors">✕</button>
             </div>
 
+            {/* Botones selectores */}
+            <InviteOptions selected={selectedTab} onChange={setSelectedTab} />
+
+            {/* Contenido dinámico */}
+            {selectedTab === "manual" ? (
+                <ProtectedPersonForm onSubmit={handleManualSubmit} />
+            ) : (
+                <InviteLinkCard />
+            )}
         </div>
-
     );
-
 }
-
-export default CreateProtectedPersonModal;

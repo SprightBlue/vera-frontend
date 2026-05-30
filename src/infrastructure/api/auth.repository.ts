@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { LoginRequest, RegisterRequest, AuthResponse } from '../auth.types';
 
+
 // Lee la URL del .env.development — si no existe, usa localhost
 const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080';
 
@@ -12,6 +13,7 @@ export const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
 
 // Interceptor: agrega el JWT a cada request automáticamente
 // si el usuario está autenticado. Equivalente al middleware
