@@ -3,7 +3,7 @@ import Sidebar from '../presentation/components/Sidebar';
 import Header from '../presentation/components/Header';
 
 interface Alert {
-  id: number;
+  id: string;
   title: string;
   description: string;
   riskLevel: string;
