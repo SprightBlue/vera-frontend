@@ -2,7 +2,7 @@ import { apiClient } from "./auth.repository";
 import type { AlertDetail } from "../../domain/models/AlertDetail";
 
 export async function getAlerts() {
-    const response = await apiClient.get("/alerts");
+    const response = await apiClient.get("/api/alerts");
     return response.data;
 }
 

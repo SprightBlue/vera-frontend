@@ -36,7 +36,7 @@ function AlertDetail() {
 
                     <div className="flex items-center gap-3 mb-6">
                         <button
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate('/alerts')}
                             className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all"
                         >
                             <ArrowLeft size={20} />
