@@ -15,6 +15,7 @@ import Register from "./presentation/pages/Register";
 
 import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Alerts from "./presentation/pages/alerts/Alerts";
+import AlertDetail from "./presentation/pages/alerts/AlertDetail";
 import Settings from "./presentation/pages/settings/Settings";
 
 
@@ -73,6 +74,11 @@ function App() {
                             <Alerts />
                         
                     }
+                />
+
+                <Route
+                    path="/alerts/:alertId"
+                    element={<AlertDetail />}
                 />
 
                 <Route
