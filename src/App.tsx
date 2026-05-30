@@ -7,7 +7,6 @@ import Register from "./presentation/pages/Register";
 import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Settings from "./presentation/pages/settings/Settings";
 import AlertsView from "./components/AlertsView";
-import AddPerson from "./presentation/pages/people/AddPerson";
 import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
@@ -56,11 +55,6 @@ function App() {
                 <Route
                     path="/settings"
                     element={<Settings />}
-                />
-
-                <Route
-                    path="/addperson"
-                    element={<AddPerson />}
                 />
 
             </Routes>
