@@ -27,7 +27,6 @@
         height: 8px;
     }
 
-    /* Fondo del canal del scroll */
     ::-webkit-scrollbar-track {
         background: #050816;
     }

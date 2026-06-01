@@ -32,7 +32,7 @@ export function AnalysisForm({loading, onAnalyze}: Props) {
                     value={content}
                     onChange={(event) => setContent(event.target.value)}
                     disabled={loading}
-                    className="h-16 flex-1 rounded-lg bg-slate-900/60 border border-slate-800 px-4 py-3 text-sm text-gray-200 outline-none transition duration-200 placeholder-gray-500 focus:border-slate-600 font-inter resize-none disabled:opacity-50 backdrop-blur-sm w-full"
+                    className="h-14 flex-1 rounded-lg bg-slate-900/60 border border-slate-800 px-4 py-3 text-lg text-gray-200 outline-none transition duration-200 placeholder-gray-500 focus:border-slate-600 font-inter resize-none disabled:opacity-50 backdrop-blur-sm w-full"
                 />
 
                 <button
