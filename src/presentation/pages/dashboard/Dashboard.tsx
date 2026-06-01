@@ -128,12 +128,13 @@ function Dashboard() {
 
             {/* MAIN */}
 
-            <main className="
-                flex-1
-                flex
-                flex-col
-                min-w-0
-            ">
+           <main className="
+    flex-1
+    flex
+    flex-col
+    min-w-0
+    ml-[260px]
+">
 
                 {/* HEADER */}
 
