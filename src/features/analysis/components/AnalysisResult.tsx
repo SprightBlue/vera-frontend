@@ -14,12 +14,12 @@ export function AnalysisResult({result, error, showPlaceholder = true}: Props) {
     return (
         <div
             className="analysis-appear flex flex-col items-center justify-center text-center py-14 bg-transparent w-full select-none">
-          <AlertCircle className="text-red-500/80 h-10 w-10 mb-4 stroke-[1.5]"/>
-          <h3 className="text-sm font-semibold text-slate-200 font-montserrat mb-1">
-            No se pudo completar el análisis técnico
+          <AlertCircle className="text-red-500/80 h-14 w-14 mb-4 stroke-[1.5]"/>
+          <h3 className="text-xl font-semibold text-slate-200 font-montserrat mb-1">
+            No se pudo completar el análisis
           </h3>
-          <p className="font-inter text-xs text-slate-500 max-w-sm leading-relaxed">
-            {error}
+          <p className="font-inter text-lg text-slate-500 max-w-sm leading-relaxed">
+            Ocurrió un error al procesar el análisis. Por favor, intente nuevamente más tarde.
           </p>
         </div>
     );
@@ -30,11 +30,11 @@ export function AnalysisResult({result, error, showPlaceholder = true}: Props) {
     return (
         <div
             className="analysis-empty-appear flex flex-col items-center justify-center py-16 bg-transparent text-center w-full select-none">
-          <Search className="text-slate-700 h-10 w-10 mb-4 stroke-[1.5]"/>
-          <h3 className="text-sm font-semibold text-slate-400 font-montserrat mb-1">
+          <Search className="text-slate-700 h-14 w-14 mb-4 stroke-[1.5]"/>
+          <h3 className="text-xl font-semibold text-slate-400 font-montserrat mb-1">
             Sistema listo para analizar
           </h3>
-          <p className="font-inter text-xs text-slate-600 max-w-xs leading-relaxed">
+          <p className="font-inter text-lg text-slate-600 max-w-xs leading-relaxed">
             Inserte un bloque de texto o enlace arriba para analizar su nivel de riesgo y patrones sospechosos.
           </p>
         </div>
@@ -52,7 +52,7 @@ export function AnalysisResult({result, error, showPlaceholder = true}: Props) {
 
           <div
               className="lg:col-span-4 rounded-xl border border-slate-900 bg-slate-900/20 p-6 flex flex-col items-center justify-center min-h-55 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 w-full text-left font-montserrat self-start mb-6">
+            <p className="text-lg font-semibold uppercase tracking-wider text-slate-500 w-full text-left font-montserrat self-start mb-6">
               Nivel de riesgo
             </p>
 
@@ -76,7 +76,7 @@ export function AnalysisResult({result, error, showPlaceholder = true}: Props) {
               <span className="text-xl font-extrabold text-white font-inter">
                 {config.percentage}%
               </span>
-                <span className={`text-[9px] font-bold uppercase tracking-wider ${config.textColor}`}>
+                <span className={`text-sm font-bold uppercase tracking-wider ${config.textColor}`}>
                 {config.label}
               </span>
               </div>
@@ -87,20 +87,20 @@ export function AnalysisResult({result, error, showPlaceholder = true}: Props) {
 
             <div
                 className="flex-1 rounded-xl border border-slate-900 bg-slate-900/20 p-5 min-h-25 flex flex-col justify-start backdrop-blur-sm">
-              <h4 className={`text-xs font-semibold uppercase tracking-wider font-montserrat mb-2 ${config.textColor}`}>
+              <h4 className={`text-xl font-semibold uppercase tracking-wider font-montserrat mb-2 ${config.textColor}`}>
                 Patrones Sospechosos
               </h4>
-              <p className="text-sm text-slate-200 font-inter leading-relaxed wrap-break-word pl-5 border-l border-slate-800">
+              <p className="text-lg text-slate-200 font-inter leading-relaxed wrap-break-word pl-5 border-l border-slate-800">
                 {result.suspiciousPatterns || 'No se identificaron patrones de riesgo explícitos en el contenido.'}
               </p>
             </div>
 
             <div
                 className="flex-1 rounded-xl border border-slate-900 bg-slate-900/20 p-5 min-h-25 flex flex-col justify-start backdrop-blur-sm">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-primary font-montserrat mb-2">
+              <h4 className="text-xl font-semibold uppercase tracking-wider text-primary font-montserrat mb-2">
                 Recomendación
               </h4>
-              <p className="text-sm text-slate-300 font-inter leading-relaxed wrap-break-word pl-5 border-l border-slate-800">
+              <p className="text-lg text-slate-300 font-inter leading-relaxed wrap-break-word pl-5 border-l border-slate-800">
                 {result.recommendation || 'Proceda con precaución estándar del sistema.'}
               </p>
             </div>
