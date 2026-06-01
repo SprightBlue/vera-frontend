@@ -26,21 +26,32 @@ function Sidebar() {
     ];
 
     return (
-        <aside className="w-[260px] min-h-screen bg-[#070B1A] border-r border-[#182033] flex flex-col p-6">
-            
-            {/* LOGO: Ajustado para no ser invasivo */}
+        <aside className="
+            fixed
+            left-0
+            top-0
+            w-[260px]
+            h-screen
+            bg-[#070B1A]
+            border-r
+            border-[#182033]
+            flex
+            flex-col
+            p-6
+            z-50
+        ">
             <div className="mb-12 px-2">
-                <img 
-                    src={logoVera} 
-                    alt="Vera Logo" 
-                    className="w-[90px] h-auto object-contain opacity-90" 
+                <img
+                    src={logoVera}
+                    alt="Vera Logo"
+                    className="w-[90px] h-auto object-contain opacity-90"
                 />
             </div>
 
-            {/* MENÚ SUPERIOR: Más espaciado vertical */}
             <div className="flex flex-col gap-2 flex-1">
                 {menuItems.map((item) => {
                     const isActive = location.pathname === item.path;
+
                     return (
                         <Link
                             key={item.path}
@@ -58,7 +69,6 @@ function Sidebar() {
                 })}
             </div>
 
-            {/* MENÚ INFERIOR */}
             <div className="flex flex-col gap-2 pt-6 border-t border-[#182033]">
                 {bottomItems.map((item) => (
                     <Link
