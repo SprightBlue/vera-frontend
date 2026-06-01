@@ -36,6 +36,11 @@ function App() {
                 />
 
                 <Route
+                    path="/logout"
+                    element={<Login />}
+                />
+
+                <Route
                     path="/analysis"
                     element={<AnalysisPage/>}
                 />
