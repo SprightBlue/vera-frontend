@@ -35,7 +35,7 @@ export function AnalysisResult({result, error, showPlaceholder = true}: Props) {
             Sistema listo para analizar
           </h3>
           <p className="font-inter text-lg text-slate-600 max-w-xs leading-relaxed">
-            Inserte un bloque de texto o enlace arriba para analizar su nivel de riesgo y patrones sospechosos.
+            Inserte un mensaje o enlace para analizar su nivel de riesgo y patrones sospechosos.
           </p>
         </div>
     );
