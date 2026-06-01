@@ -8,6 +8,7 @@ import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Settings from "./presentation/pages/settings/Settings";
 import AlertsView from "./components/AlertsView";
 import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
+import {AnalysisPage} from "./features/analysis/views/AnalysisPage.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -33,6 +34,11 @@ function App() {
                 <Route
                     path="/register"
                     element={<Register />}
+                />
+
+                <Route
+                    path="/analysis"
+                    element={<AnalysisPage/>}
                 />
 
                 {/* Privadas */}
