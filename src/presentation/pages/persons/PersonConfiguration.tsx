@@ -84,11 +84,11 @@ function PersonConfiguration() {
           </div>
 
           {/* Info */}
-          <div className="bg-[#0d1222] border border-[#182033] rounded-2xl p-4 flex gap-3 items-start">
+          <div className="bg-[#0d1222] border border-[#182033] rounded-2xl p-6 flex gap-3 items-start">
             <ShieldCheck className="text-white mt-1" size={22} />
 
             <div>
-              <h2 className="font-semibold text-white text-lg">
+              <h2 className="font-semibold text-white text-xl">
                 Control de permisos
               </h2>
 
@@ -106,7 +106,7 @@ function PersonConfiguration() {
               <div className="flex items-center gap-2 mb-4">
                 <Bell className="text-white" size={20} />
 
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-xl">
                   Sensibilidad de alertas
                 </h3>
               </div>
@@ -141,7 +141,7 @@ function PersonConfiguration() {
               <div className="flex items-center gap-2 mb-4">
                 <ShieldAlert className="text-white" size={20} />
 
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-xl">
                   Alertas urgentes
                 </h3>
               </div>
@@ -187,7 +187,7 @@ function PersonConfiguration() {
               {/* Location */}
               <div className="flex items-center justify-between p-4">
                 <div className="flex gap-3">
-                  <MapPin className="text-white" />
+                  <MapPin className="w-5 h-5 mt-2 text-white" />
 
                   <div>
                     <h4 className="font-medium text-white">
@@ -220,7 +220,7 @@ function PersonConfiguration() {
               {/* Messages */}
               <div className="flex items-center justify-between p-4">
                 <div className="flex gap-3">
-                  <MessageSquare className="text-white" />
+                  <MessageSquare className="w-5 h-5 mt-2 text-white" />
 
                   <div>
                     <h4 className="font-medium text-white">

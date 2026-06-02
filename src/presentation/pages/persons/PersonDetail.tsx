@@ -13,7 +13,7 @@ function PersonDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const people = [
+    const persons = [
         {
             id: 1,
             photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
@@ -26,7 +26,7 @@ function PersonDetail() {
         }
     ];
 
-    const person = people.find(
+    const person = persons.find(
         (p) => p.id === Number(id)
     );
 
@@ -53,11 +53,11 @@ function PersonDetail() {
                     </div>
 
                     {/* Perfil */}
-                    <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-6 md:p-8 mb-6">
+                    <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-6">
                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
                             {/* Izquierda */}
                             <div className="flex flex-col md:flex-row gap-6">
-                                <div className="py-4">
+                                <div className="py-2">
                                     <img
                                         src={person?.photo}
                                         alt="Marta"
@@ -65,10 +65,9 @@ function PersonDetail() {
                                     />
                                 </div>
 
-
                                 <div>
                                     <div className="flex items-center gap-3 flex-wrap">
-                                        <h2 className="text-3xl font-bold">
+                                        <h2 className="text-2xl font-bold">
                                             {person?.fullName}
                                         </h2>
 
@@ -83,18 +82,18 @@ function PersonDetail() {
                                     </p>
 
                                     <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                                        <div className="flex items-center gap-3 bg-[#111827] border border-[#182033] px-5 py-3 rounded-2xl">
-                                            <Link className="w-5 h-5 text-blue-400" />
+                                        <div className="flex items-center gap-3 bg-[#111827] border border-[#182033] px-4 py-3 rounded-2xl">
+                                            <Link className="w-4 h-4 text-blue-400" />
 
-                                            <span className="text-gray-300">
+                                            <span className="text-gray-300 text-sm">
                                                 Conectado desde Ago 2023
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center gap-3 bg-[#111827] border border-[#182033] px-5 py-3 rounded-2xl">
-                                            <Clock3 className="w-5 h-5 text-blue-400" />
+                                        <div className="flex items-center gap-3 bg-[#111827] border border-[#182033] px-4 py-3 rounded-2xl">
+                                            <Clock3 className="w-4 h-4 text-blue-400" />
 
-                                            <span className="text-gray-300">
+                                            <span className="text-gray-300 text-sm">
                                                 Última actividad {person?.lastActivity}
                                             </span>
                                         </div>
@@ -119,16 +118,16 @@ function PersonDetail() {
                                     <Activity size={20} />
                                 </div>
 
-                                <h3 className="font-semibold text-lg">Sensibilidad</h3>
+                                <h3 className="font-semibold text-xl">Sensibilidad</h3>
                             </div>
 
-                            <div className="mt-16">
+                            <div className="mt-12">
                                 <div className="flex flex-wrap justify-center ">
                                     <h2 className="text-4xl font-bold px-5">
                                         {person?.notificationSensitivity}
                                     </h2>
 
-                                    <p className="text-gray-400 leading-relaxed mb-10 mt-4">
+                                    <p className="text-gray-400 leading-relaxed mb-5 mt-4">
                                         Monitoreo equilibrado
                                     </p>
                                 </div>
@@ -153,7 +152,7 @@ function PersonDetail() {
                                     <ShieldCheck size={20} />
                                 </div>
 
-                                <h3 className="font-semibold text-lg">Permisos</h3>
+                                <h3 className="font-semibold text-xl">Permisos</h3>
                             </div>
 
                             <p className="text-gray-400 leading-relaxed mb-10">
@@ -206,13 +205,13 @@ function PersonDetail() {
                                     <Settings size={20} />
                                 </div>
 
-                                <h3 className="font-semibold text-lg">
+                                <h3 className="font-semibold text-xl">
                                     Aplicaciones monitoreadas
                                 </h3>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-5 mt-10">
-                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-4 flex flex-col items-center justify-center gap-4 hover:border-blue-500 transition">
+                            <div className="grid grid-cols-2 gap-4 mt-10">
+                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-blue-500 transition">
                                     <div className="bg-[#182033] p-4 rounded-2xl">
                                         <Building2 className="text-blue-400" size={20} />
                                     </div>
@@ -220,7 +219,7 @@ function PersonDetail() {
                                     <span className="text-gray-300">Banca</span>
                                 </div>
 
-                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-4 flex flex-col items-center justify-center gap-4 hover:border-blue-500 transition">
+                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-blue-500 transition">
                                     <div className="bg-[#182033] p-4 rounded-2xl">
                                         <Mail className="text-pink-400" size={20} />
                                     </div>
@@ -228,7 +227,7 @@ function PersonDetail() {
                                     <span className="text-gray-300">Correo</span>
                                 </div>
 
-                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-4 flex flex-col items-center justify-center gap-4 hover:border-blue-500 transition">
+                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-blue-500 transition">
                                     <div className="bg-[#182033] p-4 rounded-2xl">
                                         <MessageSquare className="text-green-400" size={20} />
                                     </div>
@@ -236,7 +235,7 @@ function PersonDetail() {
                                     <span className="text-gray-300">Mensajes</span>
                                 </div>
 
-                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-4 flex flex-col items-center justify-center gap-4 hover:border-blue-500 transition">
+                                <div className="bg-[#111827] border border-[#182033] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-blue-500 transition">
                                     <div className="bg-[#182033] p-4 rounded-2xl">
                                         <Image className="text-violet-400" size={20} />
                                     </div>
@@ -255,7 +254,7 @@ function PersonDetail() {
                                     <Bell size={20} />
                                 </div>
 
-                                <h3 className="font-semibold text-lg">
+                                <h3 className="font-semibold text-xl">
                                     Información reciente
                                 </h3>
                             </div>
@@ -284,7 +283,7 @@ function PersonDetail() {
                                             </span>
                                         </div>
 
-                                        <p className="text-gray-400 leading-relaxed mt-2">
+                                        <p className="text-gray-400 leading-relaxed text-sm mt-2">
                                             El teléfono de Marta se ha guardado en la nube con éxito.
                                         </p>
                                     </div>
@@ -313,7 +312,7 @@ function PersonDetail() {
                                             </span>
                                         </div>
 
-                                        <p className="text-gray-400 leading-relaxed mt-2 text-yellow-100/80">
+                                        <p className="text-gray-400 leading-relaxed mt-2 text-yellow-100/80 text-sm">
                                             Dispositivo conectado a "CoffeeShop_FreeWiFi". Por favor,
                                             verifique amablemente si era la intención.
                                         </p>
@@ -349,7 +348,7 @@ function PersonDetail() {
                                             </span>
                                         </div>
 
-                                        <p className="text-gray-400 leading-relaxed mt-2">
+                                        <p className="text-gray-400 leading-relaxed text-sm mt-2">
                                             El dispositivo se ha cargado durante la noche y está listo
                                             para el día.
                                         </p>

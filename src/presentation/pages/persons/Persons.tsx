@@ -18,7 +18,7 @@ interface ProtectedPerson {
   email: string;
 }
 
-async function getProtectedPeople(): Promise<ProtectedPerson[]> {
+async function getProtectedPersons(): Promise<ProtectedPerson[]> {
   // Simulación de API
 
   return [
@@ -57,23 +57,25 @@ async function getProtectedPeople(): Promise<ProtectedPerson[]> {
 
 function Persons() {
 
-  const [people, setPeople] = useState<ProtectedPerson[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [persons, setPersons] = useState<ProtectedPerson[]>([]);
+  const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPeople = async () => {
+    const fetchPersons = async () => {
       try {
-        const data = await getProtectedPeople();
-        setPeople(data);
-      } catch (error) {
-        console.error("Error loading protected people", error);
-      } finally {
-        setLoading(false);
+        const data = await getProtectedPersons();
+        setPersons(data);
+      }
+      catch (error) {
+        console.error("Error al cargar personas", error);
+      }
+      finally {
+        setCargando(false); 
       }
     };
 
-    fetchPeople();
+    fetchPersons();
   }, []);
 
   return (
@@ -92,14 +94,14 @@ function Persons() {
             Todas las personas que cuido
           </h1>
 
-          {loading ? (
-            <p className="text-gray-400">Loading...</p>
+          {cargando ? (
+            <p className="text-gray-400 text-xl">Cargando...</p>
           ) : (
-            <div className="flex flex-col gap-4">
-              {people.map((person) => (
+            <div className="flex flex-col gap-5">
+              {persons.map((person) => (
                 <div
                   key={person.id}
-                  className="bg-[#0d1222] border border-[#182033] rounded-2xl p-5 flex items-center justify-between shadow-lg"
+                  className="bg-[#0d1222] border border-[#182033] rounded-2xl p-6 flex items-center justify-between shadow-lg"
                 >
                   {/* Left */}
                   <div className="flex items-center gap-4">
