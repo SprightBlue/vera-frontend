@@ -8,6 +8,9 @@ import Settings from "./presentation/pages/settings/Settings";
 import AlertsView from "./components/AlertsView";
 import AlertDetail from "./presentation/pages/alerts/AlertDetail";
 import {AnalysisPage} from "./features/analysis/views/AnalysisPage";
+import Persons from "./presentation/pages/persons/Persons.tsx";
+import PersonDetail from "./presentation/pages/persons/PersonDetail.tsx";
+import PersonConfiguration from "./presentation/pages/persons/PersonConfiguration.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -49,6 +52,21 @@ function App() {
                 <Route
                     path="/dashboard"
                     element={<Dashboard />}
+                />
+
+                <Route
+                    path="/persons"
+                    element={<Persons />}
+                />
+
+                <Route
+                    path="/persons/:id"
+                    element={<PersonDetail />}
+                />
+
+                <Route
+                    path="/persons/personConfig"
+                    element={<PersonConfiguration />}
                 />
 
                 <Route

@@ -16,7 +16,7 @@ function Sidebar() {
 
     const menuItems = [
         { label: "Panel Principal", path: "/dashboard", icon: LayoutDashboard },
-        { label: "Personas que cuido", path: "/people", icon: Users },
+        { label: "Personas que cuido", path: "/persons", icon: Users },
         { label: "Contactos", path: "/contacts", icon: ContactRound },
         { label: "Analisis", path: "/analysis", icon: TextSearch },
         { label: "Alertas", path: "/alerts", icon: ShieldAlert }
