@@ -115,4 +115,14 @@
             opacity: 1;
         }
     }
+
+    @keyframes bell-ring {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(15deg); }
+        40%, 80% { transform: rotate(-15deg); }
+    }
+
+    .animate-bell-ring {
+        animation: bell-ring 0.4s ease-in-out infinite;
+    }
 }
