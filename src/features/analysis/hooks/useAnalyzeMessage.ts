@@ -1,6 +1,6 @@
-import {useState} from 'react';
-import {analyzeMessage} from '../api/analyzeMessage';
-import type {AnalysisResultDto, AnalyzeRequestDto} from '../types/analysis.types';
+import { useState } from 'react';
+import { analyzeMessage } from '../api/analyzeMessage';
+import type { AnalysisResultDto, AnalyzeRequestDto } from '../types/analysis.types';
 
 export function useAnalyzeMessage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,5 +28,5 @@ export function useAnalyzeMessage() {
         }
     };
 
-    return {isLoading, result, error, hasInteracted, executeAnalysis,};
+    return { isLoading, result, error, hasInteracted, executeAnalysis };
 }
