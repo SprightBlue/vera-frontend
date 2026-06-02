@@ -212,7 +212,7 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full h-14 rounded-2xl bg-[#0D6EFD] hover:bg-[#0B5ED7] transition-all duration-300 cursor-pointer"
+              className="w-full h-14 rounded-2xl bg-[#0D6EFD] cursor-pointer hover:bg-[#0B5ED7] transition-all duration-300"
             >
               Iniciar sesión
             </button>
