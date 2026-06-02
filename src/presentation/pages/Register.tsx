@@ -1,14 +1,47 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { authRepository } from '../../infrastructure/api/auth.repository';
 import { useAuth } from '../context/AuthContext';
+import veraLogo from '../../assets/Isologo_Vera.png';
+
+const ShieldIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 3L19 6V11C19 16 15.5 20 12 21C8.5 20 5 16 5 11V6L12 3Z"
+      stroke="#0D6EFD"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M20 6L9 17L4 12"
+      stroke="#0D6EFD"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 export default function Register() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({ fullName: '', email: '', password: '' });
+  const [form, setForm] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -19,204 +52,204 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (form.password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres.');
+      setError('La contraseña debe tener al menos 8 caracteres');
       return;
     }
+
+    if (form.password !== form.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     setLoading(true);
-    setError('');
+
     try {
-      const data = await authRepository.register(form);
-      // Auto-login después del registro
+      const data = await authRepository.register({
+        fullName: form.fullName,
+        email: form.email,
+        password: form.password
+      });
+
       login(data);
       navigate('/dashboard');
     } catch {
-      setError('No se pudo crear la cuenta. El email puede estar en uso.');
+      setError('No se pudo crear la cuenta');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-[#0a0b10] text-white">
+    <div className="w-full min-h-screen flex bg-[#05070D] text-white">
 
-      {/* Panel izquierdo */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-[#0d0e15] border-r border-white/5">
-        <div className="flex items-center gap-3">
-          <ShieldIcon />
-          <span className="text-2xl font-bold">Vera</span>
-        </div>
-        <div className="space-y-6">
-          <h1 className="text-4xl font-bold leading-tight">
-            Empezá a protegerte<br />hoy mismo
+      {/* IZQUIERDA */}
+      <div className="hidden lg:flex w-1/2 justify-center bg-[#0B0D17] border-r border-white/5">
+        <div className="max-w-[550px] pt-[100px]">
+
+          <img
+            src={veraLogo}
+            alt="Vera"
+            className="w-[185px]"
+          />
+
+          <h1 className="text-[58px] font-bold leading-[1] mb-4 max-w-[550px]">
+            Únete a miles de
+            usuarios protegidos
           </h1>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            Creá tu cuenta gratuita y comenzá a analizar mensajes,
-            emails y links con inteligencia artificial.
+
+          <p className="text-gray-400 text-[17px] leading-8 mb-10 max-w-[470px]">
+            Crea tu cuenta y comienza a recibir protección inteligente
+            contra estafas y phishing en segundos.
           </p>
-          <div className="w-16 h-px bg-white/20" />
-          <div className="space-y-4">
-            <Feature text="Análisis ilimitado de mensajes sospechosos" />
-            <Feature text="Alertas en tiempo real ante amenazas" />
-            <Feature text="Historial completo de análisis" />
-            <Feature text="Soporte 24/7 ante incidentes" />
+
+          <div className="w-full h-px bg-white/10 mb-8" />
+
+          <div className="space-y-6">
+
+            <Feature
+              icon={<ShieldIcon />}
+              title="Protección inmediata"
+              text="Activa desde el primer momento"
+            />
+
+            <Feature
+              icon={<CheckIcon />}
+              title="Sin configuración compleja"
+              text="Funciona automáticamente"
+            />
+
           </div>
         </div>
-        <p className="text-gray-600 text-sm">© 2026 Vera. Todos los derechos reservados.</p>
       </div>
 
-      {/* Panel derecho */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
+      {/* DERECHA */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-14">
+        <div className="w-full max-w-[420px]">
 
-          <div className="flex items-center gap-3 lg:hidden">
-            <ShieldIcon />
-            <span className="text-2xl font-bold">Vera</span>
-          </div>
+          <h2 className="text-[44px] font-bold mb-3">
+            Crear cuenta
+          </h2>
 
-          <div>
-            <h2 className="text-3xl font-bold">Crear cuenta</h2>
-            <p className="text-gray-400 mt-2">
-              Completá tus datos para registrarte
-            </p>
-          </div>
+          <p className="text-gray-400 mb-10">
+            Completá tus datos para comenzar
+          </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            <div className="space-y-2">
-              <label className="text-sm text-gray-300">Nombre completo</label>
-              <input
-                type="text"
-                name="fullName"
-                value={form.fullName}
-                onChange={handleChange}
-                placeholder="Tu nombre"
-                required
-                className="w-full bg-[#12141c] border border-white/10 rounded-xl px-4 py-3
-                           text-white placeholder-gray-600 focus:outline-none
-                           focus:border-blue-500 transition-colors"
-              />
-            </div>
+            <Input
+              label="Nombre completo"
+              name="fullName"
+              value={form.fullName}
+              onChange={handleChange}
+            />
 
-            <div className="space-y-2">
-              <label className="text-sm text-gray-300">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="tu@email.com"
-                required
-                className="w-full bg-[#12141c] border border-white/10 rounded-xl px-4 py-3
-                           text-white placeholder-gray-600 focus:outline-none
-                           focus:border-blue-500 transition-colors"
-              />
-            </div>
+            <Input
+              label="Correo electrónico"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+            />
 
-            <div className="space-y-2">
-              <label className="text-sm text-gray-300">Contraseña</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Mínimo 8 caracteres"
-                  required
-                  className="w-full bg-[#12141c] border border-white/10 rounded-xl px-4 py-3
-                             text-white placeholder-gray-600 focus:outline-none
-                             focus:border-blue-500 transition-colors pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-                >
-                  {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                </button>
-              </div>
-              {/* Indicador de fortaleza de contraseña */}
-              {form.password.length > 0 && (
-                <div className="flex gap-1 mt-1">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${
-                      form.password.length >= (i + 1) * 2
-                        ? form.password.length < 6 ? 'bg-red-500'
-                        : form.password.length < 10 ? 'bg-yellow-500'
-                        : 'bg-green-500'
-                        : 'bg-white/10'
-                    }`} />
-                  ))}
-                </div>
-              )}
-            </div>
+            <PasswordInput
+              label="Contraseña"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              show={showPassword}
+              setShow={setShowPassword}
+            />
+
+            <PasswordInput
+              label="Confirmar Contraseña"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              show={showConfirm}
+              setShow={setShowConfirm}
+            />
+
+            <label className="flex items-start gap-3 text-sm text-gray-400">
+              <input type="checkbox" className="mt-1" />
+              <span>
+                Acepto los términos y condiciones
+              </span>
+            </label>
 
             {error && (
-              <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
-                {error}
-              </p>
+              <p className="text-red-400 text-sm">{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50
-                         disabled:cursor-not-allowed text-white font-semibold py-3
-                         rounded-xl transition-colors"
+              className="w-full h-14 rounded-2xl bg-[#0D6EFD]"
             >
-              {loading ? 'Creando cuenta...' : 'Crear cuenta gratis'}
+              {loading ? 'Creando...' : 'Crear cuenta'}
             </button>
-          </form>
 
-          <p className="text-center text-gray-500 text-sm">
-            ¿Ya tenés cuenta?{' '}
-            <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium">
-              Iniciar sesión
-            </Link>
-          </p>
+            <p className="text-center text-sm text-gray-400 mt-8">
+              ¿Ya tenés cuenta?{' '}
+              <Link to="/login" className="text-blue-500">
+                Iniciar sesión
+              </Link>
+            </p>
+
+          </form>
         </div>
       </div>
     </div>
   );
 }
 
-function Feature({ text }: { text: string }) {
+function Feature({ icon, title, text }: any) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="w-5 h-5 rounded-full bg-blue-600/20 flex items-center justify-center flex-shrink-0">
-        <svg className="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-        </svg>
+    <div className="flex items-start gap-4">
+      <div className="w-11 h-11 rounded-xl bg-blue-600/10 flex items-center justify-center border border-blue-500/20">
+        {icon}
       </div>
-      <span className="text-gray-400 text-sm">{text}</span>
+
+      <div>
+        <div className="text-lg font-bold text-white">{title}</div>
+        <div className="text-sm text-gray-400">{text}</div>
+      </div>
     </div>
   );
 }
 
-// Reutilizamos los mismos íconos del Login
-function ShieldIcon() {
+function Input({ label, ...props }: any) {
   return (
-    <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-      </svg>
+    <div>
+      <label className="block mb-2 font-medium">{label}</label>
+      <input
+        {...props}
+        className="w-full h-14 rounded-2xl px-5 bg-[#12141C] border border-white/10"
+      />
     </div>
   );
 }
 
-function EyeIcon() {
+function PasswordInput({ label, show, setShow, ...props }: any) {
   return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-    </svg>
-  );
-}
+    <div>
+      <label className="block mb-2 font-medium">{label}</label>
 
-function EyeOffIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
-    </svg>
+      <div className="relative">
+        <input
+          {...props}
+          type={show ? 'text' : 'password'}
+          className="w-full h-14 rounded-2xl px-5 pr-14 bg-[#12141C] border border-white/10"
+        />
+
+        <button
+          type="button"
+          onClick={() => setShow(!show)}
+          className="absolute right-5 top-1/2 -translate-y-1/2"
+        >
+          {show ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
+    </div>
   );
 }
