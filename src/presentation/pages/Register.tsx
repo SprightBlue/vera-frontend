@@ -184,7 +184,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-14 rounded-2xl bg-[#0D6EFD]"
+              className="w-full h-14 rounded-2xl bg-[#0D6EFD] cursor-pointer hover:bg-[#0B5ED7] transition-all duration-300"
             >
               {loading ? 'Creando...' : 'Crear cuenta'}
             </button>
