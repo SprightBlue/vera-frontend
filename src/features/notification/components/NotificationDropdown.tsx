@@ -38,38 +38,44 @@ export function NotificationDropdown({ alerts, isRinging, onSelectAlert }: Notif
                 )}
             </button>
 
-            {isDropdownOpen && (
-                <div className="absolute -right-12.5 sm:right-0 mt-3 w-[85vw] max-w-95 sm:w-96 rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-2xl z-50 max-h-100 overflow-y-auto">
-                    <div className="px-4 py-2 border-b border-white/5 mb-2">
-                        <h4 className="text-sm font-semibold text-white">Alertas de riesgo activas</h4>
-                    </div>
-
-                    {alerts.length === 0 ? (
-                        <p className="text-sm text-slate-500 text-center py-6">No hay alertas pendientes 🙌</p>
-                    ) : (
-                        <div className="flex flex-col gap-1">
-                            {alerts.map((alert) => (
-                                <button
-                                    key={alert.alertId}
-                                    onClick={() => {
-                                        onSelectAlert(alert);
-                                        setIsDropdownOpen(false);
-                                    }}
-                                    className="w-full text-left p-3 rounded-lg hover:bg-white/5 transition-colors duration-150 flex flex-col gap-1 border border-transparent hover:border-white/5 cursor-pointer"
-                                >
-                                    <div className="flex items-center justify-between w-full gap-2">
-                                        <span className="text-sm font-semibold text-slate-200 truncate">{alert.protectedUserName}</span>
-                                        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold shrink-0 ${getRiskColor(alert.riskLevel)}`}>
-                                            {alert.riskLevel}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-slate-400 truncate w-full">{alert.messageContent}</p>
-                                </button>
-                            ))}
-                        </div>
-                    )}
+            <div
+                className={`absolute -right-12.5 sm:right-0 mt-3 w-[85vw] max-w-95 sm:w-96 rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-2xl z-50 max-h-100 overflow-y-auto
+                    transition-all duration-200 ease-out origin-top-right
+                    ${isDropdownOpen
+                    ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                    : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+                }
+                `}
+            >
+                <div className="px-4 py-2 border-b border-white/5 mb-2">
+                    <h4 className="text-sm font-semibold text-white">Alertas de riesgo activas</h4>
                 </div>
-            )}
+
+                {alerts.length === 0 ? (
+                    <p className="text-sm text-slate-500 text-center py-6">No hay alertas pendientes 🙌</p>
+                ) : (
+                    <div className="flex flex-col gap-1">
+                        {alerts.map((alert) => (
+                            <button
+                                key={alert.alertId}
+                                onClick={() => {
+                                    onSelectAlert(alert);
+                                    setIsDropdownOpen(false);
+                                }}
+                                className="w-full text-left p-3 rounded-lg hover:bg-white/5 transition-colors duration-150 flex flex-col gap-1 border border-transparent hover:border-white/5 cursor-pointer"
+                            >
+                                <div className="flex items-center justify-between w-full gap-2">
+                                    <span className="text-sm font-semibold text-slate-200 truncate">{alert.protectedUserName}</span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold shrink-0 ${getRiskColor(alert.riskLevel)}`}>
+                                        {alert.riskLevel}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-400 truncate w-full">{alert.messageContent}</p>
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

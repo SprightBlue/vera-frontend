@@ -14,11 +14,20 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
     const displaySubtitle = subtitle ?? "Aquí tienes el resumen del bienestar de tus protegidos.";
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-    const { alerts, selectedAlert, setSelectedAlert, isRinging, handleSolveAlert } = useRiskAlerts(API_URL);
+    const {
+        alerts,
+        isRinging,
+        selectedAlert,
+        isModalRendered,
+        animateModalIn,
+        openModal,
+        closeModal,
+        handleSolveAlert
+    } = useRiskAlerts(API_URL);
 
     return (
         <header className={`sticky top-0 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all ${
-            selectedAlert ? 'z-9999' : 'z-50'
+            isModalRendered ? 'z-9999' : 'z-50'
         }`}>
             <div className="flex flex-col min-w-0 max-w-[60%] sm:max-w-none">
                 <h2 className="text-lg sm:text-xl font-medium text-white tracking-tight truncate">{displayTitle}</h2>
@@ -30,7 +39,7 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
                 <NotificationDropdown
                     alerts={alerts}
                     isRinging={isRinging}
-                    onSelectAlert={setSelectedAlert}
+                    onSelectAlert={openModal}
                 />
 
                 <div className="flex items-center gap-3 border-l border-white/5 pl-3 sm:pl-6">
@@ -44,10 +53,11 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
                 </div>
             </div>
 
-            {selectedAlert && (
+            {isModalRendered && selectedAlert && (
                 <AlertDetailModal
                     alert={selectedAlert}
-                    onClose={() => setSelectedAlert(null)}
+                    animateIn={animateModalIn}
+                    onClose={closeModal}
                     onSolve={handleSolveAlert}
                 />
             )}
