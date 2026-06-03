@@ -19,8 +19,8 @@ export function AnalysisPage() {
                 <header className="sticky top-0 z-40 w-full border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
                     <Header
                         userName={user?.fullName || "Usuario"}
-                        title="Alertas y Notificaciones"
-                        subtitle="Monitorea actividad sospechosa y amenazas detectadas"
+                        title="Análisis de Mensajes"
+                        subtitle="Detectá mensajes sospechosos y protegé tu información"
                     />
                 </header>
 
