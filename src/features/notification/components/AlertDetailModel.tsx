@@ -1,4 +1,4 @@
-import { AlertTriangle, X, Mail, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, X, CheckCircle2 } from "lucide-react";
 import { type RiskAlertResponse } from "../api/riskAlerts";
 import { getRiskColor } from "../utils/alertUtils";
 
