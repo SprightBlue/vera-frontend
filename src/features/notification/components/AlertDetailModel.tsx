@@ -1,5 +1,5 @@
 import { AlertTriangle, X, CheckCircle2 } from "lucide-react";
-import { type RiskAlertResponse } from "../api/riskAlerts";
+import { type RiskAlertResponse } from "../api/notifications.ts";
 import { getRiskColor } from "../utils/alertUtils";
 
 interface AlertDetailModalProps {
