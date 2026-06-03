@@ -24,23 +24,24 @@ interface ProtectedPerson {
 function PersonDetail() {
 
     const navigate = useNavigate();
-    const { id } = useParams(); 
-    const { user } = useAuth(); 
-    const [person, setPerson] = useState<ProtectedPerson | null>(null); 
+    const { id } = useParams();
+    const { user } = useAuth();
+    const [person, setPerson] = useState<ProtectedPerson | null>(null);
 
        useEffect(() => {
         const fetchPerson = async () => {
             try {
                 const data = await getProtectedPersons();
-                
-                const foundPerson = data.find((p: any) => p.id === Number(id));
-                
-                setPerson(foundPerson || null);
+// Cambiamos el (p: any) por (p: unknown) o quitamos el tipo para que infiera de la API
+                const foundPerson = data.find((p: { id: number }) => p.id === Number(id));
+
+// Conversión limpia pasando por unknown para evitar el 'Unexpected any' de ESLint
+                setPerson((foundPerson as unknown as ProtectedPerson) || null);
             } catch (error) {
                 console.error("Error al cargar la persona:", error);
             }
         };
-        
+
         fetchPerson();
     }, [id]);
 
