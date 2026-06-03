@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 import { Bell, ShieldAlert, MapPin, MessageSquare, ShieldCheck, Grid2X2 } from "lucide-react";
+import { getProtectedPersons, updateProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 
 function PersonConfiguration() {
 
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const id = location.state?.personId || {}; 
+  const [isSaving, setIsSaving] = useState(false); 
 
   // Se crea un form data donde se cargan los datos del formulario
   const [formData, setFormData] = useState({
@@ -24,6 +30,32 @@ function PersonConfiguration() {
       privateMessages: false,
     },
   });
+
+  useEffect(() => {
+    async function fetchCurrentSettings() {
+      if (!id) return;
+      
+      try {
+        const data = await getProtectedPersons();
+        const currentPerson = data.find((p: any) => p.id === Number(id));
+        if (currentPerson) {
+          let sensitivityReact = "balanced";
+          if (currentPerson.notificationSensitivity === "ALTO") sensitivityReact = "high";
+          if (currentPerson.notificationSensitivity === "BAJO") sensitivityReact = "low";
+
+          setFormData((prev) => ({
+            ...prev,
+            sensitivity: sensitivityReact,
+            urgentMonitoring: currentPerson.highRiskAlertsEnabled ?? true, 
+          }));
+        }
+      } catch (error) {
+        console.error("Error al traer la configuración:", error);
+      }
+    }
+
+    fetchCurrentSettings();
+  }, [id]);
 
   // Cambia cada opción de sensibilidad de alertas
   const handleSensitivityChange = (value: string) => {
@@ -52,9 +84,28 @@ function PersonConfiguration() {
     }));
   };
 
-  // Aca enviaria los datos del form al backend
-  function handleSubmit() {
-    console.log(formData);
+  async function handleSubmit() {
+    console.log("El ID actual es:", id); 
+    
+    if (!id) {
+        alert("¡FALTA EL ID! Revisa la navegación desde la pantalla anterior.");
+        return;
+    }
+    
+    try {
+      setIsSaving(true);
+      
+      await updateProtectedPerson(Number(id), formData);
+      
+      alert("¡Configuración guardada con éxito!");
+      navigate(`/persons/${id}`);
+      
+    } catch (error) {
+      console.error("Error al actualizar configuración:", error);
+      alert("Error al intentar guardar los cambios.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -66,7 +117,7 @@ function PersonConfiguration() {
       {/* MAIN */}
       <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
         <Header
-          userName="Usuario"
+          userName={user?.fullName || "Usuario"}
           title="Personas que cuido"
           subtitle="Observa los detalles de cada persona a la que protejes"
         />
@@ -309,12 +360,13 @@ function PersonConfiguration() {
               onClick={handleSubmit}
               className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer"
             >
-              Guardar preferencias
+              {isSaving ? "Guardando..." : "Guardar preferencias"}
             </button>
 
             <button
               type="button"
               className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
+              onClick={() => navigate(`/persons`)}
             >
               Cancelar
             </button>
