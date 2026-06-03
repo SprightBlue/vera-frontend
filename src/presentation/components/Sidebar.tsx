@@ -6,7 +6,8 @@ import {
     ShieldAlert,
     TextSearch,
     Settings,
-    LogOut
+    LogOut,
+    BookOpen
 } from "lucide-react";
 
 import logoVera from "../../assets/Isologo_Vera.png";
@@ -23,6 +24,7 @@ function Sidebar() {
     ];
 
     const bottomItems = [
+        { label: "Manual de Uso", path: "/manual", icon: BookOpen },
         { label: "Configuración", path: "/settings", icon: Settings },
         { label: "Cerrar Sesión", path: "/logout", icon: LogOut }
     ];
