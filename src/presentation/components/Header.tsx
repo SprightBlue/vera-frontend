@@ -1,4 +1,6 @@
-import { Bell } from "lucide-react";
+import { useRiskAlerts } from "../../features/notification/hooks/useRiskAlert";
+import { NotificationDropdown } from "../../features/notification/components/NotificationDropdown";
+import { AlertDetailModal } from "../../features/notification/components/AlertDetailModel";
 
 interface HeaderProps {
     userName?: string;
@@ -7,39 +9,48 @@ interface HeaderProps {
     subtitle?: string;
 }
 
-function Header({
-                    userName = "Usuario",
-                    userRole = "Protector",
-                    title,
-                    subtitle,
-                }: HeaderProps) {
+function Header({ userName = "Usuario", userRole = "Protector", title, subtitle }: HeaderProps) {
     const displayTitle = title ?? `Bienvenido, ${userName} 👋`;
     const displaySubtitle = subtitle ?? "Aquí tienes el resumen del bienestar de tus protegidos.";
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
+    const { alerts, selectedAlert, setSelectedAlert, isRinging, handleSolveAlert } = useRiskAlerts(API_URL);
 
     return (
-        <header className="sticky top-0 z-30 flex items-center justify-between w-full px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5">
-            <div className="flex flex-col">
-                <h2 className="text-xl font-medium text-white tracking-tight">{displayTitle}</h2>
-                <p className="text-sm text-slate-400 mt-1">{displaySubtitle}</p>
+        <header className={`sticky top-0 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all ${
+            selectedAlert ? 'z-9999' : 'z-50'
+        }`}>
+            <div className="flex flex-col min-w-0 max-w-[60%] sm:max-w-none">
+                <h2 className="text-lg sm:text-xl font-medium text-white tracking-tight truncate">{displayTitle}</h2>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1 truncate hidden xs:block">{displaySubtitle}</p>
             </div>
 
-            <div className="flex items-center gap-6">
-                <button className="relative p-2 text-slate-400 hover:text-white transition-all duration-200 rounded-full hover:bg-white/5">
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full ring-2 ring-[#050816]" />
-                </button>
-                <div className="flex items-center gap-3 border-l border-white/5 pl-6">
-                    <div className="flex flex-col items-end">
+            <div className="flex items-center gap-3 sm:gap-6">
+
+                <NotificationDropdown
+                    alerts={alerts}
+                    isRinging={isRinging}
+                    onSelectAlert={setSelectedAlert}
+                />
+
+                <div className="flex items-center gap-3 border-l border-white/5 pl-3 sm:pl-6">
+                    <div className="flex-col items-end hidden sm:flex">
                         <span className="text-sm font-semibold text-white">{userName}</span>
-                        <span className="text-[10px] uppercase tracking-widest text-slate-500 font-medium">
-                            {userRole}
-                        </span>
+                        <span className="text-[10px] uppercase tracking-widest text-slate-500 font-medium">{userRole}</span>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shadow-lg shadow-black/20">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">
                         {userName.charAt(0).toUpperCase()}
                     </div>
                 </div>
             </div>
+
+            {selectedAlert && (
+                <AlertDetailModal
+                    alert={selectedAlert}
+                    onClose={() => setSelectedAlert(null)}
+                    onSolve={handleSolveAlert}
+                />
+            )}
         </header>
     );
 }
