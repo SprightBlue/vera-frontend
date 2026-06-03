@@ -4,8 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { getProtectedPersons } from "../../../infrastructure/api/protected-person-api";
 
 interface ProtectedPerson {
   id: number;
@@ -24,19 +25,17 @@ function PersonDetail() {
 
     const navigate = useNavigate();
     const { id } = useParams(); 
+    const { user } = useAuth(); 
     const [person, setPerson] = useState<ProtectedPerson | null>(null); 
 
        useEffect(() => {
         const fetchPerson = async () => {
             try {
-                // Le pegamos al endpoint que armamos hoy
-                const response = await axios.get('http://localhost:8080/api/v1/trust/protected', {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('vera_token')}` }
-                });
+                const data = await getProtectedPersons();
                 
-                const foundPerson = response.data.find((p: ProtectedPerson) => p.id === Number(id));
-                setPerson(foundPerson);
+                const foundPerson = data.find((p: any) => p.id === Number(id));
                 
+                setPerson(foundPerson || null);
             } catch (error) {
                 console.error("Error al cargar la persona:", error);
             }
@@ -52,7 +51,7 @@ function PersonDetail() {
             <Sidebar />
             <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
                 <Header
-                    userName="Usuario"
+                    userName={user?.fullName || "Usuario"}
                     title="Personas que cuido"
                     subtitle="Observa los detalles de cada persona a la que protejes"
                 />
@@ -119,7 +118,7 @@ function PersonDetail() {
                             </div>
 
                             {/* Botón */}
-                            <button onClick={() => navigate('/persons/personConfig')} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer">
+                            <button onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer">
                                 <Settings className="w-5 h-5" />
                                 Ajustar configuración
                             </button>
