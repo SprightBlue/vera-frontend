@@ -3,8 +3,11 @@ import { fetchActiveAlerts, solveAlert, type RiskAlertResponse } from "../api/ri
 
 export function useRiskAlerts(apiUrl: string) {
     const [alerts, setAlerts] = useState<RiskAlertResponse[]>([]);
-    const [selectedAlert, setSelectedAlert] = useState<RiskAlertResponse | null>(null);
     const [isRinging, setIsRinging] = useState(false);
+
+    const [selectedAlert, setSelectedAlert] = useState<RiskAlertResponse | null>(null);
+    const [isModalRendered, setIsModalRendered] = useState(false);
+    const [animateModalIn, setAnimateModalIn] = useState(false);
 
     useEffect(() => {
         const loadInitialAlerts = async () => {
@@ -52,11 +55,25 @@ export function useRiskAlerts(apiUrl: string) {
         };
     }, [apiUrl]);
 
+    const openModal = (alert: RiskAlertResponse) => {
+        setSelectedAlert(alert);
+        setIsModalRendered(true);
+        setTimeout(() => setAnimateModalIn(true), 10);
+    };
+
+    const closeModal = () => {
+        setAnimateModalIn(false);
+        setTimeout(() => {
+            setIsModalRendered(false);
+            setSelectedAlert(null);
+        }, 300); // 300ms coincide con duration-300 de Tailwind
+    };
+
     const handleSolveAlert = async (id: string) => {
         try {
             await solveAlert(id);
             setAlerts((prev) => prev.filter((a) => a.alertId !== id));
-            setSelectedAlert(null);
+            closeModal();
         } catch {
             alert("No se pudo resolver la alerta");
         }
@@ -64,9 +81,12 @@ export function useRiskAlerts(apiUrl: string) {
 
     return {
         alerts,
-        selectedAlert,
-        setSelectedAlert,
         isRinging,
+        selectedAlert,
+        isModalRendered,
+        animateModalIn,
+        openModal,
+        closeModal,
         handleSolveAlert,
     };
 }
