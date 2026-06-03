@@ -3,6 +3,7 @@ import { useState } from "react";
 import ProtectedPersonForm from "./ProtectedPersonForm";
 import InviteOptions from "./InviteOptions";
 import InviteLinkCard from "./InviteLinkCard";
+import { useNavigate } from "react-router-dom";
 
 import { createProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 
@@ -20,6 +21,8 @@ function CreateProtectedPersonModal({
     onSuccess
 
 }: Props) {
+
+    const navigate = useNavigate(); 
 
     const [mode, setMode] =
         useState<"manual" | "invite">("manual");
@@ -51,6 +54,8 @@ function CreateProtectedPersonModal({
             onSuccess();
 
             onClose();
+
+            navigate('/protected-people');
 
         } catch (error) {
 

@@ -4,31 +4,48 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-import "material-symbols";
+interface ProtectedPerson {
+  id: number;
+  fullName: string;
+  email: string;
+  contactNumber: string;
+  relationship: string;
+  status: string;
+//provisorios, corregir en el backend
+  photo?: string;
+  lastActivity?: string;
+}
 
 
 function PersonDetail() {
 
-    const { id } = useParams();
     const navigate = useNavigate();
+    const { id } = useParams(); 
+    const [person, setPerson] = useState<ProtectedPerson | null>(null); 
 
-    const persons = [
-        {
-            id: 1,
-            photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
-            fullName: "Sophia Williams",
-            relationshipType: "Familiar",
-            lastActivity: "2 minutes ago",
-            phone: "+1 202 555 0123",
-            email: "sophia@example.com",
-            notificationSensitivity: "Estándar"
-        }
-    ];
+       useEffect(() => {
+        const fetchPerson = async () => {
+            try {
+                // Le pegamos al endpoint que armamos hoy
+                const response = await axios.get('http://localhost:8080/api/v1/trust/protected', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('vera_token')}` }
+                });
+                
+                const foundPerson = response.data.find((p: ProtectedPerson) => p.id === Number(id));
+                setPerson(foundPerson);
+                
+            } catch (error) {
+                console.error("Error al cargar la persona:", error);
+            }
+        };
+        
+        fetchPerson();
+    }, [id]);
 
-    const person = persons.find(
-        (p) => p.id === Number(id)
-    );
+    if (!person) return <div className="text-white p-8">Cargando perfil...</div>;
 
     return (
         <div className="flex min-h-screen bg-[#050816]">
@@ -59,7 +76,7 @@ function PersonDetail() {
                             <div className="flex flex-col md:flex-row gap-6">
                                 <div className="py-2">
                                     <img
-                                        src={person?.photo}
+                                        src={person?.photo || `https://ui-avatars.com/api/?name=${person?.fullName}&background=0D8ABC&color=fff`}
                                         alt="Marta"
                                         className="w-28 h-28 rounded-full object-cover border-4 border-[#182033]"
                                     />
@@ -73,7 +90,7 @@ function PersonDetail() {
 
                                         <div className="flex items-center gap-2 bg-[#182033] px-4 py-2 rounded-full text-gray-300">
                                             <Heart className="w-4 h-4" />
-                                            <span>{person?.relationshipType}</span>
+                                            <span>{person?.relationship}</span>
                                         </div>
                                     </div>
 
@@ -94,7 +111,7 @@ function PersonDetail() {
                                             <Clock3 className="w-4 h-4 text-blue-400" />
 
                                             <span className="text-gray-300 text-sm">
-                                                Última actividad {person?.lastActivity}
+                                                Última actividad {person?.lastActivity || 'Sin actividad reciente'}
                                             </span>
                                         </div>
                                     </div>
@@ -124,7 +141,7 @@ function PersonDetail() {
                             <div className="mt-12">
                                 <div className="flex flex-wrap justify-center ">
                                     <h2 className="text-4xl font-bold px-5">
-                                        {person?.notificationSensitivity}
+                                        {person?.status === 'PENDING' ? 'Invitación Pendiente' : 'Protección Activa'}
                                     </h2>
 
                                     <p className="text-gray-400 leading-relaxed mb-5 mt-4">

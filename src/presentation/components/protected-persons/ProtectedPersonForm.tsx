@@ -515,6 +515,7 @@ function ProtectedPersonForm({ onSubmit }: Props) {
                         text-slate-300
                         hover:bg-[#111827]
                     "
+                    onClick={() => window.location.href = "/dashboard"}
                 >
                     Cancelar
                 </button>
