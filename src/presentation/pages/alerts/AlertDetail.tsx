@@ -13,8 +13,10 @@ import RecommendationCard from "../../components/alerts/RecommendationCard";
 
 import { useAlertDetail } from "../../hooks/alerts/useAlertDetail";
 import { RISK_CONFIG } from "../../components/alerts/alert-ui.ts";
+import {useAuth} from "../../context/AuthContext.tsx";
 
 function AlertDetail() {
+    const { user } = useAuth();
     const { alertId } = useParams<{ alertId: string }>();
     const navigate = useNavigate();
     const { detail, loading, error } = useAlertDetail(alertId);
@@ -27,7 +29,7 @@ function AlertDetail() {
 
             <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
                 <Header
-                    userName="Usuario"
+                    userName={user?.fullName ?? "Usuario"}
                     title="Alertas y Notificaciones"
                     subtitle="Monitorea actividad sospechosa y amenazas detectadas"
                 />
