@@ -20,6 +20,7 @@ export interface CreateProtectedPersonRequest {
 
 export interface ProtectedPerson {
 
+
     id: number;
 
     fullName: string;
@@ -81,11 +82,30 @@ export async function getProtectedPersons() {
 
 }
 
-
 export async function deleteProtectedPerson(id: number) {
     const token = localStorage.getItem('vera_token');
     
     await axios.delete(`http://localhost:8080/api/v1/trust/protected-people/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
     });
+}
+
+export async function updateProtectedPerson(id: number, configData: any) {
+
+    const token = localStorage.getItem('vera_token');
+    
+    let sensibilidadTraducida = "MEDIO";
+    if (configData.sensitivity === "low") sensibilidadTraducida = "BAJO";
+    if (configData.sensitivity === "high") sensibilidadTraducida = "ALTO";
+
+    const payload = {
+        sensitivityLevel: sensibilidadTraducida,
+        notifyHighRisk: configData.urgentMonitoring 
+    };
+
+    const response = await axios.patch(`http://localhost:8080/api/v1/trust/protected-people/${id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
 }

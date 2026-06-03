@@ -532,6 +532,7 @@ function ProtectedPersonForm({ onSubmit }: Props) {
                         text-white
                         font-semibold
                     "
+                    onClick={() => window.location.href = "/persons"}
                 >
                     Guardar Perfil
                 </button>
