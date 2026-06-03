@@ -1,4 +1,4 @@
-import { useRiskAlerts } from "../../features/notification/hooks/useRiskAlert";
+import { useNotifications } from "../../features/notification/hooks/useNotifications.ts"; // 👈 Cambiado al hook unificado
 import { NotificationDropdown } from "../../features/notification/components/NotificationDropdown";
 import { AlertDetailModal } from "../../features/notification/components/AlertDetailModel";
 
@@ -14,16 +14,19 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
     const displaySubtitle = subtitle ?? "Aquí tienes el resumen del bienestar de tus protegidos.";
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
+    // 🌟 Inyectamos el nuevo hook con los estados polimórficos de la bandeja
     const {
-        alerts,
+        notifications,
         isRinging,
         selectedAlert,
         isModalRendered,
         animateModalIn,
         openModal,
         closeModal,
-        handleSolveAlert
-    } = useRiskAlerts(API_URL);
+        handleSolveAlert,
+        handleAcceptInvitation,
+        handleRejectInvitation
+    } = useNotifications(API_URL);
 
     return (
         <header className={`sticky top-0 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all ${
@@ -36,10 +39,13 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
 
             <div className="flex items-center gap-3 sm:gap-6">
 
+                {/* 🌟 Dropdown actualizado con la lista unificada y handlers de invitaciones */}
                 <NotificationDropdown
-                    alerts={alerts}
+                    notifications={notifications}
                     isRinging={isRinging}
                     onSelectAlert={openModal}
+                    onAcceptInvite={handleAcceptInvitation}
+                    onRejectInvite={handleRejectInvitation}
                 />
 
                 <div className="flex items-center gap-3 border-l border-white/5 pl-3 sm:pl-6">

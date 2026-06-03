@@ -1,192 +1,74 @@
 import { useState } from "react";
-
 import ProtectedPersonForm from "./ProtectedPersonForm";
-import InviteOptions from "./InviteOptions";
-import InviteLinkCard from "./InviteLinkCard";
-import { useNavigate } from "react-router-dom";
-
-import { createProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import { createProtectedPerson, type CreateProtectedPersonRequest } from "../../../infrastructure/api/protected-person-api";
+import { CheckCircle2 } from "lucide-react";
 
 interface Props {
-
     onClose: () => void;
-
     onSuccess: () => void;
-
 }
 
-function CreateProtectedPersonModal({
+function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSent, setIsSent] = useState(false);
 
-    onClose,
-    onSuccess
-
-}: Props) {
-
-    const navigate = useNavigate(); 
-
-    const [mode, setMode] =
-        useState<"manual" | "invite">("manual");
-
-    const [inviteLink, setInviteLink] =
-        useState("");
-
-    async function handleCreate(data: {
-        fullName: string;
-        relationshipType: string;
-        phone: string;
-        email: string;
-    }) {
-
+    // 🌟 Cambiado de 'any' a 'CreateProtectedPersonRequest'
+    async function handleCreate(formData: CreateProtectedPersonRequest) {
+        setIsLoading(true);
         try {
-
-            await createProtectedPerson({
-
-                ...data,
-
-                highRiskAlertsEnabled: true,
-
-                weeklySummaryEnabled: false,
-
-                notificationSensitivity: "MEDIUM"
-
-            });
-
+            await createProtectedPerson(formData);
             onSuccess();
-
-            onClose();
-
-            navigate('/protected-people');
-
+            setIsSent(true);
         } catch (error) {
-
-            console.error(error);
-
+            console.error("Error al procesar la solicitud:", error);
+            alert("Ocurrió un error al enviar la invitación.");
+        } finally {
+            setIsLoading(false);
         }
-
-    }
-
-    function generateInviteLink() {
-
-        const fakeLink =
-            `https://vera.care/invite/${crypto.randomUUID()}`;
-
-        setInviteLink(fakeLink);
-
     }
 
     return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0f172a] border border-[#1e293b] rounded-3xl p-6 md:p-8">
 
-        <div className="
-    fixed
-    inset-0
-    bg-black/70
-
-    flex
-    items-center
-    justify-center
-
-    p-4
-
-    z-50
-">
-
-            <div className="
-    w-full
-    max-w-4xl
-    max-h-[90vh]
-    overflow-y-auto
-
-    bg-[#0f172a]
-    border
-    border-[#1e293b]
-
-    rounded-3xl
-
-    p-6
-    md:p-8
-">
-
-                <div className="
-                    flex
-                    items-center
-                    justify-between
-                    mb-6
-                ">
-
-                    <h2 className="
-                        text-2xl
-                        font-bold
-                        text-white
-                    ">
-                        Añadir protegido
-                    </h2>
-
-                    <button
-                        onClick={onClose}
-                        className="
-                            text-slate-400
-                            hover:text-white
-                        "
-                    >
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-white">Invitar protegido</h2>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white cursor-pointer text-lg">
                         ✕
                     </button>
-
                 </div>
 
-                <InviteOptions
-                    selected={mode}
-                    onChange={setMode}
-                />
+                {isSent ? (
+                    <div className="flex flex-col items-center text-center py-12 px-4 gap-4 animate-fade-in">
+                        <CheckCircle2 className="w-16 h-16 text-emerald-500" />
+                        <h3 className="text-xl font-bold text-white mt-2">¡Invitación enviada con éxito!</h3>
+                        <p className="text-slate-400 text-sm max-w-md leading-relaxed">
+                            La solicitud fue depositada directamente en la bandeja de notificaciones del protegido en tiempo real. Podrás ver su estado en tu panel en cuanto sea aceptada.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition cursor-pointer"
+                        >
+                            Entendido
+                        </button>
+                    </div>
+                ) : (
+                    <div className={`mt-4 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}>
+                        {/* TypeScript validará automáticamente que el onSubmit reciba los datos correctos */}
+                        <ProtectedPersonForm onSubmit={handleCreate} />
 
-                {
-                    mode === "manual" ? (
-
-                        <ProtectedPersonForm
-                            onSubmit={handleCreate}
-                        />
-
-                    ) : (
-
-                        <div className="flex flex-col gap-5">
-
-                            {
-                                inviteLink ? (
-
-                                    <InviteLinkCard
-                                        inviteLink={inviteLink}
-                                        onClose={onClose}
-                                    />
-
-                                ) : (
-
-                                    <button
-                                        onClick={generateInviteLink}
-                                        className="
-                                            bg-blue-600
-                                            hover:bg-blue-700
-                                            rounded-xl
-                                            py-3
-                                            text-white
-                                            font-semibold
-                                        "
-                                    >
-                                        Generar enlace seguro
-                                    </button>
-
-                                )
-                            }
-
-                        </div>
-
-                    )
-                }
+                        {isLoading && (
+                            <p className="text-sm text-blue-400 font-medium text-center mt-4 animate-pulse">
+                                Enviando notificación en tiempo real a la app...
+                            </p>
+                        )}
+                    </div>
+                )}
 
             </div>
-
         </div>
-
     );
-
 }
 
 export default CreateProtectedPersonModal;
