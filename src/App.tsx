@@ -11,6 +11,7 @@ import {AnalysisPage} from "./features/analysis/views/AnalysisPage";
 import Persons from "./presentation/pages/persons/Persons.tsx";
 import PersonDetail from "./presentation/pages/persons/PersonDetail.tsx";
 import PersonConfiguration from "./presentation/pages/persons/PersonConfiguration.tsx";
+import ManualView from "./presentation/pages/manual/ManualView.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -83,6 +84,11 @@ function App() {
                 <Route
                     path="/settings"
                     element={<Settings />}
+                />
+
+                <Route 
+                    path="/manual" 
+                    element={<ManualView />} 
                 />
 
             </Routes>
