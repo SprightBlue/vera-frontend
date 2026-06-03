@@ -1,5 +1,9 @@
 import axios from "axios";
 
+// 1. Configuración dinámica de la API
+// En desarrollo usará localhost:8080. En Render usará la variable que le configures.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
 export interface CreateProtectedPersonRequest {
     fullName: string;
     relationshipType: string;
@@ -21,17 +25,14 @@ export interface ProtectedPerson {
     notificationSensitivity: string;
 }
 
-// Nueva interfaz para tipar el configData de la actualización sin 'any'
 export interface UpdateProtectedConfig {
     sensitivity: string;
     urgentMonitoring: boolean;
 }
 
-// Cambiado de 'any' a 'CreateProtectedPersonRequest'
 export async function createProtectedPerson(data: CreateProtectedPersonRequest): Promise<void> {
     const token = localStorage.getItem('vera_token');
 
-    // Mapeo semántico para que coincida con tus enums del backend
     let relacionTraducida = "Familiar";
     if (data.relationshipType === "TRUSTED_CONTACT") relacionTraducida = "Contacto de confianza";
     if (data.relationshipType === "PROFESSIONAL") relacionTraducida = "Profesional";
@@ -50,8 +51,8 @@ export async function createProtectedPerson(data: CreateProtectedPersonRequest):
         receiveAlertSummaries: data.weeklySummaryEnabled
     };
 
-    // Pega al endpoint real que procesa la invitación y emite el evento SSE
-    await axios.post('http://localhost:8080/api/v1/trust/invite', payload, {
+    // Cambiado a la URL dinámica usando plantillas de cadena (backticks)
+    await axios.post(`${API_BASE_URL}/api/v1/trust/invite`, payload, {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
@@ -59,7 +60,7 @@ export async function createProtectedPerson(data: CreateProtectedPersonRequest):
 export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
     const token = localStorage.getItem('vera_token');
     const response = await axios.get<ProtectedPerson[]>(
-        "http://localhost:8080/api/v1/trust/protected-people",
+        `${API_BASE_URL}/api/v1/trust/protected-people`,
         { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;
@@ -67,12 +68,11 @@ export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
 
 export async function deleteProtectedPerson(id: number): Promise<void> {
     const token = localStorage.getItem('vera_token');
-    await axios.delete(`http://localhost:8080/api/v1/trust/protected-people/${id}`, {
+    await axios.delete(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
 
-// Cambiado de 'any' a 'UpdateProtectedConfig'
 export async function updateProtectedPerson(id: number, configData: UpdateProtectedConfig): Promise<void> {
     const token = localStorage.getItem('vera_token');
 
@@ -80,13 +80,12 @@ export async function updateProtectedPerson(id: number, configData: UpdateProtec
     if (configData.sensitivity === "low" || configData.sensitivity === "LOW") sensibilidadTraducida = "BAJO";
     if (configData.sensitivity === "high" || configData.sensitivity === "HIGH") sensibilidadTraducida = "ALTO";
 
-    // Enviamos estrictamente las columnas que dejamos vivas en la base de datos
     const payload = {
         sensitivityLevel: sensibilidadTraducida,
-        notifyHighRisk: configData.urgentMonitoring // Mapea a notify_high_risk en tu DB
+        notifyHighRisk: configData.urgentMonitoring
     };
 
-    await axios.patch(`http://localhost:8080/api/v1/trust/protected-people/${id}`, payload, {
+    await axios.patch(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
