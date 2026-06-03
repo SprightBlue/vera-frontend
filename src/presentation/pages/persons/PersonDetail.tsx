@@ -1,9 +1,9 @@
 import { ArrowLeft, Heart, Link, Clock3, Settings, Activity, ShieldCheck, MapPin, Smartphone, Wifi, Building2, Mail, MessageSquare, Image, Bell, Info, BatteryCharging, CheckCircle2 } from "lucide-react";
-
 import { useParams, useNavigate } from "react-router-dom";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
+
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons } from "../../../infrastructure/api/protected-person-api";

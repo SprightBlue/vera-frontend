@@ -5,12 +5,14 @@ import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 import { Bell, ShieldAlert, MapPin, MessageSquare, ShieldCheck, Grid2X2 } from "lucide-react";
 import { getProtectedPersons, updateProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 
 function PersonConfiguration() {
 
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.state?.personId || {}; 
@@ -115,7 +117,7 @@ function PersonConfiguration() {
       {/* MAIN */}
       <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
         <Header
-          userName="Usuario"
+          userName={user?.fullName || "Usuario"}
           title="Personas que cuido"
           subtitle="Observa los detalles de cada persona a la que protejes"
         />

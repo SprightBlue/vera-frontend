@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Phone, Mail } from "lucide-react";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
-import { Phone, Mail } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 import { deleteProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 /* Utilizar cuando se haga la conexion con backend */
 //import { ProtectedPersonApi } from "../../../infrastructure/api/protected-person-api";
@@ -24,6 +25,7 @@ interface ProtectedPerson {
 
 function Persons() {
 
+  const { user } = useAuth();
   const [persons, setPersons] = useState<ProtectedPerson[]>([]);
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
@@ -70,7 +72,7 @@ function Persons() {
       <Sidebar />
       <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
         <Header
-          userName="Usuario"
+          userName={user?.fullName ?? "Usuario"}
           title="Personas que cuido"
           subtitle="Observa los detalles de cada persona a la que protejes"
         />
