@@ -6,13 +6,15 @@ import Register from "./presentation/pages/Register";
 import Dashboard from "./presentation/pages/dashboard/Dashboard";
 import Settings from "./presentation/pages/settings/Settings";
 import AlertsView from "./components/AlertsView";
-import {AnalysisPage} from "./features/analysis/views/AnalysisPage";
+import { AnalysisPage } from "./features/analysis/views/AnalysisPage";
 import Persons from "./presentation/pages/persons/Persons.tsx";
 import PersonDetail from "./presentation/pages/persons/PersonDetail.tsx";
 import PersonConfiguration from "./presentation/pages/persons/PersonConfiguration.tsx";
 import ManualView from "./presentation/pages/manual/ManualView.tsx";
 import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
 import Contacts from "./presentation/pages/contacts/Contacts";
+import ForgotPassword from "./presentation/pages/ForgotPassword";
+import ResetPassword from "./presentation/pages/ResetPassword";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -47,7 +49,7 @@ function App() {
 
                 <Route
                     path="/analysis"
-                    element={<AnalysisPage/>}
+                    element={<AnalysisPage />}
                 />
 
                 {/* Privadas */}
@@ -91,9 +93,19 @@ function App() {
                     element={<Settings />}
                 />
 
-                <Route 
-                    path="/manual" 
-                    element={<ManualView />} 
+                <Route
+                    path="/manual"
+                    element={<ManualView />}
+                />
+
+                <Route
+                    path="/forgot-password"
+                    element={<ForgotPassword />}
+                />
+
+                <Route
+                    path="/reset-password"
+                    element={<ResetPassword />}
                 />
 
             </Routes>

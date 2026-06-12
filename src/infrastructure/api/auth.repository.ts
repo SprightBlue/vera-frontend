@@ -41,4 +41,25 @@ export const authRepository = {
     );
     return response.data;
   },
+
+async forgotPassword(email: string): Promise<void> {
+  await apiClient.post(
+    '/api/v1/auth/forgot-password',
+    { email }
+  );
+},
+
+async resetPassword(
+  token: string,
+  newPassword: string
+): Promise<void> {
+  await apiClient.post(
+    '/api/v1/auth/reset-password',
+    {
+      token,
+      newPassword
+    }
+  );
+},
+
 };
