@@ -26,13 +26,34 @@ apiClient.interceptors.request.use((config) => {
 
 export const authRepository = {
 
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>(
+async login(
+  credentials: LoginRequest
+): Promise<AuthResponse> {
+
+  const response =
+    await apiClient.post<AuthResponse>(
       '/api/v1/auth/login',
       credentials
     );
-    return response.data;
-  },
+
+  return response.data;
+},
+
+
+async googleLogin(
+  credential: string
+): Promise<AuthResponse> {
+
+  const response =
+    await apiClient.post<AuthResponse>(
+      '/api/v1/auth/google',
+      {
+        credential
+      }
+    );
+
+  return response.data;
+},
 
   async register(data: RegisterRequest): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>(
