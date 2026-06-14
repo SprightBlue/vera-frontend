@@ -1,23 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-    fetchActiveAlerts,
-    fetchPendingInvitations,
-    solveAlert,
-    acceptInvitationById,
-    rejectInvitationById,
+    fetchAllNotifications,
+    acceptInvitation,
+    rejectInvitation,
+    deleteNotification,
+    markAllRead,
     type AppNotification,
-    type RiskAlertResponse
+    type InvitationPayload
 } from "../api/notifications";
 
-export function useNotifications(apiUrl: string) {
+export function useNotifications() {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [isRinging, setIsRinging] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    const [selectedAlert, setSelectedAlert] = useState<RiskAlertResponse | null>(null);
-    const [isModalRendered, setIsModalRendered] = useState(false);
-    const [animateModalIn, setAnimateModalIn] = useState(false);
-
-    // 🌟 Mover triggerBell arriba envuelto en useCallback evita problemas de referencia en el useEffect
     const triggerBell = useCallback(() => {
         setIsRinging(true);
         setTimeout(() => setIsRinging(false), 2000);
@@ -26,113 +22,78 @@ export function useNotifications(apiUrl: string) {
     useEffect(() => {
         const loadInitialData = async () => {
             try {
-                const [alertsData, invitationsData] = await Promise.all([
-                    fetchActiveAlerts(),
-                    fetchPendingInvitations()
-                ]);
-
-                const formattedAlerts: AppNotification[] = alertsData.map(a => ({ type: 'ALERT', data: a }));
-                const formattedInvitations: AppNotification[] = invitationsData.map(i => ({ type: 'INVITATION', data: i }));
-
-                setNotifications([...formattedAlerts, ...formattedInvitations]);
-                console.log("🟢 Bandeja de notificaciones sincronizada.");
+                const data = await fetchAllNotifications();
+                setNotifications(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error("🔴 Error inicializando la bandeja:", error);
+                console.error("Error al sincronizar notificaciones:", error);
+                setNotifications([]);
             }
         };
 
-        loadInitialData();
+        void loadInitialData();
 
         const token = localStorage.getItem('vera_token');
         if (!token) return;
 
-        console.log("📡 Conectando al canal unificado SSE...");
-        const eventSource = new EventSource(`${apiUrl}/api/v1/risk-alerts/stream?token=${token}`);
+        const eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/api/v1/notifications/stream?token=${token}`);
 
-        // 🌟 Tipamos explícitamente el 'event' como un evento nativo de tipo MessageEvent de TS
-        const handleRiskAlert = (event: Event) => {
-            const messageEvent = event as MessageEvent;
-            console.log("🔥 ALERTA RECIBIDA:", messageEvent.data);
-            const data = JSON.parse(messageEvent.data);
-            setNotifications(prev => [{ type: 'ALERT', data }, ...prev]);
+        eventSource.addEventListener("NEW_NOTIFICATION", (e: MessageEvent) => {
+            const data: AppNotification = JSON.parse(e.data);
+            setNotifications(prev => [data, ...(Array.isArray(prev) ? prev : [])]);
             triggerBell();
-        };
+        });
 
-        const handleTrustInvitation = (event: Event) => {
-            const messageEvent = event as MessageEvent;
-            console.log("✉️ INVITACIÓN RECIBIDA:", messageEvent.data);
-            const data = JSON.parse(messageEvent.data);
-            setNotifications(prev => [{ type: 'INVITATION', data }, ...prev]);
-            triggerBell();
-        };
+        eventSource.addEventListener("NOTIFICATION_DELETED", (e: MessageEvent) => {
+            const { id } = JSON.parse(e.data);
+            setNotifications(prev => (Array.isArray(prev) ? prev.filter(n => n.id !== id) : []));
+        });
 
-        eventSource.addEventListener("RISK_ALERT", handleRiskAlert);
-        eventSource.addEventListener("TRUST_INVITATION", handleTrustInvitation);
+        return () => eventSource.close();
+    }, [triggerBell]);
 
-        eventSource.onerror = () => eventSource.close();
-
-        return () => {
-            eventSource.removeEventListener("RISK_ALERT", handleRiskAlert);
-            eventSource.removeEventListener("TRUST_INVITATION", handleTrustInvitation);
-            eventSource.close();
-        };
-    }, [apiUrl, triggerBell]); // Se agrega triggerBell como dependencia segura
-
-    const openModal = (alert: RiskAlertResponse) => {
-        setSelectedAlert(alert);
-        setIsModalRendered(true);
-        setTimeout(() => setAnimateModalIn(true), 10);
-    };
-
-    const closeModal = () => {
-        setAnimateModalIn(false);
-        setTimeout(() => {
-            setIsModalRendered(false);
-            setSelectedAlert(null);
-        }, 300);
-    };
-
-    const handleSolveAlert = async (id: string) => {
+    const handleMarkAllRead = async () => {
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
         try {
-            await solveAlert(id);
-            setNotifications(prev => prev.filter(n => !(n.type === 'ALERT' && n.data.alertId === id)));
-            closeModal();
+            await markAllRead();
         } catch (error) {
-            console.error(error);
-            alert("No se pudo resolver la alerta");
+            console.error("Error al marcar como leídas:", error);
         }
     };
 
-    const handleAcceptInvitation = async (id: number) => {
-        try {
-            await acceptInvitationById(id);
-            setNotifications(prev => prev.filter(n => !(n.type === 'INVITATION' && n.data.id === id)));
-        } catch (error) {
-            console.error(error);
-            alert("Error al aceptar la invitación");
-        }
-    };
+    const handleAction = async (notif: AppNotification, action: 'ACCEPT' | 'REJECT' | 'DELETE') => {
+        if (isProcessing) return;
+        setIsProcessing(true);
 
-    const handleRejectInvitation = async (id: number) => {
         try {
-            await rejectInvitationById(id);
-            setNotifications(prev => prev.filter(n => !(n.type === 'INVITATION' && n.data.id === id)));
-        } catch (error) {
-            console.error(error);
-            alert("Error al rechazar la invitación");
+            if (action === 'DELETE') {
+                await deleteNotification(notif.id);
+                setNotifications(prev => (Array.isArray(prev) ? prev.filter(n => n.id !== notif.id) : []));
+            } else if (notif.type === 'INVITATION') {
+                const p = notif.payload as InvitationPayload;
+                if (action === 'ACCEPT') {
+                    await acceptInvitation(p.id);
+                } else if (action === 'REJECT') {
+                    await rejectInvitation(p.id);
+                }
+                setNotifications(prev =>
+                    Array.isArray(prev)
+                        ? prev.map(n => n.id === notif.id ? { ...n, type: action === 'ACCEPT' ? 'INVITATION_ACCEPTED' : 'INVITATION_REJECTED', isRead: true } : n)
+                        : []
+                );
+            }
+        } catch (e) {
+            console.error("Error ejecutando acción:", e);
+        } finally {
+            setIsProcessing(false);
         }
     };
 
     return {
-        notifications,
+        notifications: Array.isArray(notifications) ? notifications : [],
+        unreadCount: (Array.isArray(notifications) ? notifications : []).filter(n => !n.isRead).length,
         isRinging,
-        selectedAlert,
-        isModalRendered,
-        animateModalIn,
-        openModal,
-        closeModal,
-        handleSolveAlert,
-        handleAcceptInvitation,
-        handleRejectInvitation
+        isProcessing,
+        handleMarkAllRead,
+        handleAction
     };
 }
