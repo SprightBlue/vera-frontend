@@ -33,6 +33,7 @@ export default function Register() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -70,6 +71,13 @@ export default function Register() {
       return;
     }
 
+
+    if (!acceptedTerms) {
+      setError(
+        'Debes aceptar los términos y condiciones'
+      );
+      return;
+    }
 
     setLoading(true);
 
