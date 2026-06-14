@@ -1,5 +1,5 @@
-import { Search, AlertCircle } from 'lucide-react';
-import type { AnalysisResultDto } from '../types/analysis.types';
+import { Search, AlertCircle, ShieldAlert, FileText, CheckCircle2, AlertTriangle, Lightbulb, Clock, Globe } from 'lucide-react';
+import type { AnalysisResultDto } from '../api/analyzeMessage';
 import { getRiskConfig } from '../utils/riskConfig';
 
 type Props = {
@@ -14,11 +14,9 @@ export function AnalysisResult({ result, error, showPlaceholder = true }: Props)
         return (
             <div className="analysis-appear flex flex-col items-center justify-center text-center py-14 bg-transparent w-full select-none">
                 <AlertCircle className="text-red-500/80 h-14 w-14 mb-4 stroke-[1.5]" />
-
                 <h3 className="text-xl font-semibold text-slate-200 font-montserrat mb-1">
                     No se pudo completar el análisis
                 </h3>
-
                 <p className="font-inter text-lg text-slate-500 max-w-sm leading-relaxed">
                     Ocurrió un error al procesar el análisis. Por favor, intente nuevamente más tarde.
                 </p>
@@ -32,140 +30,90 @@ export function AnalysisResult({ result, error, showPlaceholder = true }: Props)
         return (
             <div className="analysis-empty-appear w-full">
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/20 p-10 text-center">
-
                     <Search className="text-slate-600 h-14 w-14 mb-4 mx-auto stroke-[1.5]" />
-
                     <h3 className="text-2xl font-semibold text-slate-300 font-montserrat mb-3">
-                        Analizá un mensaje sospechoso
+                        Analizá un archivo o mensaje sospechoso
                     </h3>
-
                     <p className="font-inter text-slate-500 max-w-md mx-auto leading-relaxed">
-                        Pegá un SMS, correo electrónico o enlace para detectar posibles intentos de phishing o fraude.
+                        Subí capturas, audios, documentos o pegá texto para detectar posibles intentos de phishing, fraudes o malware.
                     </p>
-
                 </div>
             </div>
         );
     }
 
     const config = getRiskConfig(result.riskLevel);
+    const percentage = result.riskPercentage ?? 0;
 
     const radius = 50;
     const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset =
-        circumference - (config.percentage / 100) * circumference;
+    const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     return (
-        <section className="analysis-appear w-full mb-8">
+        <section className="analysis-appear w-full mb-8 space-y-6">
 
-            {/* Banner superior */}
-
-            <div
-                className={`
-                    mb-6
-                    rounded-xl
-                    border
-                    p-5
-                    ${
-                        config.percentage >= 70
-                            ? 'border-red-500/20 bg-red-500/10'
-                            : config.percentage >= 40
-                            ? 'border-yellow-500/20 bg-yellow-500/10'
-                            : 'border-green-500/20 bg-green-500/10'
-                    }
-                `}
-            >
-                <h3
-                    className={`
-                        text-lg
-                        font-semibold
-                        ${
-                            config.percentage >= 70
-                                ? 'text-red-400'
-                                : config.percentage >= 40
-                                ? 'text-yellow-400'
-                                : 'text-green-400'
-                        }
-                    `}
-                >
-                    {config.percentage >= 70
-                        ? '⚠ Riesgo Alto Detectado'
-                        : config.percentage >= 40
-                        ? '⚠ Actividad Sospechosa Detectada'
-                        : '✅ Mensaje aparentemente seguro'}
-                </h3>
-
-                <p className="mt-1 text-slate-400">
-                    Resultado generado por el sistema de análisis de Vera.
-                </p>
+            <div className={`rounded-xl border p-5 flex items-start gap-4 ${config.bgColor} ${config.borderColor}`}>
+                <div className="mt-0.5">
+                    {percentage >= 70 ? (
+                        <ShieldAlert className="h-6 w-6 text-red-400" />
+                    ) : percentage >= 40 ? (
+                        <AlertTriangle className="h-6 w-6 text-yellow-400" />
+                    ) : (
+                        <CheckCircle2 className="h-6 w-6 text-green-400" />
+                    )}
+                </div>
+                <div>
+                    <h3 className={`text-lg font-semibold ${config.textColor}`}>
+                        {result.title || 'Análisis Completado'}
+                    </h3>
+                    <p className="mt-0.5 text-sm text-slate-400">
+                        {percentage >= 70
+                            ? 'Peligro inminente detectado. Te recomendamos no interactuar con el remitente ni descargar elementos.'
+                            : percentage >= 40
+                                ? 'Se encontraron discrepancias o patrones irregulares. Procedé con cuidado.'
+                                : 'No se detectaron amenazas graves bajo los criterios estándares de seguridad.'}
+                    </p>
+                </div>
             </div>
 
-{/* RESUMEN DE DETECCIÓN */}
-<div className="grid md:grid-cols-3 gap-4 mb-6">
-
-    <div className="rounded-xl border border-slate-800 bg-slate-900/20 p-5">
-        <p className="text-slate-400 text-sm">
-            Nivel de riesgo
-        </p>
-
-        <p className={`text-3xl font-bold mt-2 ${config.textColor}`}>
-            {config.label}
-        </p>
-    </div>
-
-    <div className="rounded-xl border border-slate-800 bg-slate-900/20 p-5">
-        <p className="text-slate-400 text-sm">
-            Patrones detectados
-        </p>
-
-        <p className="text-3xl font-bold text-red-400 mt-2">
-            {result.suspiciousPatterns ? '1+' : '0'}
-        </p>
-    </div>
-
-    <div className="rounded-xl border border-slate-800 bg-slate-900/20 p-5">
-        <p className="text-slate-400 text-sm">
-            Fecha del análisis
-        </p>
-
-        <p className="text-lg font-semibold text-white mt-2">
-            {new Date(result.createdAt).toLocaleDateString()}
-        </p>
-    </div>
-
-</div>
+            <div className="grid grid-cols-3 gap-4">
+                <div className="rounded-xl border border-slate-800 bg-slate-900/20 p-4">
+                    <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Origen del Análisis</p>
+                    <p className="text-sm font-bold text-slate-200 mt-1 flex items-center gap-1.5">
+                        <Globe className="h-4 w-4 text-slate-500" /> Entorno {result.source}
+                    </p>
+                </div>
+                <div className="rounded-xl border border-slate-800 bg-slate-900/20 p-4">
+                    <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Tipo de Amenaza</p>
+                    <p className="text-sm font-bold text-blue-400 mt-1 truncate">
+                        {result.riskType || 'No identificado'}
+                    </p>
+                </div>
+                <div className="rounded-xl border border-slate-800 bg-slate-900/20 p-4">
+                    <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Fecha de Ejecución</p>
+                    <p className="text-sm font-medium text-slate-400 mt-1 flex items-center gap-1">
+                        <Clock className="h-3.5 w-3.5 text-slate-500" />
+                        {new Date(result.createdAt).toLocaleDateString()}
+                    </p>
+                </div>
+            </div>
 
             <div className="grid gap-6 lg:grid-cols-12 items-stretch">
 
-                {/* Riesgo */}
-
-                <div className="lg:col-span-4 rounded-xl border border-slate-900 bg-slate-900/20 p-6 flex flex-col items-center justify-center min-h-55 backdrop-blur-sm">
-
-                    <p className="text-lg font-semibold tracking-wide text-slate-500 w-full text-left font-montserrat self-start mb-6">
-                        Nivel de riesgo
+                <div className="lg:col-span-4 rounded-xl border border-slate-900 bg-slate-900/20 p-6 flex flex-col items-center justify-center backdrop-blur-sm">
+                    <p className="text-sm font-semibold uppercase tracking-wider text-slate-500 w-full text-left font-montserrat mb-6">
+                        Porcentaje de Riesgo
                     </p>
 
-                    <div className="relative flex items-center justify-center h-28 w-28 my-auto">
-
-                        <svg
-                            className="w-full h-full transform -rotate-90"
-                            viewBox="0 0 116 116"
-                        >
-                            <circle
-                                cx="58"
-                                cy="58"
-                                r={radius}
-                                className="stroke-slate-800/60"
-                                strokeWidth="8"
-                                fill="transparent"
-                            />
-
+                    <div className="relative flex items-center justify-center h-32 w-32 my-auto">
+                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 116 116">
+                            <circle cx="58" cy="58" r={radius} className="stroke-slate-800/50" strokeWidth="9" fill="transparent" />
                             <circle
                                 cx="58"
                                 cy="58"
                                 r={radius}
                                 className={`transition-all duration-1000 ease-out ${config.strokeColor}`}
-                                strokeWidth="8"
+                                strokeWidth="9"
                                 fill="transparent"
                                 strokeDasharray={circumference}
                                 strokeDashoffset={strokeDashoffset}
@@ -174,53 +122,45 @@ export function AnalysisResult({ result, error, showPlaceholder = true }: Props)
                         </svg>
 
                         <div className="absolute flex flex-col items-center justify-center">
-                            <span className="text-xl font-extrabold text-white font-inter">
-                                {config.percentage}%
+                            <span className="text-2xl font-black text-white font-inter">
+                                {percentage}%
                             </span>
-
-                            <span
-                                className={`text-sm font-bold uppercase tracking-wider ${config.textColor}`}
-                            >
+                            <span className={`text-xs font-bold uppercase tracking-widest mt-0.5 ${config.textColor}`}>
                                 {config.label}
                             </span>
                         </div>
                     </div>
                 </div>
 
-                
-
-                {/* Patrones y recomendaciones */}
-
-                <div className="flex flex-col gap-4 lg:col-span-8 justify-between">
-
-                    <div className="flex-1 rounded-xl border border-slate-900 bg-slate-900/20 p-5 min-h-25 flex flex-col justify-start backdrop-blur-sm">
-
-                        <h4
-                            className={`text-lg font-semibold font-montserrat mb-3 ${config.textColor}`}
-                        >
-                            Patrones detectados
-                        </h4>
-
-                        <p className="text-lg text-slate-200 font-inter leading-relaxed break-words pl-5 border-l border-slate-800">
-                            {result.suspiciousPatterns ||
-                                'No se identificaron patrones de riesgo explícitos en el contenido.'}
-                        </p>
-
+                <div className="lg:col-span-8 rounded-xl border border-slate-900 bg-slate-900/20 p-6 flex flex-col justify-start backdrop-blur-sm">
+                    <div className="flex items-center gap-2 text-slate-400 font-semibold text-sm uppercase tracking-wider mb-3">
+                        <FileText className="h-4 w-4 text-slate-500" />
+                        <h4>Resumen del Contenido Analizado</h4>
                     </div>
+                    <p className="text-base text-slate-300 font-inter leading-relaxed bg-slate-950/40 p-4 rounded-lg border border-slate-800/60 grow">
+                        {result.contentSummary || 'No se pudo generar un resumen del contenido procesado.'}
+                    </p>
+                </div>
+            </div>
 
-                    <div className="flex-1 rounded-xl border border-slate-900 bg-slate-900/20 p-5 min-h-25 flex flex-col justify-start backdrop-blur-sm">
+            <div className="grid grid-cols-2 gap-6">
 
-                        <h4 className="text-lg font-semibold text-primary font-montserrat mb-3">
-                            Recomendaciones de seguridad
-                        </h4>
+                <div className="rounded-xl border border-slate-900 bg-slate-900/20 p-5 flex flex-col backdrop-blur-sm">
+                    <h4 className={`text-base font-bold font-montserrat mb-3 flex items-center gap-2 ${config.textColor}`}>
+                        <AlertTriangle className="h-4 w-4 text-yellow-400" /> Patrones e Indicadores Obtenidos
+                    </h4>
+                    <p className="text-sm text-slate-300 font-inter leading-relaxed pl-4 border-l-2 border-slate-800 grow">
+                        {result.suspiciousPatterns}
+                    </p>
+                </div>
 
-                        <p className="text-lg text-slate-300 font-inter leading-relaxed break-words pl-5 border-l border-slate-800">
-                            {result.recommendation ||
-                                'Proceda con precaución estándar del sistema.'}
-                        </p>
-
-                    </div>
-
+                <div className="rounded-xl border border-slate-900 bg-slate-900/20 p-5 flex flex-col backdrop-blur-sm">
+                    <h4 className="text-base font-bold font-montserrat mb-3 flex items-center gap-2 text-blue-400">
+                        <Lightbulb className="h-4 w-4 text-blue-400" /> Acciones Sugeridas
+                    </h4>
+                    <p className="text-sm text-slate-300 font-inter leading-relaxed pl-4 border-l-2 border-slate-800 grow">
+                        {result.recommendation || 'No se requieren acciones drásticas. Mantenga sus filtros de seguridad activos.'}
+                    </p>
                 </div>
 
             </div>

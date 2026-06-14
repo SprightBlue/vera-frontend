@@ -1,7 +1,8 @@
 export interface RiskVisuals {
-    percentage: number;
     strokeColor: string;
     textColor: string;
+    bgColor: string;
+    borderColor: string;
     label: string;
 }
 
@@ -10,32 +11,36 @@ export function getRiskConfig(riskLevel?: string): RiskVisuals {
         case 'BAJO':
         case 'LOW':
             return {
-                percentage: 10,
-                strokeColor: 'stroke-[var(--color-risk-low)]',
-                textColor: 'text-[var(--color-risk-low)]',
-                label: 'Bajo',
+                strokeColor: 'stroke-green-500',
+                textColor: 'text-green-400',
+                bgColor: 'bg-green-500/10',
+                borderColor: 'border-green-500/20',
+                label: 'Riesgo Bajo',
             };
         case 'MEDIO':
         case 'MEDIUM':
             return {
-                percentage: 50,
-                strokeColor: 'stroke-[var(--color-risk-medium)]',
-                textColor: 'text-[var(--color-risk-medium)]',
-                label: 'Medio',
+                strokeColor: 'stroke-yellow-500',
+                textColor: 'text-yellow-400',
+                bgColor: 'bg-yellow-500/10',
+                borderColor: 'border-yellow-500/20',
+                label: 'Riesgo Medio',
             };
         case 'ALTO':
         case 'HIGH':
             return {
-                percentage: 100,
-                strokeColor: 'stroke-[var(--color-risk-high)]',
-                textColor: 'text-[var(--color-risk-high)]',
-                label: 'Alto',
+                strokeColor: 'stroke-red-500',
+                textColor: 'text-red-400',
+                bgColor: 'bg-red-500/10',
+                borderColor: 'border-red-500/20',
+                label: 'Riesgo Alto',
             };
         default:
             return {
-                percentage: 0,
-                strokeColor: 'stroke-[var(--color-risk-undefined)]',
-                textColor: 'text-[var(--color-risk-undefined)]',
+                strokeColor: 'stroke-slate-700',
+                textColor: 'text-slate-400',
+                bgColor: 'bg-slate-900/40',
+                borderColor: 'border-slate-800',
                 label: 'Sin definir',
             };
     }
