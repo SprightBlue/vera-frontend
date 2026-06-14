@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Bell } from "lucide-react";
-import { type AppNotification } from "../api/notifications";
+import { type AppNotification } from "../api/notifications.ts";
 import { NotificationItem } from "./NotificationItem";
 
 interface DropdownProps {

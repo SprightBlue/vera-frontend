@@ -1,4 +1,4 @@
-import { type AppNotification } from "../api/notifications";
+import { type AppNotification } from "../api/notifications.ts";
 
 interface NotificationModalProps {
     pendingAction: {

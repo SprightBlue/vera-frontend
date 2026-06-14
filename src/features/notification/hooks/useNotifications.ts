@@ -7,7 +7,7 @@ import {
     markAllRead,
     type AppNotification,
     type InvitationPayload
-} from "../api/notifications";
+} from "../api/notifications.ts";
 
 export function useNotifications() {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);

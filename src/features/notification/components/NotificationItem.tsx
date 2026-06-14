@@ -1,5 +1,5 @@
 import { ShieldAlert, UserPlus, Info, Check, X, ShieldCheck, Trash2 } from "lucide-react";
-import { type AppNotification } from "../api/notifications";
+import { type AppNotification } from "../api/notifications.ts";
 
 interface ItemProps {
     notif: AppNotification;
