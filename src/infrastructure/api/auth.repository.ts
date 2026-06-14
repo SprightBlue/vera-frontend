@@ -62,4 +62,9 @@ async resetPassword(
   );
 },
 
+verifyEmail: async (token: string) => {
+    const response = await apiClient.get(`/auth/verify?token=${token}`);
+    return response.data;
+  },
+
 };
