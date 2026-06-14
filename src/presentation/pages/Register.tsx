@@ -33,6 +33,7 @@ export default function Register() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -44,6 +45,7 @@ export default function Register() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -63,13 +65,21 @@ export default function Register() {
       return;
     }
 
+    if (!acceptedTerms) {
+      setError(
+        'Debes aceptar los términos y condiciones'
+      );
+      return;
+    }
+
     setLoading(true);
 
     try {
       const data = await authRepository.register({
         fullName: form.fullName,
         email: form.email,
-        password: form.password
+        password: form.password,
+        acceptedTerms
       });
 
       login(data);
@@ -171,9 +181,22 @@ export default function Register() {
             />
 
             <label className="flex items-start gap-3 text-sm text-gray-400">
-              <input type="checkbox" className="mt-1" />
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={acceptedTerms}
+                onChange={(e) =>
+                  setAcceptedTerms(e.target.checked)
+                }
+              />
               <span>
-                Acepto los términos y condiciones
+                Acepto los{' '}
+                <Link
+                  to="/terms"
+                  className="text-blue-500 underline"
+                >
+                  términos y condiciones
+                </Link>
               </span>
             </label>
 
