@@ -84,7 +84,7 @@ async resetPassword(
 },
 
 verifyEmail: async (token: string) => {
-    const response = await apiClient.get(`/auth/verify?token=${token}`);
+    const response = await apiClient.get(`/api/v1/auth/verify?token=${token}`);
     return response.data;
   },
 

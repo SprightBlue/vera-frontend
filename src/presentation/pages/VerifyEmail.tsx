@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { authRepository } from '../../infrastructure/api/auth.repository';
 import veraLogo from '../../assets/Isologo_Vera.png';
@@ -10,13 +10,19 @@ export default function VerifyEmail() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Verificando tu cuenta...');
 
+  const hasAttempted = useRef(false);
+
   useEffect(() => {
+    if (!token) {
+      setStatus('error');
+      setMessage('No se encontró ningún token de verificación.');
+      return;
+    }
+
     const verify = async () => {
-      if (!token) {
-        setStatus('error');
-        setMessage('No se encontró ningún token de verificación.');
-        return;
-      }
+      if (hasAttempted.current) return;
+      
+      hasAttempted.current = true;
 
       try {
         await authRepository.verifyEmail(token);
@@ -24,7 +30,7 @@ export default function VerifyEmail() {
         setMessage('¡Cuenta verificada con éxito! Ya podés acceder a VERA.');
       } catch (error: any) {
         setStatus('error');
-        setMessage(error.response?.data || 'El enlace es inválido o ya expiró.');
+        setMessage('El enlace es inválido o ya expiró.');
       }
     };
 
