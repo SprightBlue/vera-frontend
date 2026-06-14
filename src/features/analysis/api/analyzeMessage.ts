@@ -1,26 +1,48 @@
-import type { AnalysisResultDto, AnalyzeRequestDto } from '../types/analysis.types';
+export interface AnalyzeRequestDto {
+    text?: string;
+    file?: File | null;
+    source: string;
+}
+
+export interface AnalysisResultDto {
+    id: string;
+    createdAt: string;
+    title: string;
+    source: string;
+    contentSummary: string;
+    riskType: string;
+    riskLevel: string;
+    riskPercentage: number;
+    suspiciousPatterns: string;
+    recommendation: string;
+}
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-const ANALYSIS_ENDPOINT = '/api/v1/analysis/message';
+const ANALYSIS_ENDPOINT = '/api/v1/analysis';
 
 export async function analyzeMessage(payload: AnalyzeRequestDto): Promise<AnalysisResultDto> {
-    // 1. Recuperamos el token del almacenamiento local
     const token = localStorage.getItem('vera_token');
 
-    // 2. Preparamos las cabeceras básicas
-    const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-    };
+    const headers: Record<string, string> = {};
 
-    // 3. Si el token existe, lo inyectamos con el formato Bearer que espera Spring Security
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
+    const formData = new FormData();
+
+    if (payload.text) {
+        formData.append('text', payload.text);
+    }
+    if (payload.file) {
+        formData.append('file', payload.file);
+    }
+    formData.append('source', payload.source);
+
     const response = await fetch(`${API_URL}${ANALYSIS_ENDPOINT}`, {
         method: 'POST',
-        headers: headers, // 🔒 Ahora viaja seguro
-        body: JSON.stringify(payload),
+        headers: headers,
+        body: formData,
     });
 
     if (!response.ok) {
@@ -28,5 +50,5 @@ export async function analyzeMessage(payload: AnalyzeRequestDto): Promise<Analys
         throw new Error(`Error en el análisis (${response.status}): ${errorText}`.trim());
     }
 
-    return await response.json() as Promise<AnalysisResultDto>;
+    return await response.json() as AnalysisResultDto;
 }

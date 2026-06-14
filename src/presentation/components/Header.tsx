@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../../features/notification/hooks/useNotifications";
 import { NotificationDropdown } from "../../features/notification/components/NotificationDropdown";
-import { NotificationModal } from "../../features/notification/components/NotificationModal"; // 💡 Importamos el modal
-import { type AppNotification } from "../../features/notification/api/notifications";
+import { NotificationModal } from "../../features/notification/components/NotificationModal";
+import { type AppNotification } from "../../features/notification/api/notifications.ts";
 
 interface HeaderProps {
     userName?: string;
@@ -15,10 +15,9 @@ interface HeaderProps {
 function Header({ userName = "Usuario", userRole = "Protector", title, subtitle }: HeaderProps) {
     const navigate = useNavigate();
 
-    const displayTitle = title ?? `Bienvenido, ${userName} 👋`;
+    const displayTitle = title ?? `Bienvenido, ${userName}`;
     const displaySubtitle = subtitle ?? "Aquí tienes el resumen del bienestar de tus protegidos.";
 
-    // Traemos todo lo necesario del Hook de dominio de notificaciones
     const { notifications, isRinging, isProcessing, handleMarkAllRead, handleAction } = useNotifications();
 
     const [pendingAction, setPendingAction] = useState<{
@@ -60,14 +59,12 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
                 </div>
             </header>
 
-            {/* 💡 LLAMADO AL MODAL DESACOPLADO: Posicionado fuera del header y conectado al hook */}
             <NotificationModal
                 pendingAction={pendingAction}
                 isProcessing={isProcessing}
                 onClose={() => setPendingAction(null)}
                 onConfirm={async () => {
                     if (pendingAction) {
-                        // Ejecuta la llamada a la API a través de la lógica del hook
                         await handleAction(pendingAction.notif, pendingAction.type);
                         setPendingAction(null);
                     }
