@@ -15,6 +15,7 @@ import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
 import Contacts from "./presentation/pages/contacts/Contacts";
 import ForgotPassword from "./presentation/pages/ForgotPassword";
 import ResetPassword from "./presentation/pages/ResetPassword";
+import VerifyEmail from "./presentation/pages/VerifyEmail.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -107,6 +108,10 @@ function App() {
                     path="/reset-password"
                     element={<ResetPassword />}
                 />
+
+                <Route 
+                    path="/verify-email" 
+                    element={<VerifyEmail />} />
 
             </Routes>
 
