@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { authRepository } from '../../infrastructure/api/auth.repository';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext'; // Ya no lo necesitamos acá
 import veraLogo from '../../assets/Isologo_Vera.png';
 
 const ShieldIcon = () => (
@@ -31,7 +31,6 @@ const CheckIcon = () => (
 
 export default function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
 
 
   const [form, setForm] = useState({
@@ -43,6 +42,10 @@ export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  
+  // NUEVO: Estado para los términos y condiciones
+  const [acceptTerms, setAcceptTerms] = useState(false); 
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -72,25 +75,27 @@ export default function Register() {
     }
 
 
-    if (!acceptedTerms) {
-      setError(
-        'Debes aceptar los términos y condiciones'
-      );
+    // NUEVO: Validación del checkbox
+    if (!acceptTerms) {
+      setError('Debes aceptar los términos y condiciones para continuar.');
       return;
     }
 
     setLoading(true);
 
     try {
-      const data = await authRepository.register({
+      // Registramos al usuario (El backend ahora manda el mail y devuelve token null)
+      await authRepository.register({
         fullName: form.fullName,
         email: form.email,
         password: form.password,
         acceptedTerms
       });
 
-      login(data);
-      navigate('/dashboard');
+      // Le avisamos al usuario y lo mandamos al login a esperar
+      alert('¡Cuenta creada! Por favor, revisá tu correo electrónico para verificar tu cuenta antes de iniciar sesión.');
+      navigate('/login');
+      
     } catch {
       setError('No se pudo crear la cuenta');
     } finally {
@@ -187,14 +192,12 @@ export default function Register() {
               setShow={setShowConfirm}
             />
 
-            <label className="flex items-start gap-3 text-sm text-gray-400">
-              <input
-                type="checkbox"
-                className="mt-1"
-                checked={acceptedTerms}
-                onChange={(e) =>
-                  setAcceptedTerms(e.target.checked)
-                }
+            <label className="flex items-start gap-3 text-sm text-gray-400 cursor-pointer">
+              <input 
+                type="checkbox" 
+                className="mt-1 cursor-pointer" 
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
               />
               <span>
                 Acepto los{' '}
@@ -254,7 +257,7 @@ function Input({ label, ...props }: any) {
       <label className="block mb-2 font-medium">{label}</label>
       <input
         {...props}
-        className="w-full h-14 rounded-2xl px-5 bg-[#12141C] border border-white/10"
+        className="w-full h-14 rounded-2xl px-5 bg-[#12141C] border border-white/10 focus:outline-none focus:border-blue-500 transition-colors"
       />
     </div>
   );
@@ -269,13 +272,13 @@ function PasswordInput({ label, show, setShow, ...props }: any) {
         <input
           {...props}
           type={show ? 'text' : 'password'}
-          className="w-full h-14 rounded-2xl px-5 pr-14 bg-[#12141C] border border-white/10"
+          className="w-full h-14 rounded-2xl px-5 pr-14 bg-[#12141C] border border-white/10 focus:outline-none focus:border-blue-500 transition-colors"
         />
 
         <button
           type="button"
           onClick={() => setShow(!show)}
-          className="absolute right-5 top-1/2 -translate-y-1/2"
+          className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-white transition-colors"
         >
           {show ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
