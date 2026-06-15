@@ -17,6 +17,7 @@ import ForgotPassword from "./presentation/pages/ForgotPassword";
 import ResetPassword from "./presentation/pages/ResetPassword";
 import Incidents from "./presentation/pages/incidents/IncidentsPage.tsx";
 import VerifyEmail from "./presentation/pages/VerifyEmail.tsx";
+import TermsAndConditions from "./presentation/pages/TermsAndConditions";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -32,6 +33,11 @@ function App() {
                 <Route
                     path="/"
                     element={<Register />}
+                />
+
+                <Route
+                    path="/terms"
+                    element={<TermsAndConditions />}
                 />
 
                 <Route
