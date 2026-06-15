@@ -42,13 +42,13 @@ export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  
+
   // NUEVO: Estado para los términos y condiciones
-  const [acceptTerms, setAcceptTerms] = useState(false); 
-  
+  const [acceptTerms, setAcceptTerms] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -67,12 +67,7 @@ export default function Register() {
       setError('Las contraseñas no coinciden');
       return;
     }
-    if (!acceptedTerms) {
-      setError(
-        'Debes aceptar los términos y condiciones'
-      );
-      return;
-    }
+   
 
 
     // NUEVO: Validación del checkbox
@@ -89,13 +84,13 @@ export default function Register() {
         fullName: form.fullName,
         email: form.email,
         password: form.password,
-        acceptedTerms
+        acceptedTerms: acceptTerms
       });
 
       // Le avisamos al usuario y lo mandamos al login a esperar
       alert('¡Cuenta creada! Por favor, revisá tu correo electrónico para verificar tu cuenta antes de iniciar sesión.');
       navigate('/login');
-      
+
     } catch {
       setError('No se pudo crear la cuenta');
     } finally {
@@ -193,9 +188,9 @@ export default function Register() {
             />
 
             <label className="flex items-start gap-3 text-sm text-gray-400 cursor-pointer">
-              <input 
-                type="checkbox" 
-                className="mt-1 cursor-pointer" 
+              <input
+                type="checkbox"
+                className="mt-1 cursor-pointer"
                 checked={acceptTerms}
                 onChange={(e) => setAcceptTerms(e.target.checked)}
               />
