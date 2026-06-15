@@ -72,6 +72,7 @@ export default function Login() {
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (
   e: React.ChangeEvent<HTMLInputElement>
@@ -91,11 +92,14 @@ const handleSubmit = async (
   try {
 
     const data =
-      await authRepository.login(form);
+  await authRepository.login(form);
 
-    login(data);
+login(
+  data,
+  rememberMe
+);
 
-    navigate('/dashboard');
+navigate('/dashboard');
 
   } catch {
 
@@ -119,13 +123,16 @@ const handleGoogleSuccess = async (
     }
 
     const data =
-      await authRepository.googleLogin(
-        credentialResponse.credential
-      );
+  await authRepository.googleLogin(
+    credentialResponse.credential
+  );
 
-    login(data);
+login(
+  data,
+  rememberMe
+);
 
-    navigate('/dashboard');
+navigate('/dashboard');
 
   } catch (error) {
 
@@ -240,11 +247,22 @@ return (
             </div>
 
             <div className="flex items-center gap-2">
-              <input type="checkbox" />
-              <label className="text-sm text-gray-400">
-                Recordarme por 30 días
-              </label>
-            </div>
+
+  <input
+    type="checkbox"
+    checked={rememberMe}
+    onChange={(e) =>
+      setRememberMe(
+        e.target.checked
+      )
+    }
+  />
+
+  <label className="text-sm text-gray-400">
+    Recordarme por 30 días
+  </label>
+
+</div>
 
             <button
               type="submit"
