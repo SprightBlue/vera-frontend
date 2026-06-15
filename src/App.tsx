@@ -15,6 +15,7 @@ import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
 import Contacts from "./presentation/pages/contacts/Contacts";
 import ForgotPassword from "./presentation/pages/ForgotPassword";
 import ResetPassword from "./presentation/pages/ResetPassword";
+import Incidents from "./presentation/pages/incidents/IncidentsPage.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -106,6 +107,11 @@ function App() {
                 <Route
                     path="/reset-password"
                     element={<ResetPassword />}
+                />
+
+                <Route
+                    path="/incidents"
+                    element={<PrivateRoute><Incidents /></PrivateRoute>}
                 />
 
             </Routes>
