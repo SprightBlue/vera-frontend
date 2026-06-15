@@ -7,7 +7,8 @@ import {
     TextSearch,
     Settings,
     LogOut,
-    BookOpen
+    BookOpen,
+    AlertTriangle
 } from "lucide-react";
 
 import logoVera from "../../assets/Isologo_Vera.png";
@@ -20,7 +21,8 @@ function Sidebar() {
         { label: "Personas que cuido", path: "/persons", icon: Users },
         { label: "Contactos", path: "/contacts", icon: ContactRound },
         { label: "Analisis", path: "/analysis", icon: TextSearch },
-        { label: "Alertas", path: "/alerts", icon: ShieldAlert }
+        { label: "Alertas", path: "/alerts", icon: ShieldAlert },
+        { label: "Incidentes", path: "/incidents", icon: AlertTriangle },
     ];
 
     const bottomItems = [
