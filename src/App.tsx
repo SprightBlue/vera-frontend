@@ -15,6 +15,7 @@ import AlertDetail from "./presentation/pages/alerts/AlertDetail.tsx";
 import Contacts from "./presentation/pages/contacts/Contacts";
 import ForgotPassword from "./presentation/pages/ForgotPassword";
 import ResetPassword from "./presentation/pages/ResetPassword";
+import Incidents from "./presentation/pages/incidents/IncidentsPage.tsx";
 import VerifyEmail from "./presentation/pages/VerifyEmail.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
@@ -109,9 +110,15 @@ function App() {
                     element={<ResetPassword />}
                 />
 
-                <Route 
-                    path="/verify-email" 
-                    element={<VerifyEmail />} />
+                <Route
+                    path="/verify-email"
+                    element={<VerifyEmail />}
+                />
+
+                <Route
+                    path="/incidents"
+                    element={<PrivateRoute><Incidents /></PrivateRoute>}
+                />
 
             </Routes>
 
