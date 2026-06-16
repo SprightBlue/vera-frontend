@@ -74,16 +74,19 @@ function Persons() {
           subtitle="Observa los detalles de cada persona a la que protejes"
         />
 
-        <div className="flex h-screen justify-center p-8">
-          <div className="w-full max-w-4xl mx-auto">
+        <div className="flex justify-center p-8">
+          <div className="w-full bg-[#0d1222] border border-[#182033] rounded-3xl py-8 px-12">
+            <h1 className="text-2xl font-semibold text-white mb-8">
+              Todas las personas que cuido
+            </h1>
             {cargando ? (
               <p className="bg-slate-900/50 border border-slate-800/60 px-8 py-6 rounded-2xl text-gray-400 text-lg">Cargando...</p>
             ) : (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5">
                 {persons.map((person) => (
                   <div
                     key={person.id}
-                    className="bg-slate-900/50 border border-slate-800/60 rounded-2xl p-8 flex flex-col lg:flex-row items-center justify-between"
+                    className="rounded-3xl border border-slate-800 bg-[#111827] p-6 flex flex-col lg:flex-row items-center justify-between"
                   >
                     {/* Left */}
                     <div className="flex flex-col md:flex-row items-center gap-6">
