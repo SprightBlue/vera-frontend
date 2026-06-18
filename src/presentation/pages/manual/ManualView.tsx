@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { useAuth } from '../../context/AuthContext';
-import { startDashboardTour } from "../../../features/analysis/utils/tours";
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
