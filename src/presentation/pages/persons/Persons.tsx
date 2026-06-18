@@ -30,7 +30,7 @@ function Persons() {
   useEffect(() => {
     const fetchPersons = async () => {
       try {
-        const miToken = localStorage.getItem('vera_token');
+        const miToken = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token') || '';
 
         const response = await axios.get('http://localhost:8080/api/v1/trust/protected-people', {
           headers: { Authorization: `Bearer ${miToken}` }

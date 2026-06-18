@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// 1. Configuración dinámica de la API
-// En desarrollo usará localhost:8080. En Render usará la variable que le configures.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 export interface CreateProtectedPersonRequest {
@@ -31,7 +29,7 @@ export interface UpdateProtectedConfig {
 }
 
 export async function createProtectedPerson(data: CreateProtectedPersonRequest): Promise<void> {
-    const token = localStorage.getItem('vera_token');
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
 
     let relacionTraducida = "Familiar";
     if (data.relationshipType === "TRUSTED_CONTACT") relacionTraducida = "Contacto de confianza";
@@ -51,14 +49,13 @@ export async function createProtectedPerson(data: CreateProtectedPersonRequest):
         receiveAlertSummaries: data.weeklySummaryEnabled
     };
 
-    // Cambiado a la URL dinámica usando plantillas de cadena (backticks)
     await axios.post(`${API_BASE_URL}/api/v1/trust/invite`, payload, {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
 
 export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
-    const token = localStorage.getItem('vera_token');
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
     const response = await axios.get<ProtectedPerson[]>(
         `${API_BASE_URL}/api/v1/trust/protected-people`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -67,14 +64,14 @@ export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
 }
 
 export async function deleteProtectedPerson(id: number): Promise<void> {
-    const token = localStorage.getItem('vera_token');
-    await axios.delete(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, {
+        const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+        await axios.delete(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
 
 export async function updateProtectedPerson(id: number, configData: UpdateProtectedConfig): Promise<void> {
-    const token = localStorage.getItem('vera_token');
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
 
     let sensibilidadTraducida = "MEDIO";
     if (configData.sensitivity === "low" || configData.sensitivity === "LOW") sensibilidadTraducida = "BAJO";

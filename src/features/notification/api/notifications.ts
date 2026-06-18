@@ -21,7 +21,7 @@ export interface AppNotification {
 }
 
 const getHeaders = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('vera_token') || ''}`,
+    'Authorization': `Bearer ${localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token') || ''}`,
     'Content-Type': 'application/json'
 });
 
