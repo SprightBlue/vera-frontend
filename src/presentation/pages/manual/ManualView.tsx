@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { useAuth } from '../../context/AuthContext';
+import { startDashboardTour } from "../../../features/analysis/utils/tours";
+import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Users, 
@@ -133,6 +135,7 @@ const faqs = [
 function ManualView() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const navigate = useNavigate();
   
   // Estado para manejar qué tarjeta está abierta en el Modal
   const [selectedSection, setSelectedSection] = useState<typeof manualSections[0] | null>(null);
@@ -153,6 +156,22 @@ function ManualView() {
         
         <div className="flex-1 flex flex-col items-center p-8">
           <div className="w-full max-w-5xl flex flex-col">
+
+            {/* NUEVO: BOTÓN DE REINICIAR TOUR */}
+            <div className="flex justify-end mb-6">
+                <button 
+                    onClick={() => {
+                        localStorage.setItem("force_dashboard_tour", "true");
+                        navigate("/dashboard"); 
+                    }}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-[#0d1222] hover:bg-[#1e293b] border border-[#182033] text-indigo-400 hover:text-indigo-300 rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-indigo-500/10 font-medium text-sm"
+                >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reiniciar On-Boarding VERA
+                </button>
+            </div>
 
             {/* Grilla estilo Bento Box */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-16">

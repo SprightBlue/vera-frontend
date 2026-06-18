@@ -39,16 +39,17 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
 
             <div className="flex items-center gap-3 sm:gap-6">
 
-                {/* 🌟 Dropdown actualizado con la lista unificada y handlers de invitaciones */}
-                <NotificationDropdown
-                    notifications={notifications}
-                    isRinging={isRinging}
-                    onSelectAlert={openModal}
-                    onAcceptInvite={handleAcceptInvitation}
-                    onRejectInvite={handleRejectInvitation}
-                />
+                <div id="notification-bell">
+                    <NotificationDropdown
+                        notifications={notifications}
+                        isRinging={isRinging}
+                        onSelectAlert={openModal}
+                        onAcceptInvite={handleAcceptInvitation}
+                        onRejectInvite={handleRejectInvitation}
+                    />
+                </div>
 
-                <div className="flex items-center gap-3 border-l border-white/5 pl-3 sm:pl-6">
+                <div id="user-profile-menu" className="flex items-center gap-3 border-l border-white/5 pl-3 sm:pl-6">
                     <div className="flex-col items-end hidden sm:flex">
                         <span className="text-sm font-semibold text-white">{userName}</span>
                         <span className="text-[10px] uppercase tracking-widest text-slate-500 font-medium">{userRole}</span>
