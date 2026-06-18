@@ -18,15 +18,15 @@ function Sidebar() {
 
     const menuItems = [
         { label: "Panel Principal", path: "/dashboard", icon: LayoutDashboard },
-        { label: "Personas que cuido", path: "/persons", icon: Users },
-        { label: "Contactos", path: "/contacts", icon: ContactRound },
-        { label: "Analisis", path: "/analysis", icon: TextSearch },
-        { label: "Alertas", path: "/alerts", icon: ShieldAlert },
-        { label: "Incidentes", path: "/incidents", icon: AlertTriangle },
+        { label: "Personas que cuido", path: "/persons", icon: Users, id: "nav-personas" },
+        { label: "Contactos", path: "/contacts", icon: ContactRound, id: "nav-contactos" },
+        { label: "Analisis", path: "/analysis", icon: TextSearch, id: "nav-analisis" },
+        { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas" },
+        { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
     ];
 
     const bottomItems = [
-        { label: "Manual de Uso", path: "/manual", icon: BookOpen },
+        { label: "Manual de Uso", path: "/manual", icon: BookOpen, id: "nav-manual" },
         { label: "Configuración", path: "/settings", icon: Settings },
         { label: "Cerrar Sesión", path: "/logout", icon: LogOut }
     ];
@@ -64,6 +64,7 @@ function Sidebar() {
                         <Link
                             key={item.path}
                             to={item.path}
+                            id={item.id}
                             className={`flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 text-[14px] font-medium cursor-pointer ${
                                 isActive
                                     ? "bg-blue-600/10 border border-blue-500/20 text-white"
@@ -83,6 +84,7 @@ function Sidebar() {
                     <Link
                         key={item.path}
                         to={item.path}
+                        id={item.id}
                         className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-400 hover:bg-[#0f1425] hover:text-white transition-all text-[14px] font-medium cursor-pointer"
                     >
                         <item.icon size={20} />

@@ -12,11 +12,11 @@ function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [isSent, setIsSent] = useState(false);
 
-    // 🌟 Cambiado de 'any' a 'CreateProtectedPersonRequest'
     async function handleCreate(formData: CreateProtectedPersonRequest) {
         setIsLoading(true);
         try {
             await createProtectedPerson(formData);
+            
             onSuccess();
             setIsSent(true);
         } catch (error) {
@@ -55,7 +55,6 @@ function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
                     </div>
                 ) : (
                     <div className={`mt-4 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}>
-                        {/* TypeScript validará automáticamente que el onSubmit reciba los datos correctos */}
                         <ProtectedPersonForm onSubmit={handleCreate} />
 
                         {isLoading && (
