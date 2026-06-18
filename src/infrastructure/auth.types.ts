@@ -8,6 +8,7 @@ export interface RegisterRequest {
   fullName: string;
   email: string;
   password: string;
+  acceptedTerms: boolean;
 }
 
 export interface AuthResponse {

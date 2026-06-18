@@ -309,7 +309,7 @@ function PersonConfiguration() {
               Información visible
             </h3>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
                   key: "deviceHealth",
@@ -328,16 +328,16 @@ function PersonConfiguration() {
                   key={item.key}
                   type="button"
                   onClick={() => handleVisibleData(item.key)}
-                  className={`rounded-2xl p-5 transition-all cursor-pointer ${formData.visibleData[
+                  className={`rounded-2xl p-6 transition-all cursor-pointer border border-slate-800 ${formData.visibleData[
                     item.key as keyof typeof formData.visibleData
                   ]
-                    ? "bg-[#263451]"
-                    : "bg-[#111827]"
+                    ? "bg-[#182033] text-white"
+                    : "bg-[#0b1220] text-slate-500"
                     }`}
                 >
                   <div className="flex justify-center mb-3">
                     <div
-                      className={`w-5 h-5 rounded-full border-2 ${formData.visibleData[
+                      className={`w-4 h-4 rounded-full border-2 ${formData.visibleData[
                         item.key as keyof typeof formData.visibleData
                       ]
                         ? "border-blue-600 bg-blue-600"
@@ -346,7 +346,7 @@ function PersonConfiguration() {
                     />
                   </div>
 
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium">
                     {item.label}
                   </p>
                 </button>

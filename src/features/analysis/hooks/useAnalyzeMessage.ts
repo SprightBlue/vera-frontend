@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { analyzeMessage } from '../api/analyzeMessage';
-import type { AnalysisResultDto, AnalyzeRequestDto } from '../types/analysis.types';
+import type { AnalysisResultDto, AnalyzeRequestDto } from '../api/analyzeMessage';
 
 export function useAnalyzeMessage() {
     const [isLoading, setIsLoading] = useState(false);

@@ -26,13 +26,34 @@ apiClient.interceptors.request.use((config) => {
 
 export const authRepository = {
 
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>(
+async login(
+  credentials: LoginRequest
+): Promise<AuthResponse> {
+
+  const response =
+    await apiClient.post<AuthResponse>(
       '/api/v1/auth/login',
       credentials
     );
-    return response.data;
-  },
+
+  return response.data;
+},
+
+
+async googleLogin(
+  credential: string
+): Promise<AuthResponse> {
+
+  const response =
+    await apiClient.post<AuthResponse>(
+      '/api/v1/auth/google',
+      {
+        credential
+      }
+    );
+
+  return response.data;
+},
 
   async register(data: RegisterRequest): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>(
@@ -41,4 +62,30 @@ export const authRepository = {
     );
     return response.data;
   },
+
+async forgotPassword(email: string): Promise<void> {
+  await apiClient.post(
+    '/api/v1/auth/forgot-password',
+    { email }
+  );
+},
+
+async resetPassword(
+  token: string,
+  newPassword: string
+): Promise<void> {
+  await apiClient.post(
+    '/api/v1/auth/reset-password',
+    {
+      token,
+      newPassword
+    }
+  );
+},
+
+verifyEmail: async (token: string) => {
+    const response = await apiClient.get(`/api/v1/auth/verify?token=${token}`);
+    return response.data;
+  },
+
 };

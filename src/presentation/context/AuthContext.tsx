@@ -8,7 +8,7 @@ import type { AuthUser } from '../../infrastructure/auth.types';
 
 interface AuthContextType {
   user: AuthUser | null;
-  login: (userData: AuthUser) => void;
+  login: (userData: AuthUser, rememberMe?: boolean) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -21,24 +21,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Al montar, recupera la sesión guardada en localStorage
   // para que el usuario no tenga que loguearse de nuevo al refrescar.
   useEffect(() => {
-    const token = localStorage.getItem('vera_token');
-    const userData = localStorage.getItem('vera_user');
+   const token =
+  localStorage.getItem('vera_token')
+  ||
+  sessionStorage.getItem('vera_token');
+
+const userData =
+  localStorage.getItem('vera_user')
+  ||
+  sessionStorage.getItem('vera_user');
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
   }, []);
 
-  const login = (userData: AuthUser) => {
-    localStorage.setItem('vera_token', userData.token);
-    localStorage.setItem('vera_user', JSON.stringify(userData));
-    setUser(userData);
-  };
+  const login = (
+  userData: AuthUser,
+  rememberMe = false
+) => {
+
+  const storage =
+    rememberMe
+      ? localStorage
+      : sessionStorage;
+
+  storage.setItem(
+    'vera_token',
+    userData.token
+  );
+
+  storage.setItem(
+    'vera_user',
+    JSON.stringify(userData)
+  );
+
+  setUser(userData);
+};
 
   const logout = () => {
-    localStorage.removeItem('vera_token');
-    localStorage.removeItem('vera_user');
-    setUser(null);
-  };
+
+  localStorage.removeItem(
+    'vera_token'
+  );
+
+  localStorage.removeItem(
+    'vera_user'
+  );
+
+  sessionStorage.removeItem(
+    'vera_token'
+  );
+
+  sessionStorage.removeItem(
+    'vera_user'
+  );
+
+  setUser(null);
+};
 
   return (
     <AuthContext.Provider value={{
