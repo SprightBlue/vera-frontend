@@ -91,9 +91,16 @@ const handleSubmit = async (
 
   try {
 
-    const data =
+  const data =
   await authRepository.login(form);
 
+console.log("LOGIN RESPONSE", data);
+
+login(
+  data,
+  rememberMe
+);
+  
 login(
   data,
   rememberMe

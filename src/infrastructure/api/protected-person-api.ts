@@ -31,7 +31,12 @@ export interface UpdateProtectedConfig {
 }
 
 export async function createProtectedPerson(data: CreateProtectedPersonRequest): Promise<void> {
-    const token = localStorage.getItem('vera_token');
+     const token =
+        localStorage.getItem('vera_token')
+        ||
+        sessionStorage.getItem('vera_token');
+
+    console.log("TOKEN:", token);
 
     let relacionTraducida = "Familiar";
     if (data.relationshipType === "TRUSTED_CONTACT") relacionTraducida = "Contacto de confianza";
@@ -58,7 +63,10 @@ export async function createProtectedPerson(data: CreateProtectedPersonRequest):
 }
 
 export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
-    const token = localStorage.getItem('vera_token');
+    const token =
+    localStorage.getItem('vera_token')
+    ||
+    sessionStorage.getItem('vera_token');
     const response = await axios.get<ProtectedPerson[]>(
         `${API_BASE_URL}/api/v1/trust/protected-people`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -67,14 +75,20 @@ export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
 }
 
 export async function deleteProtectedPerson(id: number): Promise<void> {
-    const token = localStorage.getItem('vera_token');
+    const token =
+    localStorage.getItem('vera_token')
+    ||
+    sessionStorage.getItem('vera_token');
     await axios.delete(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
 
 export async function updateProtectedPerson(id: number, configData: UpdateProtectedConfig): Promise<void> {
-    const token = localStorage.getItem('vera_token');
+    const token =
+    localStorage.getItem('vera_token')
+    ||
+    sessionStorage.getItem('vera_token');
 
     let sensibilidadTraducida = "MEDIO";
     if (configData.sensitivity === "low" || configData.sensitivity === "LOW") sensibilidadTraducida = "BAJO";
