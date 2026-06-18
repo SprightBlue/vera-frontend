@@ -1,15 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import {
-    LayoutDashboard,
-    Users,
-    ContactRound,
-    ShieldAlert,
-    TextSearch,
-    Settings,
-    LogOut,
-    BookOpen,
-    AlertTriangle
-} from "lucide-react";
+import { LayoutDashboard, Users, ContactRound, ShieldAlert, Sparkles, Settings, LogOut, BookOpen, AlertTriangle } from "lucide-react";
 
 import logoVera from "../../assets/Isologo_Vera.png";
 
@@ -20,7 +10,7 @@ function Sidebar() {
         { label: "Panel Principal", path: "/dashboard", icon: LayoutDashboard },
         { label: "Personas que cuido", path: "/persons", icon: Users, id: "nav-personas" },
         { label: "Contactos", path: "/contacts", icon: ContactRound, id: "nav-contactos" },
-        { label: "Analisis", path: "/analysis", icon: TextSearch, id: "nav-analisis" },
+        { label: "Centro de Inteligencia", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
         { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas" },
         { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
     ];

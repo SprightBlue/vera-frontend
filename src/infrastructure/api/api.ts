@@ -11,17 +11,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-
-    const token = localStorage.getItem("vera_token") || sessionStorage.getItem("vera_token");
-
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
     if (token) {
-
         config.headers.Authorization = `Bearer ${token}`;
-
     }
-
     return config;
-
 });
 
 export default api;
