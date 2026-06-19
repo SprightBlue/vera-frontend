@@ -19,9 +19,9 @@ export interface ProtectedPerson {
     relationshipType: string;
     phone: string;
     email: string;
-    highRiskAlertsEnabled: boolean;
+    notifyHighRisk: boolean;
     weeklySummaryEnabled: boolean;
-    notificationSensitivity: string;
+    sensitivityLevel: string;
     status?: string;
 }
 
