@@ -10,19 +10,15 @@ export function AnalysisPage() {
     const { user } = useAuth();
 
     return (
-        <div className="flex min-h-screen w-full bg-slate-950 text-slate-100 font-inter">
-            <aside className="hidden md:block md:w-64 shrink-0 border-r border-slate-900 bg-slate-950">
-                <Sidebar />
-            </aside>
+        <div className="flex h-screen w-screen overflow-hidden bg-[#050816]">
+            <Sidebar />
 
-            <div className="flex flex-1 flex-col min-w-0">
-                <header className="sticky top-0 z-40 w-full border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
+            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-65">
                     <Header
                         userName={user?.fullName || "Usuario"}
                         title="Análisis de Contenido"
-                        subtitle="Detectá mensajes o contenido multiemda sospechosos y protegé tu información"
+                        subtitle="Detectá mensajes o contenido multimedia sospechosos y protegé tu información"
                     />
-                </header>
 
                 <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8">
                     <div className="mx-auto max-w-5xl w-full">

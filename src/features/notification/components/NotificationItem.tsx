@@ -1,4 +1,4 @@
-import { ShieldAlert, UserPlus, Info, Check, X, ShieldCheck, Trash2 } from "lucide-react";
+import { ShieldAlert, UserPlus, Info, X as XIcon, ShieldCheck } from "lucide-react";
 import { type AppNotification } from "../api/notifications.ts";
 
 interface ItemProps {
@@ -9,63 +9,45 @@ interface ItemProps {
 
 export function NotificationItem({ notif, onAction, onSelect }: ItemProps) {
     const renderIcon = () => {
+        const baseClass = "w-5 h-5 shrink-0";
         switch (notif.type) {
-            case 'ALERT':
-                return <ShieldAlert className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />;
-            case 'ALERT_SOLVED':
-                return <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />;
-            case 'INVITATION':
-                return <UserPlus className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />;
-            default:
-                return <Info className="w-5 h-5 text-slate-500 shrink-0 mt-0.5" />;
+            case 'ALERT': return <ShieldAlert className={`${baseClass} text-red-500`} />;
+            case 'ALERT_SOLVED': return <ShieldCheck className={`${baseClass} text-emerald-500`} />;
+            case 'INVITATION': return <UserPlus className={`${baseClass} text-blue-400`} />;
+            default: return <Info className={`${baseClass} text-slate-500`} />;
         }
     };
 
     return (
-        <div className={`p-3 rounded-lg border transition-colors flex items-start gap-3 relative group ${
-            notif.isRead ? 'bg-transparent border-transparent' : 'bg-white/5 border-white/5'
-        }`}>
-            {renderIcon()}
+        <div className={`p-4 rounded-xl border transition-all duration-300 flex items-start gap-4 relative group bg-slate-900/50 border-slate-800 hover:border-slate-700/50 ${notif.isRead ? 'opacity-60' : 'opacity-100'}`}>
 
-            <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">{notif.title}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{notif.message}</p>
+            <button
+                onClick={(e) => { e.stopPropagation(); onAction(notif, 'DELETE'); }}
+                className="absolute top-2 right-2 p-1.5 bg-slate-950/50 text-slate-400 hover:text-red-400 hover:bg-red-950/50 border border-slate-800 rounded-md transition-all cursor-pointer opacity-0 group-hover:opacity-100"
+                title="Eliminar"
+            >
+                <XIcon size={12} strokeWidth={3} />
+            </button>
+
+            <div className="mt-0.5">{renderIcon()}</div>
+
+            <div className="flex-1 min-w-0 pr-6">
+                <p className="text-[13px] font-bold text-slate-100 truncate">{notif.title}</p>
+                <p className="text-[12px] text-slate-400 mt-0.5 leading-relaxed">{notif.message}</p>
 
                 {notif.type === 'INVITATION' && (
                     <div className="flex gap-2 mt-3">
-                        <button
-                            onClick={() => onAction(notif, 'ACCEPT')}
-                            className="flex-1 py-1 bg-emerald-600 hover:bg-emerald-500 rounded text-white text-xs font-bold flex items-center justify-center gap-1 cursor-pointer"
-                        >
-                            <Check className="w-3 h-3" /> Aceptar
-                        </button>
-                        <button
-                            onClick={() => onAction(notif, 'REJECT')}
-                            className="flex-1 py-1 bg-red-950 hover:bg-red-900 text-red-400 border border-red-900/30 rounded text-xs font-bold flex items-center justify-center gap-1 cursor-pointer"
-                        >
-                            <X className="w-3 h-3" /> Rechazar
-                        </button>
+                        <button onClick={() => onAction(notif, 'ACCEPT')} className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-[11px] font-bold transition-all cursor-pointer">Aceptar</button>
+                        <button onClick={() => onAction(notif, 'REJECT')} className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[11px] font-bold transition-all cursor-pointer">Rechazar</button>
+                    </div>
+                )}
+
+                {notif.type === 'ALERT' && (
+                    <div className="mt-3">
+                        <button onClick={() => onSelect(notif)} className="px-3 py-1.5 text-[11px] bg-blue-900/30 border border-blue-500/30 text-blue-300 font-bold rounded-lg hover:bg-blue-900/50 transition-all cursor-pointer">Ver detalles</button>
                     </div>
                 )}
             </div>
-
-            {notif.type === 'ALERT' && (
-                <button
-                    onClick={() => onSelect(notif)}
-                    className="text-xs text-blue-400 font-bold hover:underline cursor-pointer whitespace-nowrap self-center"
-                >
-                    Ver
-                </button>
-            )}
-
-            {notif.type !== 'INVITATION' && notif.type !== 'ALERT' && (
-                <button
-                    onClick={() => onAction(notif, 'DELETE')}
-                    className="p-1 text-slate-500 hover:text-red-400 rounded transition-colors opacity-0 group-hover:opacity-100 cursor-pointer absolute right-2 top-2"
-                >
-                    <Trash2 className="w-3.5 h-3.5" />
-                </button>
-            )}
         </div>
     );
 }
