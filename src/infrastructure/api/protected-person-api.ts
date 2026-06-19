@@ -14,6 +14,7 @@ export interface CreateProtectedPersonRequest {
 
 export interface ProtectedPerson {
     id: number;
+    protectedUserId: number | null;
     fullName: string;
     relationshipType: string;
     phone: string;
@@ -21,6 +22,7 @@ export interface ProtectedPerson {
     highRiskAlertsEnabled: boolean;
     weeklySummaryEnabled: boolean;
     notificationSensitivity: string;
+    status?: string;
 }
 
 export interface UpdateProtectedConfig {
