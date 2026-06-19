@@ -1,6 +1,6 @@
 import { type SyntheticEvent } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Loader2, AlertCircle, Sparkles } from "lucide-react";
+import { AlertCircle, Sparkles } from "lucide-react";
 
 import Sidebar from "../../../presentation/components/Sidebar.tsx";
 import Header from "../../../presentation/components/Header.tsx";
@@ -10,7 +10,7 @@ import { ChatRoom } from "../components/ChatRoom";
 import { useChat } from "../hooks/useChat";
 import { useAuth } from "../../../presentation/context/AuthContext.tsx";
 
-function ChatPage() {
+export function ChatPage() {
     const { user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -57,14 +57,11 @@ function ChatPage() {
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-[#050816]">
-
             <Sidebar />
 
             <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-65">
-
                 <Header
                     userName={user?.fullName}
-                    userRole={user?.role}
                     title="Asistente Inteligente"
                     subtitle="Espacio conversacional de asistencia contra fraudes e ingeniería social"
                 />
@@ -72,8 +69,10 @@ function ChatPage() {
                 <div className="flex-1 flex overflow-hidden min-h-0 w-full relative">
 
                     {isLoadingSessions ? (
-                        <div className="w-72 border-r border-[#182033] flex items-center justify-center bg-[#070B1A]/10 shrink-0 h-full">
-                            <Loader2 className="w-5 h-5 animate-spin text-[--color-primary]" />
+                        <div className="w-72 border-r border-[#182033] bg-[#070B1A]/10 shrink-0 h-full p-4 space-y-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="h-12 bg-slate-800/30 rounded-lg animate-pulse" />
+                            ))}
                         </div>
                     ) : (
                         <ChatSidebar
@@ -86,7 +85,7 @@ function ChatPage() {
                     )}
 
                     <div className="flex-1 flex flex-col bg-[#050816] overflow-hidden relative min-w-0">
-                        {!analysisId && !alertId && !currentChatId && messages.length === 0 ? (
+                        {!isLoadingChat && !analysisId && !alertId && !currentChatId && messages.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto p-6 sm:p-8 font-inter w-full analysis-empty-appear">
                                 <div className="text-center space-y-3 mb-10 select-none">
                                     <div className="w-12 h-12 rounded-2xl bg-blue-600/10 text-blue-400 flex items-center justify-center border border-blue-500/20 mx-auto shadow-lg shadow-blue-500/5">
@@ -120,12 +119,15 @@ function ChatPage() {
                                 </form>
                             </div>
                         ) : isLoadingChat ? (
-                            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-gray-400 font-inter">
-                                <Loader2 className="w-7 h-7 animate-spin text-[--color-primary]" />
-                                <p className="text-xs">Sincronizando canal con VERA...</p>
+                            <div className="flex-1 flex flex-col p-6 gap-6 animate-pulse w-full max-w-3xl mx-auto">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className={`flex ${i % 2 === 0 ? 'justify-end' : 'justify-start'}`}>
+                                        <div className={`h-16 w-3/4 rounded-2xl ${i % 2 === 0 ? 'bg-blue-900/20' : 'bg-slate-800/40'}`} />
+                                    </div>
+                                ))}
                             </div>
                         ) : error ? (
-                            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-xs mx-auto text-red-400 font-inter gap-2">
+                            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-red-400 font-inter gap-2">
                                 <AlertCircle size={24} />
                                 <p className="text-sm">{error}</p>
                             </div>
@@ -137,11 +139,8 @@ function ChatPage() {
                             />
                         )}
                     </div>
-
                 </div>
             </div>
         </div>
     );
 }
-
-export default ChatPage;
