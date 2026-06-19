@@ -12,17 +12,24 @@ function RecentAlerts() {
 const [alerts, setAlerts] = useState<Alert[]>([]);
 
 useEffect(() => {
-
     async function loadAlerts() {
-
-        const data = await getAlerts();
-
-        setAlerts(data);
-
+        try {
+            const data = await getAlerts();
+            
+            if (data && data.content) {
+                setAlerts(data.content);
+            } else if (Array.isArray(data)) {
+                setAlerts(data);
+            } else {
+                setAlerts([]);
+            }
+        } catch (error) {
+            console.error("Error cargando alertas recientes:", error);
+            setAlerts([]);
+        }
     }
 
     loadAlerts();
-
 }, []);
 
 return (

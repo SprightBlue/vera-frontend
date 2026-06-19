@@ -20,17 +20,24 @@ const AlertsView: React.FC = () => {
   const navigate = useNavigate();
 
 
+
   useEffect(() => {
     getAlerts()
         .then((data) => {
-          setAlerts(Array.isArray(data) ? data : []);
+          if (data && data.content) {
+              setAlerts(data.content);
+          } else if (Array.isArray(data)) {
+              setAlerts(data);
+          } else {
+              setAlerts([]);
+          }
         })
         .catch((err) => {
           console.error('Error cargando alertas:', err);
           setAlerts([]);
         });
   }, []);
-
+  
   const getRiskColorClass = (level: string) => {
     switch(level) {
       case 'HIGH': return 'text-red-500';
