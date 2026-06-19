@@ -38,17 +38,18 @@ function PersonConfiguration() {
       try {
         const data = await getProtectedPersons();
         const currentPerson = data.find((p: any) => p.id === Number(id));
-        if (currentPerson) {
-          let sensitivityReact = "balanced";
-          if (currentPerson.notificationSensitivity === "ALTO") sensitivityReact = "high";
-          if (currentPerson.notificationSensitivity === "BAJO") sensitivityReact = "low";
+            if (currentPerson) {
+              let sensitivityReact = "balanced";
+              
+              if (currentPerson.sensitivityLevel === "ALTO") sensitivityReact = "high";
+              if (currentPerson.sensitivityLevel === "BAJO") sensitivityReact = "low";
 
-          setFormData((prev) => ({
-            ...prev,
-            sensitivity: sensitivityReact,
-            urgentMonitoring: currentPerson.highRiskAlertsEnabled ?? true, 
-          }));
-        }
+              setFormData((prev) => ({
+                ...prev,
+                sensitivity: sensitivityReact,
+                urgentMonitoring: currentPerson.notifyHighRisk ?? true, 
+              }));
+            }
       } catch (error) {
         console.error("Error al traer la configuración:", error);
       }
