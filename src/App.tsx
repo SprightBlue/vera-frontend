@@ -18,6 +18,9 @@ import ResetPassword from "./presentation/pages/ResetPassword";
 import Incidents from "./presentation/pages/incidents/IncidentsPage.tsx";
 import VerifyEmail from "./presentation/pages/VerifyEmail.tsx";
 import TermsAndConditions from "./presentation/pages/TermsAndConditions";
+import ChatPage from "./features/Chat/view/ChatPage.tsx";
+import {AICenterPage} from "./features/AiCenterPage.tsx";
+import AcceptInvitePage from "./presentation/pages/invite/AcceptInvitePage";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -55,9 +58,16 @@ function App() {
                     element={<Login />}
                 />
 
+                <Route path="/ai-center" element={<AICenterPage />} />
+
                 <Route
                     path="/analysis"
                     element={<AnalysisPage />}
+                />
+
+                <Route
+                    path="/chat"
+                    element={<ChatPage />}
                 />
 
                 {/* Privadas */}
@@ -124,6 +134,11 @@ function App() {
                 <Route
                     path="/incidents"
                     element={<PrivateRoute><Incidents /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/invite/:token"
+                    element={<AcceptInvitePage />}
                 />
 
             </Routes>

@@ -10,8 +10,11 @@ export function useProtectedPersonSelector() {
     useEffect(() => {
         getProtectedPersons()
             .then((data) => {
-                setPersons(data);
-                if (data.length > 0) setSelected(data[0]);
+                // Solo mostramos personas activas (que aceptaron la invitación)
+                // para gestionar sus contactos de confianza
+                const active = data.filter(p => p.status === "ACTIVE" || p.protectedUserId !== null);
+                setPersons(active);
+                if (active.length > 0) setSelected(active[0]);
             })
             .catch(() => setError("No se pudieron cargar las personas protegidas."))
             .finally(() => setLoading(false));
