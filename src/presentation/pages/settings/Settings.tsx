@@ -4,8 +4,9 @@ import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
 
 function Settings() {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     // 1. NUEVO: Agregamos los estados para los checkboxes
     const [emailAlerts, setEmailAlerts] = useState(true);
@@ -26,6 +27,46 @@ function Settings() {
         setIsEditing(false);
     };
 
+    // Aca se guarda la imagen del usuario y se actualiza la sesion
+    const handleSubmitImage = async (e) => {
+        try {
+            const image = e.target.files[0];
+            if (!image) return;
+
+            const formData = new FormData();
+            formData.append("image", image);
+            formData.append("email", user.email);
+            const token = user.token;
+
+            setUploading(true);
+
+            const response = await fetch(
+                "http://localhost:8080/api/v1/files/upload-image",
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: formData
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error("Error subiendo imagen");
+            }
+    
+            const data = await response.json();
+            user.image = data.image;
+            updateUser(user);
+    
+        } catch(error) {
+            console.error(error);
+        }
+        finally {
+            setUploading(false);
+        }
+    };
+
     return (
         <div className="flex min-h-screen bg-[#050816]">
             <Sidebar />
@@ -44,21 +85,41 @@ function Settings() {
                     <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
                         <div className="flex items-center justify-between flex-wrap gap-6">
                             <div className="flex items-center gap-5">
-                                <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
-                                    {user?.fullName?.charAt(0) || "U"}
-                                </div>
+                                {user?.image ? (
+                                    <img
+                                    src={user.image}
+                                    alt="Perfil"
+                                    className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                                />
+                                ) : (
+                                    <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
+                                        {user?.fullName?.charAt(0) || "U"}
+                                    </div>
+                                )}
                                 <div>
                                     <h2 className="text-2xl font-bold text-white">{user?.fullName || "Usuario"}</h2>
                                     <p className="text-slate-400">{user?.email || "correo@ejemplo.com"}</p>
                                     <p className="text-sm text-slate-500 mt-1">Cuenta protegida activa</p>
                                 </div>
                             </div>
-                            <button
-                                onClick={() => setIsEditing(!isEditing)}
-                                className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium"
-                            >
-                                {isEditing ? "Cancelar" : "Editar perfil"}
-                            </button>
+                            <div>
+                                <label className="px-5 py-3 mr-6 rounded-2xl bg-[#3d3d3d] hover:bg-[#323232] transition-colors text-white font-medium cursor-pointer">
+                                    {uploading ? "Subiendo imagen..." : "Cambiar foto"}
+                                    <input
+                                        type="file"
+                                        hidden
+                                        accept="image/*"
+                                        onChange={handleSubmitImage}
+                                    />
+                                </label>
+
+                                <button
+                                    onClick={() => setIsEditing(!isEditing)}
+                                    className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium"
+                                >
+                                    {isEditing ? "Cancelar" : "Editar perfil"}
+                                </button>
+                            </div>
                         </div>
                     </div>
 

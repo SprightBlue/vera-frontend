@@ -10,6 +10,7 @@ interface AuthContextType {
   user: AuthUser | null;
   login: (userData: AuthUser, rememberMe?: boolean) => void;
   logout: () => void;
+  updateUser: (updatedUser: Partial<AuthUser>) => void;
   isAuthenticated: boolean;
 }
 
@@ -79,11 +80,37 @@ const userData =
   setUser(null);
 };
 
+// Actualiza datos del usuario en la sesión
+const updateUser = (updatedUser: Partial<AuthUser>) => {
+  setUser(prevUser => {
+    if (!prevUser) return null;
+    const newUser = {
+      ...prevUser,
+      ...updatedUser
+    };
+    // Mantener sincronizado el storage donde está la sesión
+    if (localStorage.getItem('vera_user')) {
+      localStorage.setItem(
+        'vera_user',
+        JSON.stringify(newUser)
+      );
+    }
+    else {
+      sessionStorage.setItem(
+        'vera_user',
+        JSON.stringify(newUser)
+      );
+    }
+    return newUser;
+  });
+};
+
   return (
     <AuthContext.Provider value={{
       user,
       login,
       logout,
+      updateUser,
       isAuthenticated: !!user
     }}>
       {children}

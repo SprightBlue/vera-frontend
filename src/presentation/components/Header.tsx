@@ -4,6 +4,7 @@ import { useNotifications } from "../../features/notification/hooks/useNotificat
 import { NotificationDropdown } from "../../features/notification/components/NotificationDropdown";
 import { NotificationModal } from "../../features/notification/components/NotificationModal";
 import { type AppNotification } from "../../features/notification/api/notifications.ts";
+import { useAuth } from "../context/AuthContext";
 
 interface HeaderProps {
     userName?: string;
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 function Header({ userName = "Usuario", userRole = "Protector", title, subtitle }: HeaderProps) {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const displayTitle = title ?? `Bienvenido, ${userName}`;
     const displaySubtitle = subtitle ?? "Aquí tienes el resumen del bienestar de tus protegidos.";
@@ -52,9 +54,17 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
                             <span className="text-sm font-semibold text-white">{userName}</span>
                             <span className="text-[10px] uppercase tracking-widest text-slate-500 font-medium">{userRole}</span>
                         </div>
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">
-                            {userName.charAt(0).toUpperCase()}
-                        </div>
+                        {user?.image ? (
+                            <img
+                            src={user.image}
+                            alt="Perfil"
+                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0"
+                        />
+                        ) : (
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">
+                                {userName.charAt(0).toUpperCase()}
+                            </div>
+                        )}
                     </div>
                 </div>
             </header>
