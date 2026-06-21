@@ -5,6 +5,7 @@ import Header from "../../components/Header";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons, updateProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import { toast } from "react-hot-toast/headless";
 
 // Definimos una interfaz local para evitar problemas con 'any'
 interface APIProtectedPerson {
@@ -65,18 +66,18 @@ function PersonConfiguration() {
 
   async function handleSubmit() {
     if (!id) {
-        alert("¡FALTA EL ID! Revisa la navegación desde la pantalla anterior.");
+        toast.success("¡FALTA EL ID! Revisa la navegación desde la pantalla anterior.");
         return;
     }
     
     try {
       setIsSaving(true);
       await updateProtectedPerson(Number(id), formData);
-      alert("¡Configuración guardada con éxito!");
+      toast.success("¡Configuración guardada con éxito!");
       navigate(`/persons/${id}`);
     } catch (error) {
       console.error("Error al actualizar configuración:", error);
-      alert("Error al intentar guardar los cambios.");
+      toast.error("Error al intentar guardar los cambios.");
     } finally {
       setIsSaving(false);
     }
