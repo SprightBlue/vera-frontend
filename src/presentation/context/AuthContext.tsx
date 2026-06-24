@@ -2,10 +2,6 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthUser } from '../../infrastructure/auth.types';
 
-// El contexto de autenticación actúa como el "estado global" de sesión.
-// Equivalente a guardar el usuario en req.user en Express,
-// pero del lado del cliente y accesible desde cualquier componente.
-
 interface AuthContextType {
   user: AuthUser | null;
   login: (userData: AuthUser, rememberMe?: boolean) => void;
@@ -19,8 +15,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  // Al montar, recupera la sesión guardada en localStorage
-  // para que el usuario no tenga que loguearse de nuevo al refrescar.
   useEffect(() => {
    const token =
   localStorage.getItem('vera_token')
@@ -80,7 +74,6 @@ const userData =
   setUser(null);
 };
 
-// Actualiza datos del usuario en la sesión
 const updateUser = (updatedUser: Partial<AuthUser>) => {
   setUser(prevUser => {
     if (!prevUser) return null;
@@ -88,7 +81,6 @@ const updateUser = (updatedUser: Partial<AuthUser>) => {
       ...prevUser,
       ...updatedUser
     };
-    // Mantener sincronizado el storage donde está la sesión
     if (localStorage.getItem('vera_user')) {
       localStorage.setItem(
         'vera_user',
@@ -118,7 +110,6 @@ const updateUser = (updatedUser: Partial<AuthUser>) => {
   );
 }
 
-// Hook para consumir el contexto desde cualquier componente
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

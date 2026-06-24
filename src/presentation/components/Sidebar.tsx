@@ -1,18 +1,30 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ContactRound, ShieldAlert, Sparkles, Settings, LogOut, BookOpen, AlertTriangle } from "lucide-react";
-
+import { LayoutDashboard, Users, ContactRound, ShieldAlert, Sparkles, Settings, LogOut, BookOpen, AlertTriangle, ShieldCheck } from "lucide-react";
 import logoVera from "../../assets/Isologo_Vera.png";
+import { useAuth } from "../context/AuthContext";
 
 function Sidebar() {
     const location = useLocation();
+    
+    const { user } = useAuth(); 
 
     const menuItems = [
-        { label: "Panel Principal", path: "/dashboard", icon: LayoutDashboard },
-        { label: "Personas que cuido", path: "/persons", icon: Users, id: "nav-personas" },
-        { label: "Contactos", path: "/contacts", icon: ContactRound, id: "nav-contactos" },
-        { label: "Centro de Inteligencia", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
-        { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas" },
-        { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
+        { label: "Panel Principal", path: "/dashboard", icon: LayoutDashboard, id: "nav-dashboard" },
+        
+        ...(user?.role === 'CARER' ? [
+            { label: "Personas que cuido", path: "/persons", icon: Users, id: "nav-personas" },
+            { label: "Contactos", path: "/contacts", icon: ContactRound, id: "nav-contactos" },
+            { label: "Centro de Inteligencia", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
+            { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas" },
+            { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
+        ] : []),
+
+        ...(user?.role === 'PROTECTED' ? [
+            { label: "Mis cuidadores", path: "/my-carers", icon: ShieldCheck, id: "nav-mis-cuidadores" },
+            { label: "Centro de Inteligencia", path: "/ai-center", icon: Sparkles, id: "nav-ai-center-prot" },
+            { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas-prot" },
+            { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes-prot" },
+        ] : [])
     ];
 
     const bottomItems = [
@@ -37,15 +49,15 @@ function Sidebar() {
             z-50
         ">
             {/* Logo */}
-           <div className="-mt-10 mb-2 pl-4">
-    <img
-        src={logoVera}
-        alt="Vera Logo"
-        className="w-[135px] h-auto object-contain opacity-95"
-    />
-</div>
+            <div className="-mt-10 mb-2 pl-4">
+                <img
+                    src={logoVera}
+                    alt="Vera Logo"
+                    className="w-[135px] h-auto object-contain opacity-95"
+                />
+            </div>
 
-            {/* Menú principal */}
+            {/* Menú principal dinámico */}
             <div className="flex flex-col gap-2 flex-1">
                 {menuItems.map((item) => {
                     const isActive = location.pathname === item.path;

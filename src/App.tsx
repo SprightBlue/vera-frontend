@@ -21,6 +21,7 @@ import TermsAndConditions from "./presentation/pages/TermsAndConditions";
 import {ChatPage} from "./features/Chat/view/ChatPage.tsx";
 import {AICenterPage} from "./features/AiCenterPage.tsx";
 import AcceptInvitePage from "./presentation/pages/invite/AcceptInvitePage";
+import MyCarers from "./presentation/pages/persons/My-Carers.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -144,6 +145,11 @@ function App() {
                 <Route
                     path="/incidents"
                     element={<PrivateRoute><Incidents /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/my-carers"
+                    element={<PrivateRoute><MyCarers/></PrivateRoute>}
                 />
 
 
