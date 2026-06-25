@@ -1,4 +1,4 @@
-import api from "../../../infrastructure/api/api.ts";
+import { apiClient as api } from "../../../infrastructure/api/auth.repository";
 import type { ChatSession } from "../components/ChatSidebar.tsx";
 
 export type ChatRole = 'USER' | 'MODEL';
@@ -43,6 +43,7 @@ export const chatApi = {
             `/api/v1/chats/${encodeURIComponent(sanitizedId)}/messages`,
             message,
             {
+                // Mantenemos tu header específico para texto plano
                 headers: { 'Content-Type': 'text/plain; charset=utf-8' },
                 responseType: 'text'
             }
