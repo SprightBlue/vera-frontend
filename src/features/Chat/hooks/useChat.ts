@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { chatApi, type ChatMessage } from "../api/chatApi";
-import { useAuth } from "../../../presentation/context/AuthContext.tsx";
+import { useAuth } from "../../../presentation/context/AuthContext";
 import type { ChatSession } from "../components/ChatSidebar";
 
 interface UseChatReturn {
