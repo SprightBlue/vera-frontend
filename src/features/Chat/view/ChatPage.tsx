@@ -8,7 +8,7 @@ import Header from "../../../presentation/components/Header.tsx";
 import { ChatSidebar } from "../components/ChatSidebar";
 import { ChatRoom } from "../components/ChatRoom";
 import { useChat } from "../hooks/useChat";
-import { useAuth } from "../../../presentation/context/AuthContext.tsx";
+import { useAuth } from "../../../presentation/context/AuthContext";
 
 export function ChatPage() {
     const { user } = useAuth();

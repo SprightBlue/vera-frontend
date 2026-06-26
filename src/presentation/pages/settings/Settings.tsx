@@ -21,7 +21,7 @@ function Settings() {
             criticalAlertsEnabled: criticalAlerts,
             weeklySummaryEnabled: weeklySummary
         };
-        
+
         console.log("Datos listos para enviar al backend:", preferencesPayload);
         alert("Cambios guardados correctamente");
         setIsEditing(false);
@@ -50,15 +50,15 @@ function Settings() {
                     body: formData
                 }
             );
-    
+
             if (!response.ok) {
                 throw new Error("Error subiendo imagen");
             }
-    
+
             const data = await response.json();
             user.image = data.image;
             updateUser(user);
-    
+
         } catch(error) {
             console.error(error);
         }
@@ -87,10 +87,10 @@ function Settings() {
                             <div className="flex items-center gap-5">
                                 {user?.image ? (
                                     <img
-                                    src={user.image}
-                                    alt="Perfil"
-                                    className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
-                                />
+                                        src={user.image}
+                                        alt="Perfil"
+                                        className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                                    />
                                 ) : (
                                     <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
                                         {user?.fullName?.charAt(0) || "U"}

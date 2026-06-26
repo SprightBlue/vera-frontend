@@ -1,3 +1,5 @@
+import { apiClient } from "../../../infrastructure/api/auth.repository";
+
 export interface AnalyzeRequestDto {
     text?: string;
     file?: File | null;
@@ -17,38 +19,18 @@ export interface AnalysisResultDto {
     recommendation: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-const ANALYSIS_ENDPOINT = '/api/v1/analysis';
-
 export async function analyzeMessage(payload: AnalyzeRequestDto): Promise<AnalysisResultDto> {
-    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token'); 
-
-    const headers: Record<string, string> = {};
-
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
     const formData = new FormData();
 
-    if (payload.text) {
-        formData.append('text', payload.text);
-    }
-    if (payload.file) {
-        formData.append('file', payload.file);
-    }
+    if (payload.text) formData.append('text', payload.text);
+    if (payload.file) formData.append('file', payload.file);
     formData.append('source', payload.source);
 
-    const response = await fetch(`${API_URL}${ANALYSIS_ENDPOINT}`, {
-        method: 'POST',
-        headers: headers,
-        body: formData,
+    const response = await apiClient.post<AnalysisResultDto>('/api/v1/analysis', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data' // Axios detectará el boundary automáticamente
+        }
     });
 
-    if (!response.ok) {
-        const errorText = await response.text().catch(() => '');
-        throw new Error(`Error en el análisis (${response.status}): ${errorText}`.trim());
-    }
-
-    return await response.json() as AnalysisResultDto;
+    return response.data;
 }

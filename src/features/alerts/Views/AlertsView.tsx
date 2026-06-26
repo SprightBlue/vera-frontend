@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../presentation/context/AuthContext';
 import Sidebar from '../../../presentation/components/Sidebar';
 import Header from '../../../presentation/components/Header';
-import { useAlerts } from '../hooks/useAlerts.ts';
+import { useAlerts } from '../hooks/useAlerts';
 import { Inbox } from "lucide-react";
 
 type FilterType = 'ALL' | 'UNRESOLVED' | 'RESOLVED';
