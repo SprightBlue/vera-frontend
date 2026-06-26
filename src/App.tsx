@@ -21,6 +21,7 @@ import TermsAndConditions from "./presentation/pages/TermsAndConditions";
 import {ChatPage} from "./features/Chat/view/ChatPage.tsx";
 import {AICenterPage} from "./features/AiCenterPage.tsx";
 import AcceptInvitePage from "./presentation/pages/invite/AcceptInvitePage";
+import MyCarers from "./presentation/pages/persons/My-Carers.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -57,65 +58,7 @@ function App() {
                     path="/logout"
                     element={<Login />}
                 />
-
-                <Route path="/ai-center" element={<AICenterPage />} />
-
-                <Route
-                    path="/analysis"
-                    element={<AnalysisPage />}
-                />
-
-                <Route
-                    path="/chat"
-                    element={<ChatPage />}
-                />
-
-                {/* Privadas */}
-                <Route
-                    path="/dashboard"
-                    element={<Dashboard />}
-                />
-
-                <Route
-                    path="/persons"
-                    element={<Persons />}
-                />
-
-                <Route
-                    path="/persons/:id"
-                    element={<PersonDetail />}
-                />
-
-                <Route
-                    path="/persons/personConfig"
-                    element={<PersonConfiguration />}
-                />
-
-                <Route
-                    path="/alerts"
-                    element={<PrivateRoute><AlertsView /></PrivateRoute>}
-                />
-
-                <Route
-                    path="/alerts/:alertId"
-                    element={<AlertDetail />}
-                />
-
-                <Route
-                    path="/contacts"
-                    element={<PrivateRoute><Contacts /></PrivateRoute>}
-                />
-
-                <Route
-                    path="/settings"
-                    element={<Settings />}
-                />
-
-                <Route
-                    path="/manual"
-                    element={<ManualView />}
-                />
-
+                
                 <Route
                     path="/forgot-password"
                     element={<ForgotPassword />}
@@ -132,14 +75,83 @@ function App() {
                 />
 
                 <Route
+                    path="/invite/:token"
+                    element={<AcceptInvitePage />}
+                />
+                
+
+
+                {/* Privadas */}
+
+                <Route path="/ai-center" 
+                element={<PrivateRoute><AICenterPage /></PrivateRoute>} 
+                />
+
+                <Route
+                    path="/analysis"
+                    element={<PrivateRoute><AnalysisPage /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/chat"
+                    element={<PrivateRoute><ChatPage /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/dashboard"
+                    element={<PrivateRoute><Dashboard /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/persons"
+                    element={<PrivateRoute><Persons /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/persons/:id"
+                    element={<PrivateRoute><PersonDetail /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/persons/personConfig"
+                    element={<PrivateRoute><PersonConfiguration /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/alerts"
+                    element={<PrivateRoute><AlertsView /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/alerts/:alertId"
+                    element={<PrivateRoute><AlertDetail /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/contacts"
+                    element={<PrivateRoute><Contacts /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/settings"
+                    element={<PrivateRoute><Settings /></PrivateRoute>}
+                />
+
+                <Route
+                    path="/manual"
+                    element={<PrivateRoute><ManualView /></PrivateRoute>}
+                />
+
+                <Route
                     path="/incidents"
                     element={<PrivateRoute><Incidents /></PrivateRoute>}
                 />
 
                 <Route
-                    path="/invite/:token"
-                    element={<AcceptInvitePage />}
+                    path="/my-carers"
+                    element={<PrivateRoute><MyCarers/></PrivateRoute>}
                 />
+
 
             </Routes>
 
