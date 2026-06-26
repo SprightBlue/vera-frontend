@@ -75,76 +75,76 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
-  setForm({
-    ...form,
-    [e.target.name]: e.target.value
-  });
-};
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
-const handleSubmit = async (
-  e: React.FormEvent
-) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
+    try {
 
-    const data =
-  await authRepository.login(form);
+      const data =
+        await authRepository.login(form);
 
-login(
-  data,
-  rememberMe
-);
+      login(
+        data,
+        rememberMe
+      );
 
-navigate('/dashboard');
+      navigate('/dashboard');
 
-  } catch {
+    } catch {
 
-    alert(
-      'Email o contraseña incorrectos'
-    );
-  }
-};
-
-const handleGoogleSuccess = async (
-  credentialResponse: CredentialResponse
-) => {
-
-  try {
-
-    if (!credentialResponse.credential) {
-
-      throw new Error(
-        'No se recibió credential'
+      alert(
+        'Email o contraseña incorrectos'
       );
     }
+  };
 
-    const data =
-  await authRepository.googleLogin(
-    credentialResponse.credential
-  );
+  const handleGoogleSuccess = async (
+    credentialResponse: CredentialResponse
+  ) => {
 
-login(
-  data,
-  rememberMe
-);
+    try {
 
-navigate('/dashboard');
+      if (!credentialResponse.credential) {
 
-  } catch (error) {
+        throw new Error(
+          'No se recibió credential'
+        );
+      }
 
-    console.error(error);
+      const data =
+        await authRepository.googleLogin(
+          credentialResponse.credential
+        );
 
-    alert(
-      'Error al iniciar sesión con Google'
-    );
-  }
-};
+      login(
+        data,
+        rememberMe
+      );
 
-return (
+      navigate('/dashboard');
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        'Error al iniciar sesión con Google'
+      );
+    }
+  };
+
+  return (
     <div className="w-full min-h-screen flex bg-[#05070D] text-white">
 
       {/* IZQUIERDA */}
@@ -211,6 +211,7 @@ return (
               name="email"
               value={form.email}
               onChange={handleChange}
+              autoComplete="email"
             />
 
             <div>
@@ -224,6 +225,7 @@ return (
                   name="password"
                   value={form.password}
                   onChange={handleChange}
+                  autoComplete="current-password"
                   className="w-full h-14 rounded-2xl px-5 pr-14 bg-[#12141C] border border-white/10"
                 />
 
@@ -248,21 +250,21 @@ return (
 
             <div className="flex items-center gap-2">
 
-  <input
-    type="checkbox"
-    checked={rememberMe}
-    onChange={(e) =>
-      setRememberMe(
-        e.target.checked
-      )
-    }
-  />
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) =>
+                  setRememberMe(
+                    e.target.checked
+                  )
+                }
+              />
 
-  <label className="text-sm text-gray-400">
-    Recordarme por 30 días
-  </label>
+              <label className="text-sm text-gray-400">
+                Recordarme por 30 días
+              </label>
 
-</div>
+            </div>
 
             <button
               type="submit"
@@ -282,20 +284,20 @@ return (
 
           <div className="flex justify-center">
 
-  <GoogleLogin
-    onSuccess={handleGoogleSuccess}
-    onError={() =>
-      alert(
-        'Error al iniciar sesión con Google'
-      )
-    }
-    theme="filled_black"
-    shape="pill"
-    size="large"
-    text="continue_with"
-  />
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() =>
+                alert(
+                  'Error al iniciar sesión con Google'
+                )
+              }
+              theme="filled_black"
+              shape="pill"
+              size="large"
+              text="continue_with"
+            />
 
-</div>
+          </div>
 
           <p className="text-center text-sm text-gray-400 mt-8">
             ¿No tenés cuenta?{' '}
