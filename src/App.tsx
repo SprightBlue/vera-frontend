@@ -22,6 +22,7 @@ import {ChatPage} from "./features/Chat/view/ChatPage.tsx";
 import {AICenterPage} from "./features/AiCenterPage.tsx";
 import AcceptInvitePage from "./presentation/pages/invite/AcceptInvitePage";
 import MyCarers from "./presentation/pages/persons/My-Carers.tsx";
+import {useLocationSender} from "./features/location/hooks/useLocationSender.ts";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -29,6 +30,8 @@ function PrivateRoute({ children }: { children: ReactNode }) {
 }
 
 function App() {
+    useLocationSender();
+
     return (
         <BrowserRouter>
             <Routes>

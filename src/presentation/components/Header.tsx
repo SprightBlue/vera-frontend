@@ -36,7 +36,7 @@ function Header({ userName, userRole, title, subtitle }: HeaderProps) {
 
     return (
         <>
-            <header className="sticky top-0 z-40 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all">
+            <header className="sticky top-0 z-410 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all">
                 <div className="flex flex-col min-w-0 max-w-[60%] sm:max-w-none">
                     <h2 className="text-lg sm:text-xl font-medium text-white tracking-tight truncate">{displayTitle}</h2>
                     <p className="text-xs sm:text-sm text-slate-400 mt-1 truncate hidden xs:block">{displaySubtitle}</p>
