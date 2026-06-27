@@ -85,3 +85,24 @@ verifyEmail: async (token: string) => {
   },
 
 };
+
+// Actualiza la foto del usuario en la base de datos
+export async function uploadUserImage(image: File, email: string): Promise<string> {
+  const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+
+  const formData = new FormData();
+            formData.append("image", image);
+            formData.append("email", email);
+
+  const response = await axios.put(
+    "http://localhost:8080/api/v1/files/upload-user-image",
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+  );
+
+  return response.data.image;
+}

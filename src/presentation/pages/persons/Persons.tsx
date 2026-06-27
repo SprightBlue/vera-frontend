@@ -5,20 +5,8 @@ import { Phone, Mail } from "lucide-react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-import { deleteProtectedPerson } from "../../../infrastructure/api/protected-person-api";
-
-interface ProtectedPerson {
-  id: number;
-  fullName: string;
-  email: string;
-  contactNumber: string;
-  relationship: string;
-  status: string;
-  photo?: string;
-  lastActivity?: string;
-}
+import {getProtectedPersons, deleteProtectedPerson, type ProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 
 function Persons() {
 
@@ -27,15 +15,14 @@ function Persons() {
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
 
+  // Se obtienen todas las personas protejidas por el usuario
   useEffect(() => {
     const fetchPersons = async () => {
       try {
-        const miToken = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token') || '';
-
-        const response = await axios.get('http://localhost:8080/api/v1/trust/protected-people', {
-          headers: { Authorization: `Bearer ${miToken}` }
-        });
-        setPersons(response.data);
+        const protectedPersons = await getProtectedPersons();
+        if (protectedPersons.length > 0) {
+            setPersons(protectedPersons);
+        }
       }
       catch (error) {
         console.error("Error al cargar personas del backend", error);
@@ -44,10 +31,10 @@ function Persons() {
         setCargando(false);
       }
     };
-
     fetchPersons();
   }, []);
 
+  // Se elimina una persona protejida asociada a un usuario
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm("¿Estás seguro de que querés eliminar a esta persona de tus protegidos?");
     if (!confirmed) return;
@@ -55,7 +42,7 @@ function Persons() {
     try {
       await deleteProtectedPerson(id);
 
-      setPersons(persons.filter(person => person.id !== id));
+      setPersons(prev => prev.filter(person => person.id !== id));
 
     } catch (error) {
       console.error("Error al eliminar la persona:", error);
@@ -91,11 +78,17 @@ function Persons() {
                     {/* Left */}
                     <div className="flex flex-col md:flex-row items-center gap-6">
                       {/* Photo */}
-                      <img
-                        src={person.photo ||
-                          `https://ui-avatars.com/api/?name=${person.fullName}&background=0D8ABC&color=fff`}
-                        className="w-20 h-20 rounded-full object-cover border border-white/10">
-                      </img>
+                      {person?.image ? (
+                        <img
+                          src={person.image}
+                          alt="Perfil"
+                          className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                        />
+                      ) : (
+                        <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
+                          {person?.fullName?.charAt(0) || "U"}
+                        </div>
+                      )}
                       {/* Info */}
                       <div className="flex flex-col gap-1">
                         <h2 className="text-white text-lg font-semibold">
@@ -107,7 +100,7 @@ function Persons() {
                         </p>
 
                         <p className="text-sm text-gray-400">
-                          Última actividad: {person.lastActivity || 'Sin actividad reciente'}
+                          Última actividad: Sin actividad reciente
                         </p>
                         {person.status === 'PENDING' && (
                           <span className="bg-yellow-500/20 text-yellow-500 text-sm px-4 py-1 rounded mt-2 inline-block w-fit">

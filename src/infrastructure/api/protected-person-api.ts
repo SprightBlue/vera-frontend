@@ -16,18 +16,26 @@ export interface ProtectedPerson {
     id: number;
     protectedUserId: number | null;
     fullName: string;
-    relationshipType: string;
-    phone: string;
+    relationship: string;
+    contactNumber: string;
     email: string;
     notifyHighRisk: boolean;
-    weeklySummaryEnabled: boolean;
+    receiveAlertSummaries?: boolean;
     sensitivityLevel: string;
     status?: string;
+    image?: string;
 }
 
 export interface UpdateProtectedConfig {
     sensitivity: string;
     urgentMonitoring: boolean;
+}
+
+export interface UpdateProtectedInfo {
+    fullName: string,
+    relationship: string,
+    contactNumber: string,
+    image: string
 }
 
 export async function createProtectedPerson(data: CreateProtectedPersonRequest): Promise<void> {
@@ -87,4 +95,50 @@ export async function updateProtectedPerson(id: number, configData: UpdateProtec
     await axios.patch(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
     });
+}
+
+export async function getProtectedPersonById(id: number): Promise<ProtectedPerson> {
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+    const response = await axios.get<ProtectedPerson>(
+        `${API_BASE_URL}/api/v1/trust/protected-people/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+}
+
+export async function updateProtectedPersonInfo(id: number, updatedPerson: UpdateProtectedInfo): Promise<ProtectedPerson> {
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+    const payload = {
+        fullName: updatedPerson.fullName,
+        relationship: updatedPerson.relationship,
+        contactNumber: updatedPerson.contactNumber,
+        image: updatedPerson.image
+    };
+
+    const response = await axios.patch(`${API_BASE_URL}/api/v1/trust/protected-people/edit-person/${id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return response.data;
+}
+
+export async function uploadImage(image: File): Promise<string> {
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    const response = await axios.patch(
+        `${API_BASE_URL}/api/v1/files/upload-protected-person-image`,
+        formData,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data"
+            },
+            responseType: "text"
+        }
+    );
+    
+    return response.data;
 }
