@@ -5,10 +5,10 @@ import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons } from "../../../infrastructure/api/protected-person-api";
+import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 
-// Interfaz alineada con lo que devuelve el backend actualmente
 interface ProtectedPerson {
-    id: number;
+    id: number; // Este ID representa el trustContactId (vínculo relacional)
     fullName: string;
     email: string;
     contactNumber: string;
@@ -16,7 +16,7 @@ interface ProtectedPerson {
     status: string;
     sensitivityLevel: string;
     notifyHighRisk: boolean;
-    photo?: string; // Provisorio
+    photo?: string;
 }
 
 function PersonDetail() {
@@ -47,7 +47,7 @@ function PersonDetail() {
     return (
         <div className="flex min-h-screen bg-[#050816]">
             <Sidebar />
-            <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
+            <main className="flex-1 flex flex-col min-w-0 ml-65">
                 <Header
                     userName={user?.fullName || "Usuario"}
                     title="Personas que cuido"
@@ -114,8 +114,8 @@ function PersonDetail() {
                                     </div>
 
                                     {/* Botón de Configuración */}
-                                    <button 
-                                        onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })} 
+                                    <button
+                                        onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })}
                                         className="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer h-fit"
                                     >
                                         <Settings className="w-5 h-5" />
@@ -124,9 +124,17 @@ function PersonDetail() {
                                 </div>
                             </div>
 
-                            {/* Tarjetas de Estado (Solo lo que existe en la BD) */}
+                            {/* Tarjetas de Estado */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                
+
+                                {/* 💡 MAPA COMPLETO INTEGRADO: Toma todo el ancho de la grilla */}
+                                {person && (
+                                    <LocationCard
+                                        trustContactId={person.id}
+                                        personName={person.fullName}
+                                    />
+                                )}
+
                                 {/* Tarjeta: Sensibilidad Actual */}
                                 <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8">
                                     <div className="flex items-center gap-4 mb-8">
@@ -144,12 +152,12 @@ function PersonDetail() {
 
                                     <div className="mt-8">
                                         <div className="w-full h-3 bg-[#182033] rounded-full overflow-hidden">
-                                            <div 
+                                            <div
                                                 className={`h-full rounded-full transition-all duration-500 ${
                                                     person?.sensitivityLevel === 'BAJO' ? 'w-1/3 bg-emerald-500' :
-                                                    person?.sensitivityLevel === 'MEDIO' ? 'w-1/2 bg-blue-500' :
-                                                    person?.sensitivityLevel === 'ALTO' ? 'w-full bg-red-500' : 'w-0'
-                                                }`} 
+                                                        person?.sensitivityLevel === 'MEDIO' ? 'w-1/2 bg-blue-500' :
+                                                            person?.sensitivityLevel === 'ALTO' ? 'w-full bg-red-500' : 'w-0'
+                                                }`}
                                             />
                                         </div>
                                         <div className="flex justify-between mt-2 text-gray-500 text-sm">
@@ -161,7 +169,7 @@ function PersonDetail() {
                                 </div>
 
                                 {/* Tarjeta: Alertas Urgentes Actuales */}
-                                <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8">
+                                <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 md:col-span-2 lg:col-span-1">
                                     <div className="flex items-center gap-4 mb-8">
                                         <div className="bg-[#182033] p-3 rounded-full">
                                             <ShieldCheck size={20} className={person?.notifyHighRisk ? "text-emerald-400" : "text-gray-500"} />
@@ -174,8 +182,8 @@ function PersonDetail() {
                                             {person?.notifyHighRisk ? 'Monitoreo Activo' : 'Monitoreo Pausado'}
                                         </h2>
                                         <p className="text-gray-400 text-center text-sm">
-                                            {person?.notifyHighRisk 
-                                                ? 'Las notificaciones inmediatas ante riesgos altos están habilitadas.' 
+                                            {person?.notifyHighRisk
+                                                ? 'Las notificaciones inmediatas ante riesgos altos están habilitadas.'
                                                 : 'No recibirás notificaciones inmediatas si se detecta un riesgo alto.'}
                                         </p>
                                     </div>
