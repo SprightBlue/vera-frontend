@@ -13,11 +13,18 @@ interface HeaderProps {
     subtitle?: string;
 }
 
-function Header({ userName = "Usuario", userRole = "Protector", title, subtitle }: HeaderProps) {
+function Header({ userName, userRole, title, subtitle }: HeaderProps) {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user } = useAuth(); 
 
-    const displayTitle = title ?? `Bienvenido, ${userName}`;
+    const finalUserName = user?.fullName || userName || "Usuario";
+
+    let finalUserRole = "Protector";  
+    if (user?.role === 'PROTECTED') finalUserRole = "Protegido";
+    if (user?.role === 'ADMIN') finalUserRole = "Administrador";
+    if (!user?.role && userRole) finalUserRole = userRole;
+
+    const displayTitle = title ?? `Bienvenido, ${finalUserName}`;
     const displaySubtitle = subtitle ?? "Aquí tienes el resumen del bienestar de tus protegidos.";
 
     const { notifications, isRinging, isProcessing, handleMarkAllRead, handleAction } = useNotifications();
@@ -29,7 +36,7 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
 
     return (
         <>
-            <header className="sticky top-0 z-40 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all">
+            <header className="sticky top-0 z-410 flex items-center justify-between w-full px-4 sm:px-8 py-5 bg-[#050816]/80 backdrop-blur-md border-b border-white/5 transition-all">
                 <div className="flex flex-col min-w-0 max-w-[60%] sm:max-w-none">
                     <h2 className="text-lg sm:text-xl font-medium text-white tracking-tight truncate">{displayTitle}</h2>
                     <p className="text-xs sm:text-sm text-slate-400 mt-1 truncate hidden xs:block">{displaySubtitle}</p>
@@ -51,18 +58,21 @@ function Header({ userName = "Usuario", userRole = "Protector", title, subtitle 
 
                     <div className="flex items-center gap-3 border-l border-white/5 pl-3 sm:pl-6">
                         <div className="flex-col items-end hidden sm:flex">
-                            <span className="text-sm font-semibold text-white">{userName}</span>
-                            <span className="text-[10px] uppercase tracking-widest text-slate-500 font-medium">{userRole}</span>
+                            <span className="text-sm font-semibold text-white">{finalUserName}</span>
+                            {/* Mostramos el rol traducido dinámicamente */}
+                            <span className="text-[10px] uppercase tracking-widest text-slate-500 font-medium">
+                                {finalUserRole}
+                            </span>
                         </div>
                         {user?.image ? (
                             <img
-                            src={user.image}
-                            alt="Perfil"
-                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0"
-                        />
+                                src={user.image}
+                                alt="Perfil"
+                                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover bg-slate-800 border border-white/10 flex items-center justify-center shrink-0"
+                            />
                         ) : (
                             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">
-                                {userName.charAt(0).toUpperCase()}
+                                {finalUserName.charAt(0).toUpperCase()}
                             </div>
                         )}
                     </div>

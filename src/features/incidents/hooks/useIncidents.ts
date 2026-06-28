@@ -3,14 +3,18 @@ import { getProtectedPersons } from "../../../infrastructure/api/protected-perso
 import {
     getIncidentsByTrustContact,
     getIncidentDetail,
+    getMyIncidents,
 } from "../../../infrastructure/api/incidents-api";
 import type { IncidentSummary, IncidentDetail } from "../../../domain/models/Incident";
+import { useAuth } from "../../../presentation/context/AuthContext";
 
 export interface Person { id: number; fullName: string; status: string; }
 
 export const PAGE_SIZE = 5;
 
 export function useIncidents() {
+    const { user } = useAuth();
+
     const [persons, setPersons] = useState<Person[]>([]);
     const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
     const [incidents, setIncidents] = useState<IncidentSummary[]>([]);
@@ -23,22 +27,34 @@ export function useIncidents() {
     const [loadingDetail, setLoadingDetail] = useState(false);
 
     useEffect(() => {
-        getProtectedPersons()
-            .then(data => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const active = (data as any[]).filter(p => p.status === "ACTIVE") as Person[];
-                setPersons(active);
-                if (active.length > 0) setSelectedPersonId(active[0].id);
-            })
-            .catch(console.error);
-    }, []);
+        if (user?.role === 'PROTECTED') {
+            if (user.id) {
+                setSelectedPersonId(user.id);
+            }
+        } else if (user?.role === 'CARER') {
+            getProtectedPersons()
+                .then(data => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const active = (data as any[]).filter(p => p.status === "ACTIVE") as Person[];
+                    setPersons(active);
+                    if (active.length > 0) setSelectedPersonId(active[0].id);
+                })
+                .catch(console.error);
+        }
+    }, [user]);
 
     useEffect(() => {
-        if (selectedPersonId == null) return;
+        if (user?.role === 'CARER' && selectedPersonId == null) return;        
+
         setLoadingList(true);
         setSelectedId(null);
         setDetail(null);
-        getIncidentsByTrustContact(selectedPersonId, currentPage, PAGE_SIZE)
+        
+        const fetchIncidents = user?.role === 'PROTECTED'
+            ? getMyIncidents(currentPage, PAGE_SIZE) 
+            : getIncidentsByTrustContact(selectedPersonId!, currentPage, PAGE_SIZE); 
+          
+        fetchIncidents
             .then(res => {
                 setIncidents(res.content);
                 setTotalElements(res.totalElements);

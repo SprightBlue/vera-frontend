@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { apiClient } from "../../../infrastructure/api/auth.repository";
 
 export interface InvitationPayload { id: number; fullName: string; caregiverName: string; relationship: string; }
 export interface AlertPayload { alertId: string; riskLevel: string; protectedUserName: string; }
@@ -20,15 +20,10 @@ export interface AppNotification {
     createdAt: string;
 }
 
-const getHeaders = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token') || ''}`,
-    'Content-Type': 'application/json'
-});
-
 export async function fetchAllNotifications(): Promise<AppNotification[]> {
-    const res = await fetch(`${API_URL}/api/v1/notifications`, { headers: getHeaders() });
-    if (!res.ok) throw new Error('Error al cargar notificaciones');
-    const data = await res.json();
+    const response = await apiClient.get('/api/v1/notifications');
+    const data = response.data;
+
     if (data && data.content && Array.isArray(data.content)) {
         return data.content;
     }
@@ -36,18 +31,17 @@ export async function fetchAllNotifications(): Promise<AppNotification[]> {
 }
 
 export async function markAllRead(): Promise<void> {
-    await fetch(`${API_URL}/api/v1/notifications/read-all`, { method: 'PATCH', headers: getHeaders() });
+    await apiClient.patch('/api/v1/notifications/read-all');
 }
 
 export async function acceptInvitation(id: number): Promise<void> {
-    await fetch(`${API_URL}/api/v1/trust/invitations/${id}/accept`, { method: 'POST', headers: getHeaders() });
+    await apiClient.post(`/api/v1/trust/invitations/${id}/accept`);
 }
 
 export async function rejectInvitation(id: number): Promise<void> {
-    await fetch(`${API_URL}/api/v1/trust/invitations/${id}/reject`, { method: 'POST', headers: getHeaders() });
+    await apiClient.post(`/api/v1/trust/invitations/${id}/reject`);
 }
 
 export async function deleteNotification(id: string): Promise<void> {
-    const res = await fetch(`${API_URL}/api/v1/notifications/${id}`, { method: 'DELETE', headers: getHeaders() });
-    if (!res.ok) throw new Error('Error al eliminar la notificación');
+    await apiClient.delete(`/api/v1/notifications/${id}`);
 }

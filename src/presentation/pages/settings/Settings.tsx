@@ -23,7 +23,7 @@ function Settings() {
             criticalAlertsEnabled: criticalAlerts,
             weeklySummaryEnabled: weeklySummary
         };
-        
+
         console.log("Datos listos para enviar al backend:", preferencesPayload);
         alert("Cambios guardados correctamente");
         setIsEditing(false);
@@ -41,7 +41,7 @@ function Settings() {
 
             user.image = imageUrl;
             updateUser(user);
-    
+
         } catch(error) {
             console.error(error);
         }

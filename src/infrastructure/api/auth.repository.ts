@@ -3,14 +3,12 @@ import type { LoginRequest, RegisterRequest, AuthResponse } from '../auth.types'
 
 const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080';
 
-
 export const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
 
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
@@ -20,66 +18,43 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-export const authRepository = {
-
-async login(
-  credentials: LoginRequest
-): Promise<AuthResponse> {
-
-  const response =
-    await apiClient.post<AuthResponse>(
-      '/api/v1/auth/login',
-      credentials
-    );
-
-  return response.data;
-},
-
-
-async googleLogin(
-  credential: string
-): Promise<AuthResponse> {
-
-  const response =
-    await apiClient.post<AuthResponse>(
-      '/api/v1/auth/google',
-      {
-        credential
+apiClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/login';
       }
-    );
+      return Promise.reject(error);
+    }
+);
 
-  return response.data;
-},
-
-  async register(data: RegisterRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>(
-      '/api/v1/auth/register',
-      data
-    );
+export const authRepository = {
+  async login(credentials: LoginRequest): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/api/v1/auth/login', credentials);
     return response.data;
   },
 
-async forgotPassword(email: string): Promise<void> {
-  await apiClient.post(
-    '/api/v1/auth/forgot-password',
-    { email }
-  );
-},
+  async googleLogin(credential: string): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/api/v1/auth/google', { credential });
+    return response.data;
+  },
 
-async resetPassword(
-  token: string,
-  newPassword: string
-): Promise<void> {
-  await apiClient.post(
-    '/api/v1/auth/reset-password',
-    {
-      token,
-      newPassword
-    }
-  );
-},
+  async register(data: RegisterRequest): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/api/v1/auth/register', data);
+    return response.data;
+  },
 
-verifyEmail: async (token: string) => {
+  async forgotPassword(email: string): Promise<void> {
+    await apiClient.post('/api/v1/auth/forgot-password', { email });
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    await apiClient.post('/api/v1/auth/reset-password', { token, newPassword });
+  },
+
+  verifyEmail: async (token: string) => {
     const response = await apiClient.get(`/api/v1/auth/verify?token=${token}`);
     return response.data;
   },
@@ -105,4 +80,4 @@ export async function uploadUserImage(image: File, email: string): Promise<strin
   );
 
   return response.data.image;
-}
+};

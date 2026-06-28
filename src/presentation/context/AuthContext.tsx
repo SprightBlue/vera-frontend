@@ -22,99 +22,99 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Al montar, recupera la sesión guardada en localStorage
   // para que el usuario no tenga que loguearse de nuevo al refrescar.
   useEffect(() => {
-   const token =
-  localStorage.getItem('vera_token')
-  ||
-  sessionStorage.getItem('vera_token');
+    const token =
+        localStorage.getItem('vera_token')
+        ||
+        sessionStorage.getItem('vera_token');
 
-const userData =
-  localStorage.getItem('vera_user')
-  ||
-  sessionStorage.getItem('vera_user');
+    const userData =
+        localStorage.getItem('vera_user')
+        ||
+        sessionStorage.getItem('vera_user');
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
   }, []);
 
   const login = (
-  userData: AuthUser,
-  rememberMe = false
-) => {
+      userData: AuthUser,
+      rememberMe = false
+  ) => {
 
-  const storage =
-    rememberMe
-      ? localStorage
-      : sessionStorage;
+    const storage =
+        rememberMe
+            ? localStorage
+            : sessionStorage;
 
-  storage.setItem(
-    'vera_token',
-    userData.token
-  );
+    storage.setItem(
+        'vera_token',
+        userData.token
+    );
 
-  storage.setItem(
-    'vera_user',
-    JSON.stringify(userData)
-  );
+    storage.setItem(
+        'vera_user',
+        JSON.stringify(userData)
+    );
 
-  setUser(userData);
-};
+    setUser(userData);
+  };
 
   const logout = () => {
 
-  localStorage.removeItem(
-    'vera_token'
-  );
+    localStorage.removeItem(
+        'vera_token'
+    );
 
-  localStorage.removeItem(
-    'vera_user'
-  );
+    localStorage.removeItem(
+        'vera_user'
+    );
 
-  sessionStorage.removeItem(
-    'vera_token'
-  );
+    sessionStorage.removeItem(
+        'vera_token'
+    );
 
-  sessionStorage.removeItem(
-    'vera_user'
-  );
+    sessionStorage.removeItem(
+        'vera_user'
+    );
 
-  setUser(null);
-};
+    setUser(null);
+  };
 
 // Actualiza datos del usuario en la sesión
-const updateUser = (updatedUser: Partial<AuthUser>) => {
-  setUser(prevUser => {
-    if (!prevUser) return null;
-    const newUser = {
-      ...prevUser,
-      ...updatedUser
-    };
-    // Mantener sincronizado el storage donde está la sesión
-    if (localStorage.getItem('vera_user')) {
-      localStorage.setItem(
-        'vera_user',
-        JSON.stringify(newUser)
-      );
-    }
-    else {
-      sessionStorage.setItem(
-        'vera_user',
-        JSON.stringify(newUser)
-      );
-    }
-    return newUser;
-  });
-};
+  const updateUser = (updatedUser: Partial<AuthUser>) => {
+    setUser(prevUser => {
+      if (!prevUser) return null;
+      const newUser = {
+        ...prevUser,
+        ...updatedUser
+      };
+      // Mantener sincronizado el storage donde está la sesión
+      if (localStorage.getItem('vera_user')) {
+        localStorage.setItem(
+            'vera_user',
+            JSON.stringify(newUser)
+        );
+      }
+      else {
+        sessionStorage.setItem(
+            'vera_user',
+            JSON.stringify(newUser)
+        );
+      }
+      return newUser;
+    });
+  };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      login,
-      logout,
-      updateUser,
-      isAuthenticated: !!user
-    }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{
+        user,
+        login,
+        logout,
+        updateUser,
+        isAuthenticated: !!user
+      }}>
+        {children}
+      </AuthContext.Provider>
   );
 }
 

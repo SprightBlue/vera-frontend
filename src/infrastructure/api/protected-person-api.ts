@@ -139,6 +139,16 @@ export async function uploadImage(image: File): Promise<string> {
             responseType: "text"
         }
     );
+
+    return response.data;
+}
+
+export async function getMyCarers() {
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+    
+    const response = await axios.get(`${API_BASE_URL}/api/v1/trust/my-carers`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
     
     return response.data;
 }
