@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Phone, Mail } from "lucide-react";
 
@@ -7,22 +7,20 @@ import Header from "../../components/Header";
 
 import { useAuth } from "../../context/AuthContext";
 import {getProtectedPersons, deleteProtectedPerson, type ProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import CreateProtectedPersonModal from "../../components/protected-persons/CreateProtectedPersonModal";
 
 function Persons() {
 
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [persons, setPersons] = useState<ProtectedPerson[]>([]);
   const [cargando, setCargando] = useState(true);
-  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
-  // Se obtienen todas las personas protejidas por el usuario
   useEffect(() => {
     const fetchPersons = async () => {
       try {
-        const protectedPersons = await getProtectedPersons();
-        if (protectedPersons.length > 0) {
-            setPersons(protectedPersons);
-        }
+        await loadProtectedPersons();
       }
       catch (error) {
         console.error("Error al cargar personas del backend", error);
@@ -33,6 +31,19 @@ function Persons() {
     };
     fetchPersons();
   }, []);
+
+  // Se obtienen todas las personas protejidas por el usuario
+  const loadProtectedPersons = useCallback(async () => {
+    try {
+      const protectedPersons = await getProtectedPersons();
+      if (protectedPersons.length > 0) {
+          setPersons(protectedPersons);
+      }
+    }
+    catch (error) {
+      console.error("Error cargando protegidos:", error);
+    }
+  }, [user?.role]); 
 
   // Se elimina una persona protejida asociada a un usuario
   const handleDelete = async (id: number) => {
@@ -63,9 +74,18 @@ function Persons() {
 
         <div className="flex justify-center p-8">
           <div className="w-full bg-[#0d1222] border border-[#182033] rounded-3xl py-8 px-12">
-            <h1 className="text-2xl font-semibold text-white mb-8">
-              Todas las personas que cuido
-            </h1>
+            <div className="flex justify-between mb-8">
+              <h1 className="text-2xl font-semibold text-white">
+                Todas las personas que cuido
+              </h1>
+              <button
+                id="add-protected-btn"
+                onClick={() => setShowModal(true)}
+                className="px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium cursor-pointer"
+              >
+                Añadir protegido
+              </button>
+            </div>
             {cargando ? (
               <p className="bg-slate-900/50 border border-slate-800/60 px-8 py-6 rounded-2xl text-gray-400 text-lg">Cargando...</p>
             ) : (
@@ -103,7 +123,7 @@ function Persons() {
                           Última actividad: Sin actividad reciente
                         </p>
                         {person.status === 'PENDING' && (
-                          <span className="bg-yellow-500/20 text-yellow-500 text-sm px-4 py-1 rounded mt-2 inline-block w-fit">
+                          <span className="bg-yellow-500/20 text-yellow-500 text-sm px-4 py-1 rounded-full border border-yellow-500/30 mt-2 inline-block w-fit">
                             Invitación Pendiente
                           </span>
                         )}
@@ -143,6 +163,15 @@ function Persons() {
             )}
           </div>
         </div>
+        {showModal && (
+          <CreateProtectedPersonModal
+            onClose={() => setShowModal(false)}
+            onSuccess={() => {
+              loadProtectedPersons();
+              setShowModal(false);
+            }}
+          />
+        )}
       </main>
     </div>
   );

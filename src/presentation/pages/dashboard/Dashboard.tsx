@@ -123,7 +123,7 @@ function Dashboard() {
                                     <button
                                         id="add-protected-btn"
                                         onClick={() => setShowModal(true)}
-                                        className="px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold text-lg"
+                                        className="px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold text-lg cursor-pointer"
                                     >
                                         Añadir protegido
                                     </button>

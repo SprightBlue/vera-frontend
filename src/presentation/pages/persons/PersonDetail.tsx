@@ -83,7 +83,7 @@ function PersonDetail() {
                                                 className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
                                                 />
                                             ) : (
-                                                <div className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
+                                                <div className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-5xl font-bold text-white">
                                                     {person?.fullName?.charAt(0) || "U"}
                                                 </div>
                                             )}
@@ -116,7 +116,7 @@ function PersonDetail() {
                                             </div>
 
                                             <p className="text-gray-400 mt-4 max-w-xl leading-relaxed">
-                                                Conexión establecida de forma segura. Todos los sistemas están funcionando correctamente.
+                                                Información personal y configuración asociada a este perfil.
                                             </p>
 
                                             <div className="flex flex-col sm:flex-row gap-4 mt-6">
@@ -158,14 +158,6 @@ function PersonDetail() {
 
                             {/* Tarjetas de Estado */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-
-                                {/* 💡 MAPA COMPLETO INTEGRADO: Toma todo el ancho de la grilla */}
-                                {person && (
-                                    <LocationCard
-                                        trustContactId={person.id}
-                                        personName={person.fullName}
-                                    />
-                                )}
 
                                 {/* Tarjeta: Sensibilidad Actual */}
                                 <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8">
@@ -220,7 +212,13 @@ function PersonDetail() {
                                         </p>
                                     </div>
                                 </div>
-
+                                {/* 💡 MAPA COMPLETO INTEGRADO: Toma todo el ancho de la grilla */}
+                                {person && (
+                                    <LocationCard
+                                        trustContactId={person.id}
+                                        personName={person.fullName}
+                                    />
+                                )}
                             </div>
                         </div>
                     )}
