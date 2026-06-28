@@ -2,8 +2,10 @@ import { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
+import { uploadUserImage } from "../../../infrastructure/api/auth.repository";
 
 function Settings() {
+    
     const { user, updateUser } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -33,30 +35,11 @@ function Settings() {
             const image = e.target.files[0];
             if (!image) return;
 
-            const formData = new FormData();
-            formData.append("image", image);
-            formData.append("email", user.email);
-            const token = user.token;
-
             setUploading(true);
 
-            const response = await fetch(
-                "http://localhost:8080/api/v1/files/upload-image",
-                {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: formData
-                }
-            );
+            const imageUrl = await uploadUserImage(image, user.email);
 
-            if (!response.ok) {
-                throw new Error("Error subiendo imagen");
-            }
-
-            const data = await response.json();
-            user.image = data.image;
+            user.image = imageUrl;
             updateUser(user);
 
         } catch(error) {
@@ -87,9 +70,9 @@ function Settings() {
                             <div className="flex items-center gap-5">
                                 {user?.image ? (
                                     <img
-                                        src={user.image}
-                                        alt="Perfil"
-                                        className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                                    src={user.image}
+                                    alt="Perfil"
+                                    className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
                                     />
                                 ) : (
                                     <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
@@ -103,8 +86,8 @@ function Settings() {
                                 </div>
                             </div>
                             <div>
-                                <label className="px-5 py-3 mr-6 rounded-2xl bg-[#3d3d3d] hover:bg-[#323232] transition-colors text-white font-medium cursor-pointer">
-                                    {uploading ? "Subiendo imagen..." : "Cambiar foto"}
+                                <label className="px-5 py-3 mr-6 rounded-2xl bg-white/14 border border-white/20 backdrop-blur-sm text-white font-medium cursor-pointer hover:bg-white/20 hover:border-white/30 transition-all duration-300 active:scale-95">
+                                    {uploading ? "Actualizando.." : "Cambiar foto"}
                                     <input
                                         type="file"
                                         hidden

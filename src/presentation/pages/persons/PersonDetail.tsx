@@ -1,23 +1,13 @@
-import { ArrowLeft, Heart, Settings, Activity, ShieldCheck, Phone, Mail } from "lucide-react";
+import { ArrowLeft, Heart, Link, Clock3, Settings, Activity, ShieldCheck, MapPin, Smartphone, Wifi, MessageCircle, Phone, Mail, MessageSquare, Image, Bell, Info, BatteryCharging, CheckCircle2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
-import { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { getProtectedPersons } from "../../../infrastructure/api/protected-person-api";
-import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 
-interface ProtectedPerson {
-    id: number; // Este ID representa el trustContactId (vínculo relacional)
-    fullName: string;
-    email: string;
-    contactNumber: string;
-    relationship: string;
-    status: string;
-    sensitivityLevel: string;
-    notifyHighRisk: boolean;
-    photo?: string;
-}
+import { useAuth } from "../../context/AuthContext";
+import { getProtectedPersonById, updateProtectedPersonInfo, type ProtectedPerson, type UpdateProtectedInfo } from "../../../infrastructure/api/protected-person-api";
+import EditPersonModal from "../../components/persons/EditPersonModal";
+import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 
 function PersonDetail() {
     const navigate = useNavigate();
@@ -25,13 +15,17 @@ function PersonDetail() {
     const { user } = useAuth();
     const [person, setPerson] = useState<ProtectedPerson | null>(null);
     const [cargando, setCargando] = useState(true);
+    const [showModal, setShowModal] = useState(false);
 
+    // Se obtienen los datos del usuario protejido
     useEffect(() => {
         const fetchPerson = async () => {
             try {
-                const data = await getProtectedPersons();
-                const foundPerson = data.find((p: { id: number }) => p.id === Number(id));
-                setPerson((foundPerson as unknown as ProtectedPerson) || null);
+                const personId = Number(id);
+                if (!id || isNaN(personId)) return;
+                const protectedPerson = await getProtectedPersonById(personId);
+                setPerson(protectedPerson);
+                console.log(protectedPerson)
             }
             catch (error) {
                 console.error("Error al cargar la persona:", error);
@@ -40,9 +34,14 @@ function PersonDetail() {
                 setCargando(false);
             }
         };
-
         fetchPerson();
     }, [id]);
+
+    // Se actualizan los datos del protejido al enviar el formulario
+    const handleEditPerson = async (id:number, updatedPerson: UpdateProtectedInfo) => {
+        const protectedPerson = await updateProtectedPersonInfo(id, updatedPerson);
+        setPerson(protectedPerson);
+    };
 
     return (
         <div className="flex min-h-screen bg-[#050816]">
@@ -77,11 +76,17 @@ function PersonDetail() {
                                     <div className="flex flex-col md:flex-row gap-6">
                                         {/* Foto */}
                                         <div className="py-2">
-                                            <img
-                                                src={person?.photo || `https://ui-avatars.com/api/?name=${person?.fullName}&background=0D8ABC&color=fff`}
-                                                alt={person?.fullName}
-                                                className="w-28 h-28 rounded-full object-cover border-4 border-[#182033]"
-                                            />
+                                            {person?.image ? (
+                                                <img
+                                                src={person.image}
+                                                alt="Perfil"
+                                                className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                                                />
+                                            ) : (
+                                                <div className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-5xl font-bold text-white">
+                                                    {person?.fullName?.charAt(0) || "U"}
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Info Básica */}
@@ -99,41 +104,60 @@ function PersonDetail() {
                                                 )}
                                             </div>
 
-                                            {/* Contacto Real */}
-                                            <div className="flex flex-col gap-2 mt-4">
-                                                <div className="flex items-center gap-2 text-gray-400">
-                                                    <Mail size={16} />
-                                                    <span>{person?.email}</span>
+                                            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-5 mt-3">
+                                                <div className="flex items-center gap-2 text-gray-300 text-md">
+                                                    <Mail className="w-4 h-4 text-blue-400" />
+                                                    {person.email}
                                                 </div>
-                                                <div className="flex items-center gap-2 text-gray-400">
-                                                    <Phone size={16} />
-                                                    <span>{person?.contactNumber}</span>
+                                                <div className="flex items-center gap-2 text-gray-300 text-md">
+                                                    <Phone className="w-4 h-4 text-blue-400" />
+                                                    {person.contactNumber}
+                                                </div>
+                                            </div>
+
+                                            <p className="text-gray-400 mt-4 max-w-xl leading-relaxed">
+                                                Información personal y configuración asociada a este perfil.
+                                            </p>
+
+                                            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                                                <div className="flex items-center gap-3 bg-[#111827] border border-[#182033] px-4 py-3 rounded-2xl">
+                                                    <Link className="w-4 h-4 text-blue-400" />
+
+                                                    <span className="text-gray-300 text-sm">
+                                                        Conectado desde Ago 2023
+                                                    </span>
+                                                </div>
+
+                                                <div className="flex items-center gap-3 bg-[#111827] border border-[#182033] px-4 py-3 rounded-2xl">
+                                                    <Clock3 className="w-4 h-4 text-blue-400" />
+
+                                                    <span className="text-gray-300 text-sm">
+                                                        Última actividad: Sin actividad reciente
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Botón de Configuración */}
-                                    <button
-                                        onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })}
-                                        className="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer h-fit"
-                                    >
-                                        <Settings className="w-5 h-5" />
-                                        Ajustar configuración
-                                    </button>
+                                    {/* Botones */}
+                                    <div className="flex flex-row">
+                                        <button
+                                            id="add-protected-btn"
+                                            onClick={() => setShowModal(true)}
+                                            className="px-5 py-3 mr-5 rounded-2xl bg-white/14 border border-white/20 backdrop-blur-sm text-white font-medium cursor-pointer hover:bg-white/20 hover:border-white/30 transition-all duration-300 active:scale-95 whitespace-nowrap"
+                                        >
+                                            Editar perfil
+                                        </button>
+                                        <button onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer">
+                                            <Settings className="w-5 h-5" />
+                                            Ajustes
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Tarjetas de Estado */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-
-                                {/* 💡 MAPA COMPLETO INTEGRADO: Toma todo el ancho de la grilla */}
-                                {person && (
-                                    <LocationCard
-                                        trustContactId={person.id}
-                                        personName={person.fullName}
-                                    />
-                                )}
 
                                 {/* Tarjeta: Sensibilidad Actual */}
                                 <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8">
@@ -188,11 +212,25 @@ function PersonDetail() {
                                         </p>
                                     </div>
                                 </div>
-
+                                {/* 💡 MAPA COMPLETO INTEGRADO: Toma todo el ancho de la grilla */}
+                                {person && (
+                                    <LocationCard
+                                        trustContactId={person.id}
+                                        personName={person.fullName}
+                                    />
+                                )}
                             </div>
                         </div>
                     )}
                 </div>
+                {showModal && person && (
+                    <EditPersonModal
+                        person={person}
+                        onClose={() => setShowModal(false)}
+                        onSuccess={() => setShowModal(false)}
+                        onSubmit={handleEditPerson}
+                    />
+                )}
             </main>
         </div>
     );
