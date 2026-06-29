@@ -87,25 +87,39 @@ useEffect(() => {
 };
 
     // Aca se guarda la imagen del usuario y se actualiza la sesion
-    const handleSubmitImage = async (e) => {
-        try {
-            const image = e.target.files[0];
-            if (!image) return;
+    const handleSubmitImage = async (
+    e: React.ChangeEvent<HTMLInputElement>
+) => {
 
-            setUploading(true);
+    if (!user) return;
 
-            const imageUrl = await uploadUserImage(image, user.email);
+    const image = e.target.files?.[0];
 
-            user.image = imageUrl;
-            updateUser(user);
+    if (!image) return;
 
-        } catch (error) {
-            console.error(error);
-        }
-        finally {
-            setUploading(false);
-        }
-    };
+    try {
+
+        setUploading(true);
+
+        const imageUrl = await uploadUserImage(
+            image,
+            user.email
+        );
+
+        updateUser({
+            image: imageUrl
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    } finally {
+
+        setUploading(false);
+
+    }
+};
 
     return (
         <div className="flex min-h-screen bg-[#050816]">
