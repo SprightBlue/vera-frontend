@@ -1,33 +1,90 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
 import { uploadUserImage } from "../../../infrastructure/api/auth.repository";
+import {
+    getProfile,
+    updateProfile,
+    type UpdateProfileRequest
+} from "../../../infrastructure/api/profile-api";
+
 
 function Settings() {
-    
+
     const { user, updateUser } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [profile, setProfile] = useState<UpdateProfileRequest>({
+    fullName: "",
+    phone: "",
+    country: ""
+});
 
     // 1. NUEVO: Agregamos los estados para los checkboxes
     const [emailAlerts, setEmailAlerts] = useState(true);
     const [criticalAlerts, setCriticalAlerts] = useState(true);
     const [weeklySummary, setWeeklySummary] = useState(false);
 
-    // Función para simular el guardado en el backend
-    const handleSaveChanges = () => {
-        // Aquí empaquetamos los datos que luego enviaremos a Spring Boot
-        const preferencesPayload = {
-            emailAlertsEnabled: emailAlerts,
-            criticalAlertsEnabled: criticalAlerts,
-            weeklySummaryEnabled: weeklySummary
-        };
 
-        console.log("Datos listos para enviar al backend:", preferencesPayload);
-        alert("Cambios guardados correctamente");
-        setIsEditing(false);
+useEffect(() => {
+
+    const loadProfile = async () => {
+
+        try {
+
+            const data = await getProfile();
+
+            setProfile({
+                fullName: data.fullName,
+                phone: data.phone ?? "",
+                country: data.country ?? ""
+            });
+
+        } catch (error) {
+
+            console.error("Error cargando perfil", error);
+
+        }
+
     };
+
+    loadProfile();
+
+}, []);
+
+
+   
+   const handleSaveChanges = async () => {
+
+    try {
+
+        const updatedProfile = await updateProfile(profile);
+
+        setProfile({
+            fullName: updatedProfile.fullName,
+            phone: updatedProfile.phone ?? "",
+            country: updatedProfile.country ?? ""
+        });
+
+        updateUser({
+            ...user,
+            fullName: updatedProfile.fullName
+        });
+
+        alert("Perfil actualizado correctamente");
+
+        setIsEditing(false);
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("No se pudo actualizar el perfil");
+
+    }
+
+};
 
     // Aca se guarda la imagen del usuario y se actualiza la sesion
     const handleSubmitImage = async (e) => {
@@ -42,7 +99,7 @@ function Settings() {
             user.image = imageUrl;
             updateUser(user);
 
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
         finally {
@@ -70,9 +127,9 @@ function Settings() {
                             <div className="flex items-center gap-5">
                                 {user?.image ? (
                                     <img
-                                    src={user.image}
-                                    alt="Perfil"
-                                    className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                                        src={user.image}
+                                        alt="Perfil"
+                                        className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
                                     />
                                 ) : (
                                     <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
@@ -113,11 +170,17 @@ function Settings() {
                             <div>
                                 <label className="block text-slate-400 mb-2 text-sm">Nombre completo</label>
                                 <input
-                                    type="text"
-                                    disabled={!isEditing}
-                                    defaultValue={user?.fullName || ""}
-                                    className="w-full bg-[#12141c] border border-[#1f2937] rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
-                                />
+    type="text"
+    disabled={!isEditing}
+    value={profile.fullName}
+    onChange={(e) =>
+        setProfile({
+            ...profile,
+            fullName: e.target.value
+        })
+    }
+    className="w-full bg-[#12141c] border border-[#1f2937] rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
+/>
                             </div>
                             <div>
                                 <label className="block text-slate-400 mb-2 text-sm">Correo electrónico</label>
@@ -131,20 +194,32 @@ function Settings() {
                             <div>
                                 <label className="block text-slate-400 mb-2 text-sm">Teléfono</label>
                                 <input
-                                    type="text"
-                                    disabled={!isEditing}
-                                    placeholder="+54 11 1234 5678"
-                                    className="w-full bg-[#12141c] border border-[#1f2937] rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
-                                />
+    type="text"
+    disabled={!isEditing}
+    value={profile.phone}
+    onChange={(e) =>
+        setProfile({
+            ...profile,
+            phone: e.target.value
+        })
+    }
+    className="w-full bg-[#12141c] border border-[#1f2937] rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
+/>
                             </div>
                             <div>
-                                <label className="block text-slate-400 mb-2 text-sm">Zona horaria</label>
+                                <label className="block text-slate-400 mb-2 text-sm">Pais</label>
                                 <input
-                                    type="text"
-                                    disabled={!isEditing}
-                                    defaultValue="Argentina (GMT-3)"
-                                    className="w-full bg-[#12141c] border border-[#1f2937] rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
-                                />
+    type="text"
+    disabled={!isEditing}
+    value={profile.country}
+    onChange={(e) =>
+        setProfile({
+            ...profile,
+            country: e.target.value
+        })
+    }
+    className="w-full bg-[#12141c] border border-[#1f2937] rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
+/>
                             </div>
                         </div>
 
