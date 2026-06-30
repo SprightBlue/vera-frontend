@@ -9,6 +9,7 @@ import {
     type UpdateProfileRequest
 } from "../../../infrastructure/api/profile-api";
 import ChangePasswordModal from "../../components/settings/ChangePasswordModal";
+import ChangeEmailModal from "../../components/settings/ChangeEmailModal";
 
 
 function Settings() {
@@ -17,6 +18,8 @@ function Settings() {
     const [isEditing, setIsEditing] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [showPasswordModal, setShowPasswordModal] =
+        useState(false);
+    const [showEmailModal, setShowEmailModal] =
         useState(false);
     const [profile, setProfile] = useState<UpdateProfileRequest>({
         fullName: "",
@@ -130,14 +133,14 @@ function Settings() {
             <Sidebar />
 
             <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
-               <Header
-    title="Configuración"
-    subtitle="Personaliza tu experiencia y gestiona tu cuenta."
-/>
+                <Header
+                    title="Configuración"
+                    subtitle="Personaliza tu experiencia y gestiona tu cuenta."
+                />
 
                 <div className="p-8 flex-1">
                     {/* PAGE TITLE */}
-                    
+
 
                     {/* PROFILE CARD */}
                     <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
@@ -310,23 +313,29 @@ function Settings() {
                                 <span>Cambiar contraseña</span>
                                 <span className="text-slate-400">→</span>
                             </button>
-                            <button className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors">
+                            <button
+                                onClick={() => setShowEmailModal(true)}
+                                className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors"
+                            >
                                 <span>Cambiar correo electrónico</span>
                                 <span className="text-slate-400">→</span>
                             </button>
                             <button className="w-full flex justify-between items-center bg-[#12141c] border border-red-500/30 rounded-2xl px-5 py-4 text-red-400 hover:bg-red-500/10 transition-colors">
                                 <span>Eliminar cuenta</span>
-                                
+
                             </button>
                         </div>
                     </div>
                 </div>
             </main>
-        <ChangePasswordModal
-    isOpen={showPasswordModal}
-    onClose={() => setShowPasswordModal(false)}
-/>
-        
+            <ChangePasswordModal
+                isOpen={showPasswordModal}
+                onClose={() => setShowPasswordModal(false)}
+            />
+            <ChangeEmailModal
+                isOpen={showEmailModal}
+                onClose={() => setShowEmailModal(false)}
+            />
         </div>
     );
 }

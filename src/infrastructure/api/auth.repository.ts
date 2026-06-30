@@ -22,10 +22,15 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = '/login';
-      }
+
+    localStorage.removeItem("vera_token");
+    localStorage.removeItem("vera_user");
+
+    sessionStorage.removeItem("vera_token");
+    sessionStorage.removeItem("vera_user");
+
+    window.location.href = "/login";
+}
       return Promise.reject(error);
     }
 );
@@ -70,7 +75,7 @@ export async function uploadUserImage(image: File, email: string): Promise<strin
             formData.append("email", email);
 
   const response = await axios.put(
-    "http://localhost:8080/api/v1/files/upload-user-image",
+    `${API_URL}/api/v1/files/upload-user-image`,
     formData,
     {
         headers: {
