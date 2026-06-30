@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { ProtectedPerson, UpdateProtectedConfig, UpdateProtectedInfo } from "../../domain/models/ProtectedPerson";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
@@ -10,32 +11,6 @@ export interface CreateProtectedPersonRequest {
     highRiskAlertsEnabled: boolean;
     weeklySummaryEnabled: boolean;
     notificationSensitivity: string;
-}
-
-export interface ProtectedPerson {
-    id: number;
-    protectedUserId: number | null;
-    fullName: string;
-    relationship: string;
-    contactNumber: string;
-    email: string;
-    notifyHighRisk: boolean;
-    receiveAlertSummaries?: boolean;
-    sensitivityLevel: string;
-    status?: string;
-    image?: string;
-}
-
-export interface UpdateProtectedConfig {
-    sensitivity: string;
-    urgentMonitoring: boolean;
-}
-
-export interface UpdateProtectedInfo {
-    fullName: string,
-    relationship: string,
-    contactNumber: string,
-    image: string
 }
 
 export async function createProtectedPerson(data: CreateProtectedPersonRequest): Promise<void> {
@@ -89,7 +64,8 @@ export async function updateProtectedPerson(id: number, configData: UpdateProtec
 
     const payload = {
         sensitivityLevel: sensibilidadTraducida,
-        notifyHighRisk: configData.urgentMonitoring
+        notifyHighRisk: configData.urgentMonitoring,
+        receiveAlertSummaries: configData.weeklySummary 
     };
 
     await axios.patch(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, payload, {

@@ -1,11 +1,12 @@
-import { ArrowLeft, Heart, Link, Clock3, Settings, Activity, ShieldCheck, MapPin, Smartphone, Wifi, MessageCircle, Phone, Mail, MessageSquare, Image, Bell, Info, BatteryCharging, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Heart, Link, Clock3, Settings, Activity, ShieldCheck, Phone, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
 import { useAuth } from "../../context/AuthContext";
-import { getProtectedPersonById, updateProtectedPersonInfo, type ProtectedPerson, type UpdateProtectedInfo } from "../../../infrastructure/api/protected-person-api";
+import type { ProtectedPerson, UpdateProtectedInfo } from "../../../domain/models/ProtectedPerson.ts";
+import { getProtectedPersonById, updateProtectedPersonInfo } from "../../../infrastructure/api/protected-person-api";
 import EditPersonModal from "../../components/persons/EditPersonModal";
 import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 
