@@ -10,6 +10,7 @@ import {
 } from "../../../infrastructure/api/profile-api";
 import ChangePasswordModal from "../../components/settings/ChangePasswordModal";
 import ChangeEmailModal from "../../components/settings/ChangeEmailModal";
+import DeleteAccountModal from "../../components/settings/DeleteAccountModal";
 
 
 function Settings() {
@@ -20,6 +21,8 @@ function Settings() {
     const [showPasswordModal, setShowPasswordModal] =
         useState(false);
     const [showEmailModal, setShowEmailModal] =
+        useState(false);
+    const [showDeleteAccountModal, setShowDeleteAccountModal] =
         useState(false);
     const [profile, setProfile] = useState<UpdateProfileRequest>({
         fullName: "",
@@ -320,9 +323,12 @@ function Settings() {
                                 <span>Cambiar correo electrónico</span>
                                 <span className="text-slate-400">→</span>
                             </button>
-                            <button className="w-full flex justify-between items-center bg-[#12141c] border border-red-500/30 rounded-2xl px-5 py-4 text-red-400 hover:bg-red-500/10 transition-colors">
+                            <button
+                                onClick={() => setShowDeleteAccountModal(true)}
+                                className="w-full flex justify-between items-center border border-red-900 rounded-2xl px-5 py-4 text-red-500 hover:bg-red-950/20 transition-colors"
+                            >
                                 <span>Eliminar cuenta</span>
-
+                                <span>⚠</span>
                             </button>
                         </div>
                     </div>
@@ -335,6 +341,10 @@ function Settings() {
             <ChangeEmailModal
                 isOpen={showEmailModal}
                 onClose={() => setShowEmailModal(false)}
+            />
+            <DeleteAccountModal
+                isOpen={showDeleteAccountModal}
+                onClose={() => setShowDeleteAccountModal(false)}
             />
         </div>
     );
