@@ -45,7 +45,7 @@ function PersonConfiguration() {
           setFormData({
             sensitivity: sensitivityReact,
             urgentMonitoring: currentPerson.notifyHighRisk ?? true, 
-            weeklySummary: currentPerson.weeklySummaryEnabled ?? false,
+            weeklySummary: currentPerson.receiveAlertSummaries ?? false,
           });
         }
       } catch (error) {
