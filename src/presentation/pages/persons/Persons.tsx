@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone, Mail, ChevronDown } from "lucide-react";
+import { Phone, Mail, ChevronDown, Users } from "lucide-react";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
@@ -143,17 +143,25 @@ function Persons() {
             </div>
             {/* Tarjetas de personas protejidas */}
             {cargando ? (
-              <p className="bg-[#0d1222] border border-[#182033] px-8 py-6 rounded-2xl text-gray-400 text-lg">Cargando...</p>
-            ) : (
+              <div className="space-y-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-2xl border border-slate-900 bg-slate-900/20 p-6 py-8 flex justify-between items-center">
+                    <div className="animate-pulse space-y-4">
+                      <div className="h-4 w-48 bg-slate-800 rounded" />
+                      <div className="h-3 w-32 bg-slate-800/60 rounded" />
+                    </div>
+                    <div className="h-8 w-24 bg-slate-800 rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : filteredPersons.length > 0 ? (
               <div className="flex flex-col gap-5">
                 {filteredPersons.map((person) => (
                   <div
                     key={person.id}
                     className="rounded-3xl bg-[#0d1222] border border-[#182033] p-6 flex flex-col lg:flex-row items-center justify-between"
                   >
-                    {/* Left */}
                     <div className="flex flex-col md:flex-row items-center gap-6">
-                      {/* Photo */}
                       {person?.image ? (
                         <img
                           src={person.image}
@@ -165,7 +173,6 @@ function Persons() {
                           {person?.fullName?.charAt(0) || "U"}
                         </div>
                       )}
-                      {/* Info */}
                       <div className="flex flex-col gap-1">
                         <h2 className="text-white text-lg font-semibold">
                           {person.fullName}
@@ -216,9 +223,23 @@ function Persons() {
                   </div>
                 ))}
               </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center pt-20 gap-4 text-center pb-20">
+                <div className="p-4 rounded-full bg-slate-900 border border-slate-800">
+                  <Users size={40} className="text-slate-600" />
+                </div>
+                <div>
+                  <h3 className="text-slate-200 font-semibold text-lg">No tenés personas protegidas aún.</h3>
+                  <p className="text-slate-500 text-sm max-w-xs mx-auto mt-1">
+                    Invitá a una persona de confianza para que se una a tu círculo de protección.
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </div>
+
+        {/* Modal para añadir protejido */}
         {showModal && (
           <CreateProtectedPersonModal
             onClose={() => setShowModal(false)}

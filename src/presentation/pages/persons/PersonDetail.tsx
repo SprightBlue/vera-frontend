@@ -54,23 +54,33 @@ function PersonDetail() {
                     subtitle="Observa los detalles de cada persona a la que protejes"
                 />
                 <div className="w-full max-w-7xl p-8">
+                    {/* Cabecera con botón volver */}
+                    <div className="flex items-center gap-3 mb-6">
+                        <button
+                            onClick={() => navigate('/persons')}
+                            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-semibold text-white">Detalles de perfil</h1>
+                        </div>
+                    </div>
+                    {/* Pantalla de carga */}
                     {cargando ? (
-                        <p className="bg-slate-900/50 border border-slate-800/60 px-8 py-6 rounded-2xl text-gray-400 text-lg">Cargando perfil...</p>
+                        <div className="space-y-6">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="rounded-2xl border border-slate-900 bg-slate-900/20 p-6 py-8 flex justify-between items-center">
+                                    <div className="animate-pulse space-y-4">
+                                        <div className="h-4 w-48 bg-slate-800 rounded" />
+                                        <div className="h-3 w-32 bg-slate-800/60 rounded" />
+                                    </div>
+                                    <div className="h-8 w-24 bg-slate-800 rounded" />
+                                </div>
+                            ))}
+                        </div>
                     ) : (
                         <div>
-                            {/* Cabecera con botón volver */}
-                            <div className="flex items-center gap-3 mb-6">
-                                <button
-                                    onClick={() => navigate('/persons')}
-                                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                                >
-                                    <ArrowLeft size={20} />
-                                </button>
-                                <div>
-                                    <h1 className="text-2xl font-semibold text-white">Detalles de {person?.fullName}</h1>
-                                </div>
-                            </div>
-
                             {/* Tarjeta Principal: Perfil */}
                             <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-6">
                                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
@@ -79,9 +89,9 @@ function PersonDetail() {
                                         <div className="py-2">
                                             {person?.image ? (
                                                 <img
-                                                src={person.image}
-                                                alt="Perfil"
-                                                className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
+                                                    src={person.image}
+                                                    alt="Perfil"
+                                                    className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
                                                 />
                                             ) : (
                                                 <div className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-5xl font-bold text-white">
@@ -178,11 +188,10 @@ function PersonDetail() {
                                     <div className="mt-8">
                                         <div className="w-full h-3 bg-[#182033] rounded-full overflow-hidden">
                                             <div
-                                                className={`h-full rounded-full transition-all duration-500 ${
-                                                    person?.sensitivityLevel === 'BAJO' ? 'w-1/3 bg-emerald-500' :
+                                                className={`h-full rounded-full transition-all duration-500 ${person?.sensitivityLevel === 'BAJO' ? 'w-1/3 bg-emerald-500' :
                                                         person?.sensitivityLevel === 'MEDIO' ? 'w-1/2 bg-blue-500' :
                                                             person?.sensitivityLevel === 'ALTO' ? 'w-full bg-red-500' : 'w-0'
-                                                }`}
+                                                    }`}
                                             />
                                         </div>
                                         <div className="flex justify-between mt-2 text-gray-500 text-sm">
