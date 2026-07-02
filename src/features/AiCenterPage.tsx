@@ -1,46 +1,79 @@
-import { Search, MessageSquareText} from "lucide-react";
+import { Search, MessageSquareText } from "lucide-react";
 import { Link } from "react-router-dom";
-import Sidebar from "../presentation/components/Sidebar";
-import Header from "../presentation/components/Header";
-import { useAuth } from "../presentation/context/AuthContext";
+import Sidebar from "@/presentation/components/Sidebar";
+import Header from "@/presentation/components/Header";
+import { useAuth } from "@/presentation/context/AuthContext";
 
-export function AICenterPage() {
+function AICenterPage() {
     const { user } = useAuth();
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-[#050816]">
+        <div className="flex h-screen w-full bg-[#050816] overflow-hidden">
             <Sidebar />
-            <div className="flex-1 flex flex-col h-full ml-65">
-                <Header
-                    userName={user?.fullName}
-                    title="Centro de Inteligencia"
-                    subtitle="Seleccioná una herramienta para comenzar"
-                />
 
-                <div className="flex-1 flex items-center justify-center p-8">
-                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
-                        {/* Tarjeta Analizador */}
-                        <Link to="/analysis" className="group p-8 rounded-3xl bg-[#070B1A] border border-[#182033] hover:border-blue-500/50 transition-all flex flex-col items-center text-center shadow-2xl">
-                            <div className="w-20 h-20 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-                                <Search className="text-blue-500" size={40} />
-                            </div>
-                            <h2 className="text-2xl font-bold text-white mb-3">Analizador de Contenido</h2>
-                            <p className="text-slate-400 mb-6">Detectá riesgos en textos, enlaces o contenido multimedia sospechosos con nuestra IA avanzada.</p>
-                            <span className="text-blue-400 font-semibold text-sm border border-blue-500/20 px-4 py-2 rounded-xl">Analizar Ahora</span>
-                        </Link>
+            <main className="flex-1 flex flex-col h-screen pl-20 xl:pl-56 transition-all duration-300">
+                <div className="flex-none">
+                    <Header
+                        userName={user?.fullName}
+                        title="Centro de Inteligencia Artificial"
+                    />
+                </div>
 
-                        {/* Tarjeta Chat */}
-                        <Link to="/chat" className="group p-8 rounded-3xl bg-[#070B1A] border border-[#182033] hover:border-indigo-500/50 transition-all flex flex-col items-center text-center shadow-2xl">
-                            <div className="w-20 h-20 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-                                <MessageSquareText className="text-indigo-500" size={40} />
-                            </div>
-                            <h2 className="text-2xl font-bold text-white mb-3">Asistente Inteligente</h2>
-                            <p className="text-slate-400 mb-6">Conversá con VERA para resolver dudas de seguridad en tiempo real.</p>
-                            <span className="text-indigo-400 font-semibold text-sm border border-indigo-500/20 px-4 py-2 rounded-xl">Iniciar Chat</span>
-                        </Link>
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                    <div className="h-full flex flex-col items-center justify-center py-10 px-8 gap-12">
+
+                        <div className="max-w-3xl text-center shrink-0">
+                            <h1 className="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-white mb-4">
+                                Protección Avanzada con IA
+                            </h1>
+                            <p className="text-[clamp(1rem,1.5vw,1.5rem)] text-slate-400">
+                                Detectá fraudes e ingeniería social en tiempo real con nuestras herramientas de IA.
+                            </p>
+                        </div>
+
+                        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-10 justify-items-center">
+
+                            <Link to="/analysis" className="group relative w-full max-w-md h-[clamp(24rem,35vh,30rem)] p-10 rounded-3xl bg-[#070B1A] border border-[#182033] hover:border-blue-500/50 hover:scale-[1.02] transition-all duration-300 shadow-xl flex flex-col justify-between items-center text-center">
+                                <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+
+                                <div className="relative flex flex-col items-center pt-2">
+                                    <div className="w-20 h-20 rounded-2xl border border-[#182033] bg-blue-500/10 flex items-center justify-center mb-8">
+                                        <Search className="text-blue-500 w-10 h-10" />
+                                    </div>
+                                    <h2 className="text-[clamp(1.5rem,2vw,2rem)] font-bold text-white mb-4">Analizador</h2>
+                                    <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 leading-relaxed">Detectá riesgos en textos, enlaces o multimedia con nuestra IA avanzada.</p>
+                                </div>
+
+                                <div className="relative">
+                                    <span className="inline-block text-white font-semibold text-[clamp(1rem,1.2vw,1.2rem)] bg-linear-to-r from-blue-600 to-blue-700 px-8 py-4 rounded-xl shadow-lg">
+                                        Analizar Ahora
+                                    </span>
+                                </div>
+                            </Link>
+
+                            <Link to="/chat" className="group relative w-full max-w-md h-[clamp(24rem,35vh,30rem)] p-10 rounded-3xl bg-[#070B1A] border border-[#182033] hover:border-blue-500/50 hover:scale-[1.02] transition-all duration-300 shadow-xl flex flex-col justify-between items-center text-center">
+                                <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+
+                                <div className="relative flex flex-col items-center pt-2">
+                                    <div className="w-20 h-20 rounded-2xl border border-[#182033] bg-blue-500/10 flex items-center justify-center mb-8">
+                                        <MessageSquareText className="text-blue-500 w-10 h-10" />
+                                    </div>
+                                    <h2 className="text-[clamp(1.5rem,2vw,2rem)] font-bold text-white mb-4">Asistente</h2>
+                                    <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 leading-relaxed">Conversá con nuestro Asistente IA para resolver dudas en tiempo real.</p>
+                                </div>
+
+                                <div className="relative">
+                                    <span className="inline-block text-white font-semibold text-[clamp(1rem,1.2vw,1.2rem)] bg-linear-to-r from-blue-600 to-blue-700 px-8 py-4 rounded-xl shadow-lg">
+                                        Iniciar Chat
+                                    </span>
+                                </div>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
+
+export default AICenterPage;

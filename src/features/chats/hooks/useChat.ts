@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { chatApi, type ChatMessage } from "../api/chatApi";
-import { useAuth } from "../../../presentation/context/AuthContext";
-import type { ChatSession } from "../components/ChatSidebar";
+import { chatApi, type ChatMessage } from "@/features/chats/api/chatApi.ts";
+import { useAuth } from "@/presentation/context/AuthContext.tsx";
+import type { ChatSession } from "@/features/chats/api/chatApi.ts";
 
 interface UseChatReturn {
     messages: ChatMessage[];
@@ -10,6 +10,10 @@ interface UseChatReturn {
     isLoadingSessions: boolean;
     isSending: boolean;
     error: string | null;
+    isSidebarOpen: boolean;
+    welcomeInputValue: string;
+    setWelcomeInputValue: (value: string) => void;
+    toggleSidebar: () => void;
     sendMessage: (text: string) => Promise<void>;
     deleteChatSession: (id: string) => Promise<void>;
     refreshSessions: () => Promise<void>;
@@ -30,6 +34,25 @@ export function useChat(
     const [isSending, setIsSending] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [welcomeInputValue, setWelcomeInputValue] = useState<string>("");
+
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+        try {
+            const saved = localStorage.getItem("vera_chat_sidebar_open");
+            return saved !== null ? JSON.parse(saved) : true;
+        } catch {
+            return true;
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem("vera_chat_sidebar_open", JSON.stringify(isSidebarOpen));
+    }, [isSidebarOpen]);
+
+    const toggleSidebar = useCallback(() => {
+        setIsSidebarOpen(prev => !prev);
+    }, []);
+
     const fetchSessions = useCallback(async () => {
         if (!user?.email) return;
         try {
@@ -42,35 +65,26 @@ export function useChat(
 
     useEffect(() => {
         if (!user?.email) return;
-
         let isMounted = true;
 
         async function loadInitialSessions(): Promise<void> {
             try {
                 setIsLoadingSessions(true);
                 const data = await chatApi.getUserChats();
-                if (isMounted) {
-                    setSessions(data);
-                }
+                if (isMounted) setSessions(data);
             } catch (err) {
                 console.error("Error en carga inicial:", err);
             } finally {
-                if (isMounted) {
-                    setIsLoadingSessions(false);
-                }
+                if (isMounted) setIsLoadingSessions(false);
             }
         }
 
         void loadInitialSessions();
-
-        return () => {
-            isMounted = false;
-        };
+        return () => { isMounted = false; };
     }, [user?.email]);
 
     useEffect(() => {
         if (!user?.email) return;
-
         let isMounted = true;
 
         async function setupChat(): Promise<void> {
@@ -101,7 +115,7 @@ export function useChat(
             } catch (err) {
                 console.error("Error setting up chat room:", err);
                 if (isMounted) {
-                    setError("No se pudo establecer conexión segura con VERA. Por favor reintente.");
+                    setError("No se pudo establecer conexión segura con Vera. Por favor reintente.");
                 }
             } finally {
                 if (isMounted) setIsLoadingChat(false);
@@ -109,10 +123,7 @@ export function useChat(
         }
 
         void setupChat();
-
-        return () => {
-            isMounted = false;
-        };
+        return () => { isMounted = false; };
     }, [analysisId, alertId, currentChatId, user?.email]);
 
     const sendMessage = useCallback(async (text: string): Promise<void> => {
@@ -120,12 +131,7 @@ export function useChat(
         if (!cleanMessage) return;
 
         setIsSending(true);
-
-        const userMsg: ChatMessage = {
-            role: "USER",
-            content: cleanMessage,
-            createdAt: new Date().toISOString()
-        };
+        const userMsg: ChatMessage = { role: "USER", content: cleanMessage };
         setMessages(prev => [...prev, userMsg]);
 
         try {
@@ -136,23 +142,16 @@ export function useChat(
             }
 
             const aiResponse = await chatApi.sendMessage(activeId, cleanMessage);
-
-            const modelMsg: ChatMessage = {
-                role: "MODEL",
-                content: aiResponse,
-                createdAt: new Date().toISOString()
-            };
+            const modelMsg: ChatMessage = { role: "MODEL", content: aiResponse };
             setMessages(prev => [...prev, modelMsg]);
 
             const updatedSessions = await chatApi.getUserChats();
             setSessions(updatedSessions);
-
         } catch (err) {
             console.error("Error dispatching message:", err);
             const errorMsg: ChatMessage = {
                 role: "MODEL",
-                content: "Hubo una interrupción de red al procesar tu consulta con VERA. ¿Podrías volver a intentarlo?",
-                createdAt: new Date().toISOString()
+                content: "Hubo una interrupción de red al procesar tu consulta con Vera. ¿Podrías volver a intentarlo?"
             };
             setMessages(prev => [...prev, errorMsg]);
         } finally {
@@ -164,7 +163,6 @@ export function useChat(
         try {
             setSessions(prev => prev.filter(s => s.id !== id));
             await chatApi.deleteChat(id);
-
             const updatedSessions = await chatApi.getUserChats();
             setSessions(updatedSessions);
         } catch (err) {
@@ -179,6 +177,10 @@ export function useChat(
         isLoadingSessions,
         isSending,
         error,
+        isSidebarOpen,
+        welcomeInputValue,
+        setWelcomeInputValue,
+        toggleSidebar,
         sendMessage,
         deleteChatSession,
         refreshSessions: fetchSessions
