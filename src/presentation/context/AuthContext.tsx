@@ -37,9 +37,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (
-      userData: AuthUser,
-      rememberMe = false
-  ) => {
+    userData: AuthUser,
+    rememberMe = false
+) => {
+
+    // Limpiar cualquier sesión anterior
+    localStorage.removeItem("vera_token");
+    localStorage.removeItem("vera_user");
+
+    sessionStorage.removeItem("vera_token");
+    sessionStorage.removeItem("vera_user");
 
     const storage =
         rememberMe
@@ -47,17 +54,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             : sessionStorage;
 
     storage.setItem(
-        'vera_token',
+        "vera_token",
         userData.token
     );
 
     storage.setItem(
-        'vera_user',
+        "vera_user",
         JSON.stringify(userData)
     );
 
     setUser(userData);
-  };
+};
 
   const logout = () => {
 
