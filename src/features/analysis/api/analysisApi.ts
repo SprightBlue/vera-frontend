@@ -1,4 +1,4 @@
-import { apiClient } from "../../../infrastructure/api/auth.repository";
+import { apiClient } from "@/infrastructure/api/auth.repository.ts";
 
 export interface AnalyzeRequestDto {
     text?: string;
@@ -19,7 +19,7 @@ export interface AnalysisResultDto {
     recommendation: string;
 }
 
-export async function analyzeMessage(payload: AnalyzeRequestDto): Promise<AnalysisResultDto> {
+export async function analysisApi(payload: AnalyzeRequestDto): Promise<AnalysisResultDto> {
     const formData = new FormData();
 
     if (payload.text) formData.append('text', payload.text);
@@ -28,7 +28,7 @@ export async function analyzeMessage(payload: AnalyzeRequestDto): Promise<Analys
 
     const response = await apiClient.post<AnalysisResultDto>('/api/v1/analysis', formData, {
         headers: {
-            'Content-Type': 'multipart/form-data' // Axios detectará el boundary automáticamente
+            'Content-Type': 'multipart/form-data'
         }
     });
 

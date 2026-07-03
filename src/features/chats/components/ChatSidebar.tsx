@@ -10,7 +10,7 @@ interface ChatSidebarProps {
     onDeleteChat: (id: string) => Promise<void>;
 }
 
-export function ChatSidebar({ sessions, activeChatId, onSelectChat, onNewChat, onDeleteChat }: ChatSidebarProps) {
+function ChatSidebar({ sessions, activeChatId, onSelectChat, onNewChat, onDeleteChat }: ChatSidebarProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const handleDirectDelete = async (e: MouseEvent<HTMLButtonElement | SVGElement>, id: string) => {
@@ -83,3 +83,5 @@ export function ChatSidebar({ sessions, activeChatId, onSelectChat, onNewChat, o
         </aside>
     );
 }
+
+export default ChatSidebar;

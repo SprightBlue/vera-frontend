@@ -23,12 +23,9 @@ function AICenterPage() {
                     <div className="h-full flex flex-col items-center justify-center py-10 px-8 gap-12">
 
                         <div className="max-w-3xl text-center shrink-0">
-                            <h1 className="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-white mb-4">
-                                Protección Avanzada con IA
-                            </h1>
-                            <p className="text-[clamp(1rem,1.5vw,1.5rem)] text-slate-400">
-                                Detectá fraudes e ingeniería social en tiempo real con nuestras herramientas de IA.
-                            </p>
+                            <h2 className="text-[clamp(1rem,1.5vw,1.5rem)] text-slate-400">
+                                Explora nuestras herramientas de inteligencia artificial para analizar riesgos y obtener asistencia en tiempo real. Diseñadas para protegerte y brindarte información valiosa.
+                            </h2>
                         </div>
 
                         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-10 justify-items-center">
@@ -37,10 +34,11 @@ function AICenterPage() {
                                 <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
 
                                 <div className="relative flex flex-col items-center pt-2">
-                                    <div className="w-20 h-20 rounded-2xl border border-[#182033] bg-blue-500/10 flex items-center justify-center mb-8">
-                                        <Search className="text-blue-500 w-10 h-10" />
+                                    {/* Ícono solo con su margen inferior */}
+                                    <div className="mb-8">
+                                        <Search className="text-blue-500 w-12 h-12 stroke-[1.5]" />
                                     </div>
-                                    <h2 className="text-[clamp(1.5rem,2vw,2rem)] font-bold text-white mb-4">Analizador</h2>
+                                    <h2 className="text-[clamp(1.5rem,2vw,2rem)] font-semibold text-slate-200 mb-4">Analizador</h2>
                                     <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 leading-relaxed">Detectá riesgos en textos, enlaces o multimedia con nuestra IA avanzada.</p>
                                 </div>
 
@@ -55,10 +53,10 @@ function AICenterPage() {
                                 <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
 
                                 <div className="relative flex flex-col items-center pt-2">
-                                    <div className="w-20 h-20 rounded-2xl border border-[#182033] bg-blue-500/10 flex items-center justify-center mb-8">
-                                        <MessageSquareText className="text-blue-500 w-10 h-10" />
+                                    <div className="mb-8">
+                                        <MessageSquareText className="text-blue-500 w-12 h-12 stroke-[1.5]" />
                                     </div>
-                                    <h2 className="text-[clamp(1.5rem,2vw,2rem)] font-bold text-white mb-4">Asistente</h2>
+                                    <h2 className="text-[clamp(1.5rem,2vw,2rem)] font-semibold text-slate-200 mb-4">Asistente</h2>
                                     <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 leading-relaxed">Conversá con nuestro Asistente IA para resolver dudas en tiempo real.</p>
                                 </div>
 

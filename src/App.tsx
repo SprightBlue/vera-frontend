@@ -6,7 +6,7 @@ import Register from "@/presentation/pages/Register";
 import Dashboard from "@/presentation/pages/dashboard/Dashboard";
 import Settings from "@/presentation/pages/settings/Settings";
 import { AlertsView } from "@/features/alerts/Views/AlertsView";
-import { AnalysisPage } from "@/features/analysis/views/AnalysisPage";
+import AnalysisPage from "@/features/analysis/views/AnalysisPage";
 import Persons from "@/presentation/pages/persons/Persons";
 import PersonDetail from "@/presentation/pages/persons/PersonDetail";
 import PersonConfiguration from "@/presentation/pages/persons/PersonConfiguration";

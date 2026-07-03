@@ -33,7 +33,7 @@ function Header({ userName, userRole, title }: HeaderProps) {
             <header className="sticky top-0 z-40 w-full flex items-center justify-between h-[5.6rem] px-6 xl:px-8 bg-[#050816]/90 backdrop-blur-md border-b border-[#182033] transition-all">
 
                 <div className="flex flex-col min-w-0 pr-4 justify-center h-full py-2">
-                    <h2 className="text-[clamp(1.1rem,1.5vw,1.35rem)] font-bold text-slate-500 tracking-tight truncate leading-normal pb-1">
+                    <h2 className="text-[clamp(1.1rem,1.5vw,1.35rem)] font-semibold text-slate-200 tracking-tight truncate leading-normal pb-1">
                         {displayTitle}
                     </h2>
                 </div>
@@ -49,8 +49,8 @@ function Header({ userName, userRole, title }: HeaderProps) {
 
                     <div className="flex items-center gap-4 border-l border-[#182033] pl-6">
                         <div className="hidden sm:flex flex-col items-end leading-tight">
-                            <span className="text-[0.9rem] font-semibold text-slate-500 mb-0.5">{finalUserName}</span>
-                            <span className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">{finalUserRole}</span>
+                            <span className="text-[0.9rem] font-semibold text-slate-200 mb-0.5">{finalUserName}</span>
+                            <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-slate-200">{finalUserRole}</span>
                         </div>
                         {user?.image ? (
                             <img src={user.image} alt="Perfil" className="w-10 h-10 rounded-full object-cover shrink-0 border border-[#182033]" />

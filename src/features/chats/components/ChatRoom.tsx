@@ -8,7 +8,7 @@ interface ChatRoomProps {
     sendMessage: (text: string) => Promise<void>;
 }
 
-export function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
+function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
     const [input, setInput] = useState<string>("");
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -90,3 +90,5 @@ export function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
         </div>
     );
 }
+
+export default ChatRoom;
