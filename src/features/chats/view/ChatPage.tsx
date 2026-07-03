@@ -5,8 +5,8 @@ import { AlertCircle, Loader2, RefreshCw, SidebarClose, SidebarOpen, Send } from
 import Sidebar from "@/presentation/components/Sidebar.tsx";
 import Header from "@/presentation/components/Header.tsx";
 
-import { ChatSidebar } from "@/features/chats/components/ChatSidebar.tsx";
-import { ChatRoom } from "@/features/chats/components/ChatRoom.tsx";
+import ChatSidebar from "@/features/chats/components/ChatSidebar.tsx";
+import ChatRoom from "@/features/chats/components/ChatRoom.tsx";
 import { useChat } from "@/features/chats/hooks/useChat.ts";
 import { useAuth } from "@/presentation/context/AuthContext.tsx";
 
@@ -66,7 +66,7 @@ function ChatPage() {
             <Sidebar />
 
             <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 xl:ml-56 transition-all duration-300">
-                <Header userName={user?.fullName} title="Asistente Inteligente" />
+                <Header userName={user?.fullName} title="Asistente con Inteligencia Artificial" />
 
                 <div className="flex-1 flex overflow-hidden min-h-0 w-full relative">
 
@@ -85,7 +85,7 @@ function ChatPage() {
                                 <div className="flex-1 flex flex-col items-center justify-center py-10 px-8 gap-4 animate-fade-in duration-300">
                                     <Loader2 size={32} className="text-blue-500 animate-spin" />
                                     <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 font-medium select-none tracking-wide animate-pulse">
-                                        Sincronizando espacio conversacional...
+                                        Sincronizando chat...
                                     </p>
                                 </div>
                             ) : error ? (
@@ -108,12 +108,12 @@ function ChatPage() {
                             ) : !analysisId && !alertId && !currentChatId && messages.length === 0 ? (
                                 <div className="flex-1 flex flex-col items-center justify-center py-10 px-8 gap-8 max-w-3xl mx-auto w-full animate-fade-in">
                                     <div className="text-center select-none w-full space-y-2">
-                                        <h1 className="text-[clamp(1.75rem,3vw,2.5rem)] font-bold bg-linear-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
+                                        <h1 className="text-[clamp(1.75rem,3vw,2.5rem)] font-semibold bg-linear-to-r from-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
                                             Hola{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}.<br />
                                             ¿En qué puedo ayudarte hoy?
                                         </h1>
                                         <p className="text-[clamp(1rem,1.15vw,1.3rem)] text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                                            El asistente inteligente de Vera está preparado para ayudarte a responder tus consultas en tiempo real. Ingresá tu consulta y comenzá a interactuar con nuestro asistente.
+                                            El asistente con Inteligencia Artificial de Vera está preparado para ayudarte a responder tus consultas en tiempo real. Ingresá tu consulta y comenzá a interactuar con nuestro asistente.
                                         </p>
                                     </div>
 

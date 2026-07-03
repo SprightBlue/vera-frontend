@@ -83,8 +83,8 @@ export const startDashboardTour = (forceStart = false, startAtStep = 0) => {
                 popover: { title: 'Contactos', description: 'Crea y gestiona tu red de contactos de emergencia para actuar rápido ante cualquier riesgo.', side: 'right', align: 'center' } 
             },
             { 
-                element: '#nav-analisis', 
-                popover: { title: 'Análisis', description: 'Utiliza nuestra IA de forma manual para escanear textos, correos o enlaces sospechosos.', side: 'right', align: 'center' } 
+                element: '#nav-ai-center',
+                popover: { title: 'Centro de IA', description: 'Utiliza nuestra herramienta de inteligencia artificial para analizar o ser asistido ante cualquier amenaza.', side: 'right', align: 'center' }
             },
             { 
                 element: '#nav-alertas', 

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { analyzeMessage } from '../api/analyzeMessage';
-import type { AnalysisResultDto, AnalyzeRequestDto } from '../api/analyzeMessage';
+import { analysisApi } from '@/features/analysis/api/analysisApi.ts';
+import type { AnalysisResultDto, AnalyzeRequestDto } from '@/features/analysis/api/analysisApi.ts';
 
-export function useAnalyzeMessage() {
+export function useAnalysis() {
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState<AnalysisResultDto | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -15,7 +15,7 @@ export function useAnalyzeMessage() {
         setResult(null);
 
         try {
-            const response = await analyzeMessage(request);
+            const response = await analysisApi(request);
             setResult(response);
         } catch (requestError: unknown) {
             setError(

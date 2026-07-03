@@ -25,9 +25,9 @@ function Sidebar() {
         ] : []),
         ...(user?.role === 'PROTECTED' ? [
             { label: "Cuidadores", path: "/my-carers", icon: ShieldCheck, id: "nav-mis-cuidadores" },
-            { label: "Centro IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-center-prot" },
-            { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas-prot" },
-            { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes-prot" },
+            { label: "Centro IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
+            { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas" },
+            { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
         ] : [])
     ];
 
