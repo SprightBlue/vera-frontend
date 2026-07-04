@@ -23,6 +23,7 @@ import AICenterPage from "@/features/AiCenterPage";
 import AcceptInvitePage from "@/presentation/pages/invite/AcceptInvitePage";
 import MyCarers from "@/presentation/pages/persons/My-Carers";
 import { useLocationSender } from "@/features/location/hooks/useLocationSender";
+import TrainingPage from "@/features/training/views/TrainingPage";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated, isLoading } = useAuth();
@@ -58,6 +59,7 @@ function App() {
                 <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
                 <Route path="/manual" element={<PrivateRoute><ManualView /></PrivateRoute>} />
                 <Route path="/incidents" element={<PrivateRoute><Incidents /></PrivateRoute>} />
+                <Route path="/training" element={<PrivateRoute><TrainingPage /></PrivateRoute>} />
                 <Route path="/my-carers" element={<PrivateRoute><MyCarers /></PrivateRoute>} />
             </Routes>
         </BrowserRouter>
