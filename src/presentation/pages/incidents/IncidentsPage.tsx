@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
@@ -57,7 +56,6 @@ export default function IncidentsPage() {
                                             className="w-7 h-7 rounded-full"
                                         />
                                         {p.fullName}
-                                        <ChevronRight size={13} className="text-slate-500" />
                                     </button>
                                 ))}
                             </div>

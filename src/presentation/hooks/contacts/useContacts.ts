@@ -4,7 +4,6 @@ import {
     inviteContact,
     getContactsByProtectedPerson,
     removeContact,
-    updateContactEmergency,
     type AddContactRequest,
     type InviteContactResponse,
 } from "../../../infrastructure/api/contacts-api";
@@ -17,7 +16,6 @@ interface Result {
     add: (data: AddContactRequest) => Promise<void>;
     invite: (data: AddContactRequest) => Promise<InviteContactResponse>;
     remove: (contactId: number) => Promise<void>;
-    toggleEmergency: (contactId: number, value: boolean) => Promise<void>;
     reload: () => void;
 }
 
@@ -59,7 +57,9 @@ export function useContacts(protectedUserId: number | null): Result {
             email: data.contactEmail,
             phone: data.contactPhone,
             relationship: data.relationship,
-            emergencyContact: data.emergencyContact,
+            sensitivityLevel: data.sensitivityLevel,
+            notifyHighRisk: data.notifyHighRisk,
+            receiveAlertSummaries: data.receiveAlertSummaries,
             status: "PENDING",
         }]);
         return response;
@@ -70,12 +70,6 @@ export function useContacts(protectedUserId: number | null): Result {
         setContacts(prev => prev.filter(c => c.id !== contactId));
     }, []);
 
-    const toggleEmergency = useCallback(async (contactId: number, value: boolean) => {
-        await updateContactEmergency(contactId, value);
-        setContacts(prev =>
-            prev.map(c => c.id === contactId ? { ...c, emergencyContact: value } : c)
-        );
-    }, []);
 
-    return { contacts, loading, error, add, invite, remove, toggleEmergency, reload: load };
+    return { contacts, loading, error, add, invite, remove, reload: load };
 }

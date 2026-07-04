@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Mail, Phone, Trash2, CheckCircle2, Clock, ShieldAlert, Shield } from "lucide-react";
+import { Mail, Phone, Trash2, CheckCircle2, Clock } from "lucide-react";
 import type { Contact } from "../../../domain/models/Contact";
 
 interface Props {
     contact: Contact;
     onRemove: (id: number) => Promise<void>;
-    onToggleEmergency: (id: number, value: boolean) => Promise<void>;
 }
 
 const AVATAR_COLORS = [
@@ -24,19 +23,8 @@ function getInitials(name: string) {
         : name.slice(0, 2).toUpperCase();
 }
 
-function ContactCard({ contact, onRemove, onToggleEmergency }: Props) {
-    const [toggling, setToggling] = useState(false);
+function ContactCard({ contact, onRemove }: Props) {
     const [removing, setRemoving] = useState(false);
-
-    const handleToggleEmergency = async () => {
-        if (contact.status !== "ACTIVE") return;
-        setToggling(true);
-        try {
-            await onToggleEmergency(contact.id, !contact.emergencyContact);
-        } finally {
-            setToggling(false);
-        }
-    };
 
     const handleRemove = async () => {
         if (!window.confirm(`¿Eliminar a ${contact.fullName} de los contactos de confianza?`)) return;
@@ -52,7 +40,7 @@ function ContactCard({ contact, onRemove, onToggleEmergency }: Props) {
 
     return (
         <div className="p-5 rounded-2xl bg-[#070B1A] border border-[#182033] hover:border-slate-700 flex flex-col gap-4 transition-colors">
-            {/* Header: avatar + nombre + badge emergencia */}
+            {/* Header */}
             <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                     <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${avatarColor} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
@@ -64,17 +52,9 @@ function ContactCard({ contact, onRemove, onToggleEmergency }: Props) {
                             <span className="text-xs px-2 py-0.5 rounded-full bg-slate-700/60 text-slate-300 font-medium">
                                 {contact.relationship}
                             </span>
-                            {contact.emergencyContact && (
-                                <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/20 font-medium">
-                                    <ShieldAlert size={10} />
-                                    Emergencia
-                                </span>
-                            )}
                         </div>
                     </div>
                 </div>
-
-                {/* Botón eliminar */}
                 <button
                     onClick={() => void handleRemove()}
                     disabled={removing}
@@ -99,9 +79,8 @@ function ContactCard({ contact, onRemove, onToggleEmergency }: Props) {
                 )}
             </div>
 
-            {/* Footer: estado + toggle emergencia */}
+            {/* Footer */}
             <div className="flex items-center justify-between pt-1 border-t border-white/5">
-                {/* Estado */}
                 <div className="flex items-center gap-1.5">
                     {contact.status === "ACTIVE" ? (
                         <>
@@ -115,25 +94,6 @@ function ContactCard({ contact, onRemove, onToggleEmergency }: Props) {
                         </>
                     )}
                 </div>
-
-                {/* Toggle emergencia (solo para activos) */}
-                {contact.status === "ACTIVE" && (
-                    <button
-                        onClick={() => void handleToggleEmergency()}
-                        disabled={toggling}
-                        title={contact.emergencyContact ? "Quitar de emergencias" : "Marcar como emergencia"}
-                        className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg transition-all disabled:opacity-50 ${
-                            contact.emergencyContact
-                                ? "bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-red-500/25"
-                                : "bg-slate-700/40 text-slate-400 border border-white/5 hover:bg-slate-700/60 hover:text-white"
-                        }`}
-                    >
-                        {contact.emergencyContact
-                            ? <><ShieldAlert size={11} /> Emergencia</>
-                            : <><Shield size={11} /> Normal</>
-                        }
-                    </button>
-                )}
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 export type ContactStatus = "ACTIVE" | "PENDING";
+export type SensitivityLevel = "BAJO" | "MEDIO" | "ALTO";
 
 export interface Contact {
     id: number;
@@ -6,6 +7,8 @@ export interface Contact {
     email: string;
     phone?: string;
     relationship: string;
-    emergencyContact: boolean;
+    sensitivityLevel: SensitivityLevel;
+    notifyHighRisk: boolean;
+    receiveAlertSummaries: boolean;
     status: ContactStatus;
 }

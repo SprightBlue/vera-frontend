@@ -6,7 +6,9 @@ export interface AddContactRequest {
     contactPhone?: string;
     contactEmail: string;
     relationship: string;
-    emergencyContact: boolean;
+    sensitivityLevel: "BAJO" | "MEDIO" | "ALTO";
+    notifyHighRisk: boolean;
+    receiveAlertSummaries: boolean;
 }
 
 export interface InviteContactResponse {
@@ -41,13 +43,6 @@ export async function inviteContact(
         payload
     );
     return data;
-}
-
-export async function updateContactEmergency(
-    contactId: number,
-    emergencyContact: boolean
-): Promise<void> {
-    await apiClient.patch(`/api/v1/contacts/${contactId}`, { emergencyContact });
 }
 
 export async function removeContact(contactId: number): Promise<void> {

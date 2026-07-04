@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { X, UserPlus, Link } from "lucide-react";
-import type { AddContactRequest, InviteContactResponse } from "../../../infrastructure/api/contacts-api";
+import { UserPlus } from "lucide-react";
+import axios from "axios";
+import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
 
 interface Props {
-    onAdd: (data: AddContactRequest) => Promise<void>;
-    onInvite: (data: AddContactRequest) => Promise<InviteContactResponse>;
+    onInvite: (data: AddContactRequest) => Promise<void>;
     onCancel: () => void;
 }
 
 const RELATIONSHIPS = [
-    { value: "Familiar",                  label: "Familiar" },
-    { value: "Amigo/a",                   label: "Amigo/a" },
-    { value: "Vecino/a",                  label: "Vecino/a" },
-    { value: "Profesional",               label: "Profesional" },
-    { value: "Contacto de confianza",     label: "Otro contacto de confianza" },
+    { value: "Familiar",              label: "Familiar" },
+    { value: "Amigo/a",               label: "Amigo/a" },
+    { value: "Vecino/a",              label: "Vecino/a" },
+    { value: "Profesional",           label: "Profesional" },
+    { value: "Contacto de confianza", label: "Otro contacto de confianza" },
 ];
 
 const EMPTY: AddContactRequest = {
@@ -21,15 +21,15 @@ const EMPTY: AddContactRequest = {
     contactPhone: "",
     contactEmail: "",
     relationship: "",
-    emergencyContact: false,
+    sensitivityLevel: "MEDIO",
+    notifyHighRisk: true,
+    receiveAlertSummaries: false,
 };
 
-function AddContactForm({ onAdd, onInvite, onCancel }: Props) {
+function AddContactForm({ onInvite, onCancel }: Props) {
     const [form, setForm] = useState<AddContactRequest>(EMPTY);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [inviteLink, setInviteLink] = useState<string | null>(null);
-    const [copied, setCopied] = useState(false);
 
     const set = <K extends keyof AddContactRequest>(field: K, value: AddContactRequest[K]) =>
         setForm(prev => ({ ...prev, [field]: value }));
@@ -41,181 +41,182 @@ function AddContactForm({ onAdd, onInvite, onCancel }: Props) {
         return null;
     };
 
-    const handleSubmit = async (mode: "add" | "invite") => {
+    const handleSubmit = async () => {
         const validationError = validate();
         if (validationError) { setError(validationError); return; }
         setSaving(true);
         setError(null);
         try {
-            if (mode === "add") {
-                await onAdd(form);
-                setForm(EMPTY);
-            } else {
-                const res = await onInvite(form);
-                setInviteLink(res.invitationLink);
-                setForm(EMPTY);
-            }
+            await onInvite(form);
+            setForm(EMPTY);
         } catch (err: unknown) {
-            const msg = err instanceof Error ? err.message : null;
-            setError(msg ?? (mode === "add"
-                ? "No se pudo agregar el contacto. Verificá que el email tenga una cuenta VERA."
-                : "No se pudo generar la invitación. Intentá de nuevo."));
+            let msg: string | null = null;
+            if (axios.isAxiosError(err)) {
+                msg = typeof err.response?.data === "string" ? err.response.data : null;
+            }
+            setError(msg ?? "No se pudo enviar la invitación. Verificá que el email tenga una cuenta VERA.");
         } finally {
             setSaving(false);
         }
     };
 
-    const handleCopy = () => {
-        if (!inviteLink) return;
-        void navigator.clipboard.writeText(inviteLink);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    if (inviteLink) {
-        return (
-            <div className="p-6 rounded-2xl bg-[#070B1A] border border-blue-500/20">
-                <div className="flex items-center justify-between mb-5">
-                    <h3 className="text-white font-semibold text-base">Invitación generada</h3>
-                    <button onClick={onCancel} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all">
-                        <X size={16} />
-                    </button>
-                </div>
-                <p className="text-slate-400 text-sm mb-4">
-                    Compartí este link con el contacto. La invitación expira en <span className="text-white font-medium">7 días</span>.
-                </p>
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
-                    <p className="text-sm text-blue-400 truncate flex-1">{inviteLink}</p>
-                    <button
-                        onClick={handleCopy}
-                        className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex-shrink-0 transition-colors"
-                    >
-                        {copied ? "¡Copiado!" : "Copiar"}
-                    </button>
-                </div>
-                <button
-                    onClick={onCancel}
-                    className="mt-4 w-full px-4 py-2 rounded-xl text-slate-400 text-sm font-medium hover:text-white hover:bg-white/5 border border-[#182033] transition-all"
-                >
-                    Cerrar
-                </button>
-            </div>
-        );
-    }
-
     return (
-        <div className="p-6 rounded-2xl bg-[#070B1A] border border-blue-500/20">
-            <div className="flex items-center justify-between mb-5">
-                <h3 className="text-white font-semibold text-base">Nuevo contacto de confianza</h3>
-                <button
-                    onClick={onCancel}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all"
-                >
-                    <X size={16} />
-                </button>
-            </div>
+        <div className="flex flex-col gap-6">
 
-            <div className="flex flex-col gap-4">
+            {/* Información personal */}
+            <div className="bg-[#111827] border border-[#1f2937] rounded-2xl p-6 flex flex-col gap-5">
+                <h4 className="text-white font-semibold text-sm">Información Personal</h4>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs text-slate-400 font-medium">Nombre completo <span className="text-red-400">*</span></label>
+                        <label className="text-xs text-slate-400 font-medium">
+                            Nombre completo <span className="text-red-400">*</span>
+                        </label>
                         <input
                             type="text"
                             placeholder="Ej: Juan García"
                             value={form.fullName}
                             onChange={e => set("fullName", e.target.value)}
-                            className="px-3 py-2.5 rounded-xl bg-[#0d1526] border border-white/5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                            className="w-full bg-[#0b1220] border border-[#1e293b] rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs text-slate-400 font-medium">Teléfono</label>
+                        <label className="text-xs text-slate-400 font-medium">Número de teléfono</label>
                         <input
                             type="tel"
                             placeholder="+54 11 5555 5555"
                             value={form.contactPhone ?? ""}
                             onChange={e => set("contactPhone", e.target.value)}
-                            className="px-3 py-2.5 rounded-xl bg-[#0d1526] border border-white/5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                            className="w-full bg-[#0b1220] border border-[#1e293b] rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs text-slate-400 font-medium">Email <span className="text-red-400">*</span></label>
+                        <label className="text-xs text-slate-400 font-medium">
+                            Email <span className="text-red-400">*</span>
+                        </label>
                         <input
                             type="email"
                             placeholder="Ej: juan@email.com"
                             value={form.contactEmail}
                             onChange={e => set("contactEmail", e.target.value)}
-                            className="px-3 py-2.5 rounded-xl bg-[#0d1526] border border-white/5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                            className="w-full bg-[#0b1220] border border-[#1e293b] rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs text-slate-400 font-medium">Relación <span className="text-red-400">*</span></label>
+                        <label className="text-xs text-slate-400 font-medium">
+                            Parentesco o relación <span className="text-red-400">*</span>
+                        </label>
                         <select
                             value={form.relationship}
                             onChange={e => set("relationship", e.target.value)}
-                            className="px-3 py-2.5 rounded-xl bg-[#0d1526] border border-white/5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                            className="w-full bg-[#0b1220] border border-[#1e293b] rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500"
                         >
-                            <option value="" disabled className="text-slate-600">Seleccionar relación</option>
+                            <option value="" disabled>Seleccionar relación</option>
                             {RELATIONSHIPS.map(r => (
                                 <option key={r.value} value={r.value}>{r.label}</option>
                             ))}
                         </select>
                     </div>
                 </div>
+            </div>
 
-                {/* Toggle emergencia */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-[#0d1526] border border-white/5">
+            {/* Configuración de Protección — igual a ProtectedPersonForm */}
+            <div className="bg-[#111827] border border-[#1f2937] rounded-2xl p-6 flex flex-col gap-5">
+                <h4 className="text-white font-semibold text-sm">Configuración de Protección</h4>
+
+                {/* Alertas de Riesgo Alto */}
+                <div className="flex items-center justify-between">
                     <div>
-                        <p className="text-white text-sm font-medium">Contacto de emergencia</p>
-                        <p className="text-xs text-slate-500 mt-0.5">Recibirá alertas inmediatas ante situaciones de alto riesgo.</p>
+                        <p className="text-white text-sm font-medium">Alertas de Riesgo Alto</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Notificaciones inmediatas ante amenazas.</p>
                     </div>
                     <button
                         type="button"
-                        onClick={() => set("emergencyContact", !form.emergencyContact)}
-                        className={`w-12 h-6 rounded-full transition-all relative flex-shrink-0 ${form.emergencyContact ? "bg-red-500" : "bg-slate-700"}`}
+                        onClick={() => set("notifyHighRisk", !form.notifyHighRisk)}
+                        className={`w-14 h-8 rounded-full transition-all relative flex-shrink-0 cursor-pointer ${
+                            form.notifyHighRisk ? "bg-blue-600" : "bg-slate-700"
+                        }`}
                     >
-                        <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all shadow ${form.emergencyContact ? "left-6" : "left-0.5"}`} />
+                        <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all shadow ${
+                            form.notifyHighRisk ? "left-7" : "left-1"
+                        }`} />
                     </button>
                 </div>
 
-                {error && <p className="text-red-400 text-xs">{error}</p>}
-
-                <div className="flex items-center justify-end gap-3 pt-1 flex-wrap">
+                {/* Resúmenes Semanales */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <p className="text-white text-sm font-medium">Resúmenes Semanales</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Recibir informes consolidados cada semana.</p>
+                    </div>
                     <button
                         type="button"
-                        onClick={onCancel}
-                        disabled={saving}
-                        className="px-4 py-2 rounded-xl text-slate-400 text-sm font-medium hover:text-white hover:bg-white/5 transition-all disabled:opacity-50"
+                        onClick={() => set("receiveAlertSummaries", !form.receiveAlertSummaries)}
+                        className={`w-14 h-8 rounded-full transition-all relative flex-shrink-0 cursor-pointer ${
+                            form.receiveAlertSummaries ? "bg-blue-600" : "bg-slate-700"
+                        }`}
                     >
-                        Cancelar
-                    </button>
-                    <button
-                        type="button"
-                        disabled={saving}
-                        onClick={() => void handleSubmit("invite")}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-500/40 text-blue-400 text-sm font-semibold hover:bg-blue-500/10 transition-all disabled:opacity-50"
-                    >
-                        <Link size={14} />
-                        {saving ? "Generando..." : "Invitar por link"}
-                    </button>
-                    <button
-                        type="button"
-                        disabled={saving}
-                        onClick={() => void handleSubmit("add")}
-                        className="flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all disabled:opacity-50"
-                    >
-                        <UserPlus size={14} />
-                        {saving ? "Guardando..." : "Agregar contacto"}
+                        <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all shadow ${
+                            form.receiveAlertSummaries ? "left-7" : "left-1"
+                        }`} />
                     </button>
                 </div>
 
-                <p className="text-xs text-slate-600">
-                    <span className="text-slate-500">Agregar contacto</span> requiere que la persona ya tenga cuenta en VERA.
-                    Usá <span className="text-slate-500">Invitar por link</span> si aún no la tiene.
-                </p>
+                {/* Sensibilidad de Notificaciones */}
+                <div>
+                    <p className="text-white text-sm font-medium mb-1">Sensibilidad de Notificaciones</p>
+                    <p className="text-xs text-slate-500 mb-3">Ajustá la frecuencia con la que VERA enviará alertas a este contacto.</p>
+                    <div className="flex gap-3">
+                        {(["BAJO", "MEDIO", "ALTO"] as const).map(level => (
+                            <button
+                                key={level}
+                                type="button"
+                                onClick={() => set("sensitivityLevel", level)}
+                                className={`px-5 py-2 rounded-xl border transition-all cursor-pointer text-sm font-medium ${
+                                    form.sensitivityLevel === level
+                                        ? "bg-blue-600 border-blue-500 text-white"
+                                        : "border-[#1f2937] bg-[#070B1A] text-slate-300 hover:text-white"
+                                }`}
+                            >
+                                {level === "BAJO" ? "Bajo" : level === "MEDIO" ? "Medio" : "Alto"}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
+
+            {error && (
+                <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                    {error}
+                </p>
+            )}
+
+            <div className="flex items-center justify-end gap-3">
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    disabled={saving}
+                    className="px-4 py-2 rounded-xl text-slate-400 text-sm font-medium hover:text-white hover:bg-white/5 transition-all disabled:opacity-50"
+                >
+                    Cancelar
+                </button>
+                <button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => void handleSubmit()}
+                    className="flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all disabled:opacity-50"
+                >
+                    <UserPlus size={14} />
+                    {saving ? "Enviando..." : "Agregar contacto"}
+                </button>
+            </div>
+
+            <p className="text-xs text-slate-600">
+                La persona debe tener una cuenta activa en VERA. Recibirá una notificación para aceptar la invitación.
+            </p>
         </div>
     );
 }
