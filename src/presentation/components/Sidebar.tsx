@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ContactRound, ShieldAlert, Sparkles, Settings, LogOut, BookOpen, AlertTriangle, ShieldCheck, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Users, ContactRound, ShieldAlert, Sparkles, Settings, LogOut, BookOpen, AlertTriangle, ShieldCheck, Brain, type LucideIcon } from "lucide-react";
 import logoVera from "@/assets/Isologo_Vera.png";
 import { useAuth } from "@/presentation/context/AuthContext";
 
@@ -22,6 +22,7 @@ function Sidebar() {
             { label: "Centro IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
             { label: "Alertas", path: "/alerts", icon: ShieldAlert, id: "nav-alertas" },
             { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
+            { label: "Entrenamiento", path: "/training", icon: Brain, id: "nav-entrenamiento" },
         ] : []),
         ...(user?.role === 'PROTECTED' ? [
             { label: "Cuidadores", path: "/my-carers", icon: ShieldCheck, id: "nav-mis-cuidadores" },
