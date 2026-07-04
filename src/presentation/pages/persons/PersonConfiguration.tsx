@@ -87,14 +87,14 @@ function PersonConfiguration() {
     <div className="flex min-h-screen bg-[#050816]">
       <Sidebar />
 
-      <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
+      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
         <Header
           userName={user?.fullName || "Usuario"}
           title="Personas que cuido"
           subtitle="Observa los detalles de cada persona a la que protejes"
         />
         
-        <div className="p-8 space-y-6">
+        <div className="w-full max-w-5xl mx-auto p-8 space-y-6">
           <div className="flex items-center gap-3 mb-6">
             <button
               onClick={() => navigate('/persons')}

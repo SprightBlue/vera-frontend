@@ -83,7 +83,7 @@ function Dashboard() {
             <Sidebar />
 
             {/* MAIN */}
-            <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
+            <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
                 {/* HEADER */}
                 <div>
                     <Header userName={user?.fullName || "Usuario"} />

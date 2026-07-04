@@ -135,7 +135,7 @@ function Settings() {
         <div className="flex min-h-screen bg-[#050816]">
             <Sidebar />
 
-            <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
+            <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
                 <Header
                     title="Configuración"
                     subtitle="Personaliza tu experiencia y gestiona tu cuenta."

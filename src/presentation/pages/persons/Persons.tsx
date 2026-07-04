@@ -83,7 +83,7 @@ function Persons() {
 
     <div className="flex min-h-screen bg-[#050816]">
       <Sidebar />
-      <main className="flex-1 flex flex-col min-w-0 ml-[260px]">
+      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
         <Header
           userName={user?.fullName ?? "Usuario"}
           title="Personas que cuido"
@@ -91,7 +91,7 @@ function Persons() {
         />
 
         <div className="flex justify-center p-8">
-          <div className="w-full rounded-2xl bg-[#070B1A] border border-[#182033] p-12">
+        <div className="w-full max-w-5xl mx-auto rounded-2xl bg-[#070B1A] border border-[#182033] p-12">
             <div className="flex justify-between mb-8">
               {/* Filtro por tipo de relación */}
               <div className="flex items-center gap-3">

@@ -25,7 +25,7 @@ export function AlertsView() {
   return (
       <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-inter">
         <Sidebar />
-        <div className="flex-1 flex flex-col h-full ml-65 overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
           <Header
               userName={user?.fullName ?? "Usuario"}
               title="Historial de Alertas"
