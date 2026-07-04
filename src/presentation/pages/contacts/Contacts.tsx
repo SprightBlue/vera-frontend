@@ -3,7 +3,7 @@ import { UserPlus, Search, Users } from "lucide-react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import ProtectedPersonSelector from "../../components/contacts/ProtectedPersonSelector";
-import AddContactForm from "../../components/contacts/AddContactForm";
+import CreateContactModal from "../../components/contacts/CreateContactModal";
 import ContactCard from "../../components/contacts/ContactCard";
 import ContactStatsBar from "../../components/contacts/ContactStatsBar";
 import ContactTips from "../../components/contacts/ContactTips";
@@ -17,7 +17,7 @@ function TrustedContacts() {
     const { persons, selected, setSelected, loading: personsLoading, error: personsError } = useProtectedPersonSelector();
 
     const protectedUserId = selected?.protectedUserId ?? null;
-    const { contacts, loading: contactsLoading, error: contactsError, add, invite, remove, toggleEmergency } = useContacts(protectedUserId);
+    const { contacts, loading: contactsLoading, error: contactsError, invite, remove, reload } = useContacts(protectedUserId);
 
     const [showForm, setShowForm] = useState(false);
     const [search, setSearch] = useState("");
@@ -38,13 +38,8 @@ function TrustedContacts() {
         pending: contacts.filter(c => c.status === "PENDING").length,
     }), [contacts]);
 
-    const handleAdd = async (data: AddContactRequest) => {
-        await add(data);
-        setShowForm(false);
-    };
-
     const handleInvite = async (data: AddContactRequest) => {
-        return await invite(data);
+        await invite(data);
     };
 
     return (
@@ -59,8 +54,6 @@ function TrustedContacts() {
                 />
 
                 <div className="p-8 flex flex-col gap-6">
-
-                    {/* Selector de persona protegida */}
                     <ProtectedPersonSelector
                         persons={persons}
                         selected={selected}
@@ -68,14 +61,12 @@ function TrustedContacts() {
                         loading={personsLoading}
                     />
 
-                    {/* Error del selector */}
                     {personsError && (
                         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                             {personsError}
                         </div>
                     )}
 
-                    {/* Sin protegidos */}
                     {!personsLoading && !personsError && persons.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
                             <Users size={40} className="text-slate-600" />
@@ -86,10 +77,8 @@ function TrustedContacts() {
                         </div>
                     )}
 
-                    {/* Contenido cuando hay selección */}
                     {selected && protectedUserId !== null && (
                         <>
-                            {/* Barra de búsqueda y botón agregar */}
                             <div className="flex items-center gap-3 flex-wrap">
                                 <div className="relative flex-1 min-w-[200px]">
                                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -102,7 +91,7 @@ function TrustedContacts() {
                                     />
                                 </div>
                                 <button
-                                    onClick={() => setShowForm(p => !p)}
+                                    onClick={() => setShowForm(true)}
                                     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all whitespace-nowrap"
                                 >
                                     <UserPlus size={15} />
@@ -110,16 +99,14 @@ function TrustedContacts() {
                                 </button>
                             </div>
 
-                            {/* Formulario */}
                             {showForm && (
-                                <AddContactForm
-                                    onAdd={handleAdd}
+                                <CreateContactModal
                                     onInvite={handleInvite}
-                                    onCancel={() => setShowForm(false)}
+                                    onClose={() => setShowForm(false)}
+                                    onSuccess={() => void reload()}
                                 />
                             )}
 
-                            {/* Stats */}
                             {contacts.length > 0 && (
                                 <ContactStatsBar
                                     total={stats.total}
@@ -128,14 +115,12 @@ function TrustedContacts() {
                                 />
                             )}
 
-                            {/* Error contactos */}
                             {contactsError && (
                                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                                     {contactsError}
                                 </div>
                             )}
 
-                            {/* Loading contactos */}
                             {contactsLoading && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {[1, 2, 3].map(n => (
@@ -144,7 +129,6 @@ function TrustedContacts() {
                                 </div>
                             )}
 
-                            {/* Lista de contactos */}
                             {!contactsLoading && filtered.length > 0 && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {filtered.map(contact => (
@@ -152,13 +136,11 @@ function TrustedContacts() {
                                             key={contact.id}
                                             contact={contact}
                                             onRemove={remove}
-                                            onToggleEmergency={toggleEmergency}
                                         />
                                     ))}
                                 </div>
                             )}
 
-                            {/* Sin contactos */}
                             {!contactsLoading && contacts.length === 0 && !showForm && (
                                 <div className="flex flex-col items-center justify-center py-16 text-center gap-3">
                                     <div className="p-4 rounded-2xl bg-[#070B1A] border border-[#182033]">
@@ -178,7 +160,6 @@ function TrustedContacts() {
                                 </div>
                             )}
 
-                            {/* Sin resultados en búsqueda */}
                             {!contactsLoading && contacts.length > 0 && filtered.length === 0 && (
                                 <p className="text-slate-400 text-sm text-center py-8">
                                     No se encontraron contactos que coincidan con &ldquo;{search}&rdquo;.
@@ -189,7 +170,6 @@ function TrustedContacts() {
                         </>
                     )}
 
-                    {/* Mensaje si la persona seleccionada está pendiente */}
                     {selected && protectedUserId === null && (
                         <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-sm">
                             Esta persona aún no aceptó la invitación. Una vez que la acepte podrás gestionar sus contactos de confianza.

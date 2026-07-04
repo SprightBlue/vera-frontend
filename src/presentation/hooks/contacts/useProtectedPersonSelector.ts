@@ -10,13 +10,17 @@ export function useProtectedPersonSelector() {
     useEffect(() => {
         getProtectedPersons()
             .then((data) => {
-                // Solo mostramos personas activas (que aceptaron la invitación)
-                // para gestionar sus contactos de confianza
                 const active = data.filter(p => p.status === "ACTIVE" || p.protectedUserId !== null);
                 setPersons(active);
                 if (active.length > 0) setSelected(active[0]);
             })
-            .catch(() => setError("No se pudieron cargar las personas protegidas."))
+            .catch((err) => {
+                const status = err?.response?.status;
+                if (status && status >= 500) {
+                    setError("Ocurrió un error al cargar los datos. Intentá de nuevo más tarde.");
+                }
+                setPersons([]);
+            })
             .finally(() => setLoading(false));
     }, []);
 
