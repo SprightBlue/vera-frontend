@@ -8,6 +8,7 @@ import Header from "../../../presentation/components/Header";
 import { useAlertDetail } from "../hooks/useAlertDetail";
 import { AlertActionModal } from "../components/AlertActionModal";
 import { getRiskConfig } from "../../analysis/utils/riskConfig";
+import toast from "react-hot-toast";
 
 export function AlertDetail() {
     const { alertId } = useParams<{ alertId: string }>();
@@ -41,7 +42,7 @@ export function AlertDetail() {
                 return;
             }
         } catch (err) {
-            console.error("Error al ejecutar acción:", err);
+            toast.error("Error al ejecutar la acción: ", err);
         } finally {
             setIsProcessing(false);
             setModalConfig(prev => ({ ...prev, isOpen: false }));

@@ -24,7 +24,7 @@ function ContactStatsBar({ total, active, pending }: Props) {
                     </div>
                     <div>
                         <p className="text-2xl font-bold text-white">{values[key]}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{label}</p>
+                        <p className="text-sm text-slate-400 mt-0.5">{label}</p>
                     </div>
                 </div>
             ))}

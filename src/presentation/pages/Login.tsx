@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import veraLogo from '../../assets/Isologo_Vera.png';
 import { GoogleLogin } from '@react-oauth/google';
 import type { CredentialResponse } from '@react-oauth/google';
-
+import toast from "react-hot-toast";
 
 /* ---------------- ICONOS ---------------- */
 
@@ -103,9 +103,8 @@ export default function Login() {
 
     } catch {
 
-      alert(
-        'Email o contraseña incorrectos'
-      );
+      toast.error("El email o la contraseña no son correctos");
+
     }
   };
 
@@ -136,11 +135,8 @@ export default function Login() {
 
     } catch (error) {
 
-      console.error(error);
+      toast.error("Error al inciar sesión con Google");
 
-      alert(
-        'Error al iniciar sesión con Google'
-      );
     }
   };
 

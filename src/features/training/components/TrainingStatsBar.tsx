@@ -9,8 +9,8 @@ interface Props {
 export function TrainingStatsBar({ stats, name }: Props) {
     const items = [
         {
-            icon: <Target size={20} className="text-violet-400" />,
-            bg: "bg-violet-500/10 border-violet-500/20",
+            icon: <Target size={20} className="text-blue-400" />,
+            bg: "bg-blue-500/10 border-blue-500/20",
             label: "Entrenamientos completados",
             value: stats.completed,
         },
@@ -41,7 +41,7 @@ export function TrainingStatsBar({ stats, name }: Props) {
                     <div className="shrink-0">{item.icon}</div>
                     <div>
                         <p className="text-2xl font-bold text-white">{item.value}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{item.label}</p>
+                        <p className="text-sm text-slate-400 mt-0.5">{item.label}</p>
                     </div>
                 </div>
             ))}

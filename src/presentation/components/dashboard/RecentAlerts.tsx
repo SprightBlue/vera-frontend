@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ShieldAlert } from "lucide-react";
 import { getAlerts, type AlertSummary } from "../../../features/alerts/api/alerts-api.ts";
+import toast from "react-hot-toast";
 
 function RecentAlerts() {
     const [alerts, setAlerts] = useState<AlertSummary[]>([]);
@@ -8,8 +9,8 @@ function RecentAlerts() {
     useEffect(() => {
         void getAlerts(0).then((data) => {
             setAlerts(data.content.slice(0, 3));
-        }).catch((err) => {
-            console.error("Error cargando alertas:", err);
+        }).catch(() => {
+            toast.error("No se pudieron cargar las alertas recientes");
             setAlerts([]);
         });
     }, []);

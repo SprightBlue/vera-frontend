@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
 import AddContactForm from "./AddContactForm";
+import toast from "react-hot-toast";
 
 interface Props {
     onClose: () => void;
@@ -20,7 +21,7 @@ function CreateContactModal({ onClose, onSuccess, onInvite }: Props) {
             onSuccess();
             setIsSent(true);
         } catch (error) {
-            console.error("Error al enviar invitación:", error);
+            toast.error("No se pudo enviar la invitación");
             throw error;
         } finally {
             setIsLoading(false);

@@ -9,6 +9,7 @@ import type { ProtectedPerson, UpdateProtectedInfo } from "../../../domain/model
 import { getProtectedPersonById, updateProtectedPersonInfo } from "../../../infrastructure/api/protected-person-api";
 import EditPersonModal from "../../components/persons/EditPersonModal";
 import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
+import toast from "react-hot-toast";
 
 function PersonDetail() {
     const navigate = useNavigate();
@@ -28,8 +29,8 @@ function PersonDetail() {
                 setPerson(protectedPerson);
                 console.log(protectedPerson)
             }
-            catch (error) {
-                console.error("Error al cargar la persona:", error);
+            catch {
+                toast.error("No se pudo cargar la información de la persona");
             }
             finally {
                 setCargando(false);

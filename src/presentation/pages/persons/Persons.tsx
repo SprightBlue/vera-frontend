@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Phone, Mail, ChevronDown, Users } from "lucide-react";
+import toast from "react-hot-toast";
 
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
@@ -33,8 +34,8 @@ function Persons() {
       try {
         await loadProtectedPersons();
       }
-      catch (error) {
-        console.error("Error al cargar personas del backend", error);
+      catch {
+        toast.error("No se pudieron cargar las personas protegidas");
       }
       finally {
         setCargando(false);
@@ -51,8 +52,8 @@ function Persons() {
           setPersons(protectedPersons);
       }
     }
-    catch (error) {
-      console.error("Error cargando protegidos:", error);
+    catch {
+      toast.error("Error cargando personas protegidas");
     }
   }, [user?.role]);
 
@@ -64,19 +65,40 @@ function Persons() {
   });
 
   // Se elimina una persona protejida asociada a un usuario
-  const handleDelete = async (id: number) => {
-    const confirmed = window.confirm("¿Estás seguro de que querés eliminar a esta persona de tus protegidos?");
-    if (!confirmed) return;
+  const handleDelete = async (id: number, fullName: string) => {
+    toast((t) => (
+        <div className="bg-[#070B1A] border border-[#182033] rounded-xl p-4 shadow-lg flex flex-col gap-3 text-white min-w-[260px]">
+          <p className="text-white text-sm">
+            ¿Eliminar a <span className="font-semibold">{fullName}</span> de tus protegidos?
+          </p>
 
-    try {
-      await deleteProtectedPerson(id);
+          <div className="flex justify-end gap-2">
+            <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">
+              Cancelar
+            </button>
+            <button
+                onClick={async () => {
+                  toast.dismiss(t.id);
 
-      setPersons(prev => prev.filter(person => person.id !== id));
-
-    } catch (error) {
-      console.error("Error al eliminar la persona:", error);
-      alert("Hubo un error al intentar eliminar a la persona.");
-    }
+                  try {
+                    await deleteProtectedPerson(id);
+                    setPersons(prev =>
+                        prev.filter(person => person.id !== id)
+                    );
+                    toast.success(`${fullName} fue eliminado correctamente`);
+                  } catch {
+                    toast.error("No se pudo eliminar la persona");
+                  }
+                }}
+                className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+    ), {
+      style: { background: "transparent", boxShadow: "none", padding: 0,},
+    });
   };
 
   return (
@@ -192,10 +214,12 @@ function Persons() {
                         )}
 
                         <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-5 mt-2">
+                          {person.contactNumber && (
                           <div className="flex items-center gap-2 text-gray-300 text-sm">
                             <Phone size={15} />
                             {person.contactNumber}
                           </div>
+                          )}
 
                           <div className="flex items-center gap-2 text-gray-300 text-sm">
                             <Mail size={15} />
@@ -207,7 +231,7 @@ function Persons() {
 
                     <div className="flex gap-4 mt-6 lg:mt-0">
                       <button
-                        onClick={() => handleDelete(person.id)}
+                        onClick={() => handleDelete(person.id, person.fullName)}
                         className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 transition px-5 py-2 rounded-xl font-medium cursor-pointer"
                       >
                         Eliminar

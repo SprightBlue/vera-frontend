@@ -20,11 +20,11 @@ export function AssignTrainingModal({ scenarios, onAssign, onClose, assigning }:
             <div className="bg-[#0c1020] border border-[#182033] rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[#182033]">
                     <div>
-                        <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                            <Send size={16} className="text-violet-400" />
+                        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                            <Send size={16} className="text-blue-400" />
                             Enviar entrenamiento
                         </h3>
-                        <p className="text-xs text-slate-400 mt-0.5">
+                        <p className="text-sm text-slate-400 mt-0.5">
                             Elegí un escenario para asignarle a tu protegido
                         </p>
                     </div>
@@ -43,7 +43,7 @@ export function AssignTrainingModal({ scenarios, onAssign, onClose, assigning }:
                             onClick={() => setFilter(f)}
                             className={`px-3 py-1 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
                                 filter === f
-                                    ? "bg-violet-600/20 border-violet-500/40 text-violet-300"
+                                    ? "bg-blue-600/20 border-blue-500/40 text-blue-300"
                                     : "bg-transparent border-[#182033] text-slate-500 hover:text-slate-300"
                             }`}
                         >

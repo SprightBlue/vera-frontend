@@ -8,6 +8,7 @@ import {
     type AppNotification,
     type InvitationPayload
 } from "../api/notifications.ts";
+import toast from "react-hot-toast";
 
 export function useNotifications() {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
@@ -24,8 +25,8 @@ export function useNotifications() {
             try {
                 const data = await fetchAllNotifications();
                 setNotifications(Array.isArray(data) ? data : []);
-            } catch (error) {
-                console.error("Error al sincronizar notificaciones:", error);
+            } catch {
+                toast.error("No se pudieron sincronizar las notificaciones");
                 setNotifications([]);
             }
         };
@@ -55,8 +56,8 @@ export function useNotifications() {
         setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
         try {
             await markAllRead();
-        } catch (error) {
-            console.error("Error al marcar como leídas:", error);
+        } catch {
+            toast.error("No se pudieron marcar como leídas");
         }
     };
 
@@ -81,8 +82,8 @@ export function useNotifications() {
                         : []
                 );
             }
-        } catch (e) {
-            console.error("Error ejecutando acción:", e);
+        } catch {
+            toast.error("No se pudo ejecutar la acción");
         } finally {
             setIsProcessing(false);
         }

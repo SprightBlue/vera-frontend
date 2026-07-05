@@ -34,8 +34,8 @@ export function ProgressChart({ data }: Props) {
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: H }}>
             <defs>
                 <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.35" />
-                    <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#2563eb" stopOpacity="0.35" />
+                    <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
                 </linearGradient>
             </defs>
 
@@ -79,7 +79,7 @@ export function ProgressChart({ data }: Props) {
             <polyline
                 points={polyline}
                 fill="none"
-                stroke="#7c3aed"
+                stroke="#2563eb"
                 strokeWidth={2.5}
                 strokeLinejoin="round"
                 strokeLinecap="round"
@@ -91,7 +91,7 @@ export function ProgressChart({ data }: Props) {
                     cx={toX(i)}
                     cy={toY(d.correctRate)}
                     r={3.5}
-                    fill="#7c3aed"
+                    fill="#2563eb"
                     stroke="#050816"
                     strokeWidth={2}
                 />

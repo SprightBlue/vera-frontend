@@ -11,4 +11,5 @@ export interface Contact {
     notifyHighRisk: boolean;
     receiveAlertSummaries: boolean;
     status: ContactStatus;
+    image?: string;
 }

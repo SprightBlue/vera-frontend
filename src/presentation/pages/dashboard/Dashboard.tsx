@@ -10,6 +10,7 @@ import { getProtectedPersons } from "../../../infrastructure/api/protected-perso
 import { useAuth } from "../../context/AuthContext";
 import { startDashboardTour } from "../../../features/analysis/utils/tours";
 import { ShieldCheck } from "lucide-react"; // Importamos un iconito lindo para el protegido
+import toast from "react-hot-toast";
 
 interface ProtectedPerson {
     fullName: string;
@@ -36,8 +37,8 @@ function Dashboard() {
                     fullName: protectedPersons[0].fullName
                 });
             }
-        } catch (error) {
-            console.error("Error cargando protegidos:", error);
+        } catch {
+            toast.error("Error cargando protegidos");
         }
     }, [user?.role]); 
 
@@ -52,8 +53,8 @@ function Dashboard() {
                     analyses: result?.analyses ?? 0,
                     highRisk: result?.highRisk ?? 0
                 });
-            } catch (error) {
-                console.error("Error cargando dashboard:", error);
+            } catch {
+                toast.error("Error cargando el dashboard");
                 setData({ alerts: 0, analyses: 0, highRisk: 0 });
             }
         }

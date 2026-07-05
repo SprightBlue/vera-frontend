@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { locationApi, type UserLocationResponse } from '../api/locationApi.ts';
+import toast from "react-hot-toast";
 
 export const useLocation = (trustContactId: number) => {
     const [location, setLocation] = useState<UserLocationResponse | null>(null);
@@ -36,8 +37,8 @@ export const useLocation = (trustContactId: number) => {
             });
         };
 
-        client.onStompError = (frame) => {
-            console.error('DEBUG: Error STOMP Receiver:', frame);
+        client.onStompError = () => {
+            toast.error("Error de conexión en tiempo real con la ubicación");
         };
 
         client.activate();
