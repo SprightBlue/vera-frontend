@@ -79,26 +79,6 @@ function TrustedContacts() {
 
                     {selected && protectedUserId !== null && (
                         <>
-                            <div className="flex items-center gap-3 flex-wrap">
-                                <div className="relative flex-1 min-w-[200px]">
-                                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                                    <input
-                                        type="text"
-                                        placeholder="Buscar contacto por nombre, email o relación..."
-                                        value={search}
-                                        onChange={e => setSearch(e.target.value)}
-                                        className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#070B1A] border border-[#182033] text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
-                                    />
-                                </div>
-                                <button
-                                    onClick={() => setShowForm(true)}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all whitespace-nowrap"
-                                >
-                                    <UserPlus size={15} />
-                                    Agregar Contacto
-                                </button>
-                            </div>
-
                             {showForm && (
                                 <CreateContactModal
                                     onInvite={handleInvite}
@@ -114,6 +94,26 @@ function TrustedContacts() {
                                     pending={stats.pending}
                                 />
                             )}
+
+                            <div className="flex items-center gap-3 flex-wrap">
+                                <div className="relative flex-1 min-w-[200px]">
+                                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar contacto por nombre, email o relación..."
+                                        value={search}
+                                        onChange={e => setSearch(e.target.value)}
+                                        className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#070B1A] border border-[#182033] text-white text-base placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                                    />
+                                </div>
+                                <button
+                                    onClick={() => setShowForm(true)}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold transition-all whitespace-nowrap"
+                                >
+                                    <UserPlus size={15} />
+                                    Agregar Contacto
+                                </button>
+                            </div>
 
                             {contactsError && (
                                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
@@ -146,7 +146,7 @@ function TrustedContacts() {
                                     <div className="p-4 rounded-2xl bg-[#070B1A] border border-[#182033]">
                                         <Users size={32} className="text-slate-600" />
                                     </div>
-                                    <p className="text-white font-medium">Sin contactos de confianza</p>
+                                    <p className="text-white text-lg font-medium">Sin contactos de confianza</p>
                                     <p className="text-slate-400 text-sm max-w-sm">
                                         Agregá personas del entorno de <span className="text-white">{selected.fullName}</span> para que VERA pueda notificarlas ante situaciones de riesgo.
                                     </p>

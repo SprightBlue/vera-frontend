@@ -41,7 +41,7 @@ export function AlertsView() {
                         onClick={() => { setFilter(f); setPage(0); }}
                         className={`px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg border transition-all cursor-pointer ${
                             filter === f
-                                ? 'bg-indigo-600 border-indigo-500 text-white'
+                                ? 'bg-blue-600 border-blue-500 text-white'
                                 : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
                         }`}
                     >

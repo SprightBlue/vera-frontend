@@ -24,10 +24,10 @@ export default function IncidentsPage() {
             <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
                 <Header
                     userName={user?.fullName ?? "Usuario"}
-                    userRole={user?.role === 'PROTECTED' ? "Protegido/a" : "Cuidador/a"} 
+                    userRole={user?.role === 'PROTECTED' ? "Protegido/a" : "Cuidador/a"}
                     title="Incidentes"
-                    subtitle={user?.role === 'PROTECTED' 
-                        ? "Historial de situaciones sospechosas y guías de acción" 
+                    subtitle={user?.role === 'PROTECTED'
+                        ? "Historial de situaciones sospechosas y guías de acción"
                         : "Monitorea y acompañá a tus personas protegidas ante situaciones sospechosas"}
                 />
 
@@ -66,21 +66,21 @@ export default function IncidentsPage() {
                     <div
                         className={`grid gap-5 items-start ${
                             showDetail
-                                ? "grid-cols-1 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_220px]"
+                                ? "grid-cols-1 min-[1582px]:grid-cols-2 min-[1900px]:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_220px]"
                                 : "grid-cols-1"
                         }`}>
-                        <div className={showDetail ? "hidden lg:block" : ""}>
-                        <IncidentTable
-                            incidents={incidents}
-                            selectedId={selectedId}
-                            loading={loadingList}
-                            firstName={firstName}
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            totalElements={totalElements}
-                            onSelect={selectIncident}
-                            onPageChange={goToPage}
-                        />
+                        <div className={showDetail ? "hidden min-[1582px]:block" : ""}>
+                            <IncidentTable
+                                incidents={incidents}
+                                selectedId={selectedId}
+                                loading={loadingList}
+                                firstName={firstName}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                totalElements={totalElements}
+                                onSelect={selectIncident}
+                                onPageChange={goToPage}
+                            />
                         </div>
 
                         {showDetail && (
@@ -93,7 +93,9 @@ export default function IncidentsPage() {
                         )}
 
                         {showDetail && (
-                            <IncidentInfoPanel />
+                            <div className="block min-[1582px]:hidden min-[1900px]:block">
+                                <IncidentInfoPanel />
+                            </div>
                         )}
                     </div>
                 </div>

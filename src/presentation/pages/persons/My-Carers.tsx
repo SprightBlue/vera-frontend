@@ -3,7 +3,8 @@ import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
 import { ShieldCheck, User } from "lucide-react";
-import { getMyCarers } from "../../../infrastructure/api/protected-person-api"; 
+import { getMyCarers } from "../../../infrastructure/api/protected-person-api";
+import toast from "react-hot-toast";
 
 export default function MyCarers() {
     const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function MyCarers() {
             .then(data => {
                 setCarers(data);
             })
-            .catch(err => console.error("Error cargando cuidadores:", err))
+            .catch(() => toast.error("No se pudieron cargar los cuidadores"))
             .finally(() => setLoading(false));
     }, []);
 

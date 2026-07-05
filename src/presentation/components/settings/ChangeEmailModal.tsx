@@ -1,10 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
-import {
-    changeEmail,
-    type ChangeEmailRequest
-} from "../../../infrastructure/api/email-api";
+import { changeEmail, type ChangeEmailRequest } from "../../../infrastructure/api/email-api";
 import { useAuth } from "../../context/AuthContext";
 
 interface Props {
@@ -50,9 +47,7 @@ export default function ChangeEmailModal({
 
             onClose();
 
-        } catch (error) {
-
-            console.error(error);
+        } catch {
 
             toast.error("No se pudo cambiar el correo.");
 

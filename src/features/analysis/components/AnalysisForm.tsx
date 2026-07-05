@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Paperclip, File, Trash2, Search } from 'lucide-react';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
 import type { AnalyzeRequestDto } from '@/features/analysis/api/analysisApi.ts';
+import toast from "react-hot-toast";
 
 type Props = {
     loading: boolean;
@@ -64,8 +65,8 @@ function AnalysisForm({ loading, onAnalyze }: Props) {
             });
             setText('');
             removeFile();
-        } catch (error) {
-            console.error("Error durante el procesamiento del formulario:", error);
+        } catch {
+            toast.error("No se pudo procesar el análisis");
         }
     };
 

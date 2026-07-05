@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { chatApi, type ChatMessage } from "@/features/chats/api/chatApi.ts";
 import { useAuth } from "@/presentation/context/AuthContext.tsx";
 import type { ChatSession } from "@/features/chats/api/chatApi.ts";
+import toast from "react-hot-toast";
 
 interface UseChatReturn {
     messages: ChatMessage[];
@@ -58,8 +59,8 @@ export function useChat(
         try {
             const data = await chatApi.getUserChats();
             setSessions(data);
-        } catch (err) {
-            console.error("Error cargando historial de salas:", err);
+        } catch {
+            toast.error("No se pudo cargar el historial de chats");
         }
     }, [user?.email]);
 
@@ -72,8 +73,8 @@ export function useChat(
                 setIsLoadingSessions(true);
                 const data = await chatApi.getUserChats();
                 if (isMounted) setSessions(data);
-            } catch (err) {
-                console.error("Error en carga inicial:", err);
+            } catch {
+                toast.error("No se pudo cargar la conversación");
             } finally {
                 if (isMounted) setIsLoadingSessions(false);
             }
@@ -112,8 +113,8 @@ export function useChat(
                     const history = await chatApi.getChatHistory(id);
                     if (isMounted) setMessages(history);
                 }
-            } catch (err) {
-                console.error("Error setting up chat room:", err);
+            } catch {
+                toast.error("No se pudo abrir la conversación");
                 if (isMounted) {
                     setError("No se pudo establecer conexión segura con Vera. Por favor reintente.");
                 }
@@ -147,8 +148,8 @@ export function useChat(
 
             const updatedSessions = await chatApi.getUserChats();
             setSessions(updatedSessions);
-        } catch (err) {
-            console.error("Error dispatching message:", err);
+        } catch {
+            toast.error("No se pudo enviar el mensaje");
             const errorMsg: ChatMessage = {
                 role: "MODEL",
                 content: "Hubo una interrupción de red al procesar tu consulta con Vera. ¿Podrías volver a intentarlo?"
@@ -165,8 +166,8 @@ export function useChat(
             await chatApi.deleteChat(id);
             const updatedSessions = await chatApi.getUserChats();
             setSessions(updatedSessions);
-        } catch (err) {
-            console.error("Error al remover la sesión:", err);
+        } catch {
+            toast.error("No se pudo eliminar la conversación");
         }
     }, []);
 

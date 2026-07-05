@@ -56,7 +56,7 @@ export function IncidentDetailPanel({ detail, loading, firstName, onClose }: Pro
             <div className="flex items-center justify-between px-5 py-3 border-b border-[#182033]">
                 <button
                     onClick={onClose}
-                    className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
                 >
                     <ChevronLeft size={13} />
                     Volver a incidentes
@@ -78,11 +78,11 @@ export function IncidentDetailPanel({ detail, loading, firstName, onClose }: Pro
                 <div className="p-5">
 
                     {/* Título */}
-                    <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
                         Detalle del incidente
                     </p>
                     <StatusBadge status={detail.status} />
-                    <h2 className="text-base font-semibold text-white mt-3 mb-3 leading-snug">
+                    <h2 className="text-lg font-semibold text-white mt-3 mb-3 leading-snug">
                         {ACTION_TYPE_LABELS[detail.actionType] ?? detail.actionType}
                     </h2>
 
@@ -103,15 +103,15 @@ export function IncidentDetailPanel({ detail, loading, firstName, onClose }: Pro
                     {/* Descripción */}
                     {detail.description && (
                         <div className="mb-4 p-3 rounded-xl bg-[#111827] border border-[#182033]">
-                            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                                 Descripción
                             </p>
-                            <p className="text-sm text-slate-300 leading-relaxed">{detail.description}</p>
+                            <p className="text-base text-slate-300 leading-relaxed">{detail.description}</p>
                         </div>
                     )}
 
                     {/* Steps */}
-                    <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-3 mt-4">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 mt-4">
                         Acciones tomadas por {firstName}
                     </p>
 
@@ -128,11 +128,11 @@ export function IncidentDetailPanel({ detail, loading, firstName, onClose }: Pro
                                             : <div className="w-4 h-4 rounded-full border-2 border-slate-600 mt-0.5 shrink-0" />
                                         }
                                         <div className="min-w-0">
-                                            <p className={`text-xs font-medium leading-snug ${step.completed ? "text-slate-200" : "text-slate-400"}`}>
+                                            <p className={`text-sm font-medium leading-snug ${step.completed ? "text-slate-200" : "text-slate-400"}`}>
                                                 {step.title}
                                             </p>
                                             {step.completed && (
-                                                <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                                                <p className="text-sm text-slate-500 mt-0.5 leading-snug">
                                                     {step.description.length > 80
                                                         ? step.description.slice(0, 80) + "…"
                                                         : step.description}
@@ -159,7 +159,7 @@ export function IncidentDetailPanel({ detail, loading, firstName, onClose }: Pro
                     {/* Pie */}
                     <div className="mt-5 flex items-center gap-2.5 p-3 rounded-xl bg-blue-500/5 border border-blue-500/15">
                         <Shield size={14} className="text-blue-400 shrink-0" />
-                        <p className="text-xs text-slate-400 leading-relaxed">
+                        <p className="text-sm text-slate-400 leading-relaxed">
                             VERA te guía paso a paso para que {firstName} recupere el control.
                         </p>
                     </div>

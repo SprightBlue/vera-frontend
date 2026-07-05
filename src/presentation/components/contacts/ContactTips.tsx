@@ -27,7 +27,7 @@ const TIPS = [
 function ContactTips() {
     return (
         <div className="p-6 rounded-2xl bg-[#070B1A] border border-[#182033]">
-            <h3 className="text-white font-semibold text-sm mb-5">
+            <h3 className="text-white font-semibold text-base mb-5">
                 Consejos para elegir contactos de confianza
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -37,8 +37,8 @@ function ContactTips() {
                             <Icon size={18} className={iconClass} />
                         </div>
                         <div>
-                            <p className="text-white text-sm font-medium">{title}</p>
-                            <p className="text-slate-400 text-xs mt-1 leading-relaxed">{description}</p>
+                            <p className="text-white text-base font-medium">{title}</p>
+                            <p className="text-slate-400 text-sm mt-1 leading-relaxed">{description}</p>
                         </div>
                     </div>
                 ))}

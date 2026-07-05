@@ -7,6 +7,7 @@ import {
 } from "../../../infrastructure/api/incidents-api";
 import type { IncidentSummary, IncidentDetail } from "../../../domain/models/Incident";
 import { useAuth } from "../../../presentation/context/AuthContext";
+import toast from "react-hot-toast";
 
 export interface Person { id: number; fullName: string; status: string; }
 
@@ -39,7 +40,7 @@ export function useIncidents() {
                     setPersons(active);
                     if (active.length > 0) setSelectedPersonId(active[0].id);
                 })
-                .catch(console.error);
+                .catch(() => toast.error("No se pudieron cargar las personas protegidas"));
         }
     }, [user]);
 
@@ -60,7 +61,7 @@ export function useIncidents() {
                 setTotalElements(res.totalElements);
                 setTotalPages(res.totalPages);
             })
-            .catch(console.error)
+            .catch(() => toast.error("No se pudieron cargar los incidentes"))
             .finally(() => setLoadingList(false));
     }, [selectedPersonId, currentPage]);
 
@@ -69,7 +70,7 @@ export function useIncidents() {
         setLoadingDetail(true);
         getIncidentDetail(selectedId)
             .then(setDetail)
-            .catch(console.error)
+            .catch(() => toast.error("No se pudo cargar el detalle del incidente"))
             .finally(() => setLoadingDetail(false));
     }, [selectedId]);
 

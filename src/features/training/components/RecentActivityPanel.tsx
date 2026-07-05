@@ -20,7 +20,7 @@ interface Props {
 export function RecentActivityPanel({ sessions }: Props) {
     if (sessions.length === 0) {
         return (
-            <p className="text-slate-500 text-sm py-6 text-center">
+            <p className="text-slate-500 text-base py-6 text-center">
                 Todavía no hay actividad registrada.
             </p>
         );
@@ -40,10 +40,10 @@ export function RecentActivityPanel({ sessions }: Props) {
                             <XCircle size={16} className="text-red-400 shrink-0" />
                         )}
                         <div className="min-w-0">
-                            <p className="text-xs font-medium text-slate-200 truncate">
+                            <p className="text-sm font-medium text-slate-200 truncate">
                                 {s.scenarioTitle}
                             </p>
-                            <p className="text-[10px] text-slate-500">
+                            <p className="text-sm text-slate-500">
                                 {s.completedAt
                                     ? new Date(s.completedAt).toLocaleDateString("es-AR", {
                                         day: "2-digit",
@@ -56,12 +56,10 @@ export function RecentActivityPanel({ sessions }: Props) {
                         </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-2">
-                        <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${TYPE_BADGE[s.scenarioType] ?? ""}`}
-                        >
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${TYPE_BADGE[s.scenarioType] ?? ""}`}>
                             {TYPE_LABEL[s.scenarioType] ?? s.scenarioType}
                         </span>
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${ s.correct ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-red-500/10 text-red-400 border-red-500/20"}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold border ${ s.correct ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-red-500/10 text-red-400 border-red-500/20"}`}>
                             {s.correct ? "¡Bien hecho!" : "Error"}
                         </span>
                     </div>

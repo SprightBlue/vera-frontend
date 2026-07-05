@@ -48,8 +48,8 @@ function PersonConfiguration() {
             weeklySummary: currentPerson.receiveAlertSummaries ?? false,
           });
         }
-      } catch (error) {
-        console.error("Error al traer la configuración:", error);
+      } catch {
+        toast.error("No se pudo cargar la configuración");
       }
     }
 
@@ -75,8 +75,7 @@ function PersonConfiguration() {
       await updateProtectedPerson(Number(id), formData);
       toast.success("¡Configuración guardada con éxito!");
       navigate(`/persons/${id}`);
-    } catch (error) {
-      console.error("Error al actualizar configuración:", error);
+    } catch {
       toast.error("Error al intentar guardar los cambios.");
     } finally {
       setIsSaving(false);

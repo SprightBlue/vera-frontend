@@ -24,12 +24,12 @@ export function IncidentTable({incidents, selectedId, loading, firstName, curren
         <div className="bg-[#070B1A] border border-[#182033] rounded-2xl overflow-hidden">
 
             <div className="px-5 py-3.5 border-b border-[#182033]">
-                <h2 className="text-sm font-semibold text-white">Historial de incidentes</h2>
+                <h2 className="text-base font-semibold text-white">Historial de incidentes</h2>
             </div>
 
             <div className={`${ROW} px-5 py-2.5 bg-[#070B1A] border-b border-[#182033]`}>
                 {["Fecha", `Qué hizo ${firstName}`, "Tipo de incidente", "Estado", "Acciones"].map(h => (
-                    <span key={h} className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                    <span key={h} className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                         {h}
                     </span>
                 ))}
@@ -43,8 +43,8 @@ export function IncidentTable({incidents, selectedId, loading, firstName, curren
 
             {!loading && incidents.length === 0 && (
                 <div className="py-14 text-center">
-                    <AlertTriangle size={24} className="text-slate-700 mx-auto mb-2" />
-                    <p className="text-sm text-slate-500">No hay incidentes registrados.</p>
+                    <AlertTriangle size={26} className="text-slate-700 mx-auto mb-2" />
+                    <p className="text-base text-slate-500">No hay incidentes registrados.</p>
                 </div>
             )}
 
@@ -56,19 +56,19 @@ export function IncidentTable({incidents, selectedId, loading, firstName, curren
                     }`}
                 >
                     <div>
-                        <p className="text-xs text-slate-300">{fmtDate(inc.createdAt)}</p>
-                        <p className="text-[11px] text-slate-500">{fmtTime(inc.createdAt)}</p>
+                        <p className="text-sm text-slate-300">{fmtDate(inc.createdAt)}</p>
+                        <p className="text-sm text-slate-500">{fmtTime(inc.createdAt)}</p>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-snug">
-                        {ACTION_TYPE_LABELS[inc.actionType] ?? inc.actionType}
+                    <p className="min-w-0 truncate text-base text-slate-300" title={ACTION_TYPE_LABELS[inc.actionType]}>
+                        {ACTION_TYPE_LABELS[inc.actionType]}
                     </p>
 
                     <TypeChip actionType={inc.actionType} />
 
                     <StatusBadge status={inc.status} />
 
-                    <button onClick={() => onSelect(inc.id)} className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors cursor-pointer whitespace-nowrap">
+                    <button onClick={() => onSelect(inc.id)} className="inline-flex items-center gap-1 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors cursor-pointer whitespace-nowrap">
                         Ver detalles
                         <ChevronRight size={12} />
                     </button>

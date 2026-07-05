@@ -38,26 +38,26 @@ export function ScenarioCard({ scenario, onAssign, assigning }: Props) {
     const cfg = TYPE_CONFIG[scenario.scenarioType] ?? TYPE_CONFIG.SMS;
 
     return (
-        <div className="bg-[#070B1A] border border-[#182033] rounded-2xl p-4 flex flex-col gap-3 hover:border-violet-500/30 transition-all">
+        <div className="bg-[#070B1A] border border-[#182033] rounded-2xl p-4 flex flex-col gap-3 hover:border-blue-500/30 transition-all">
             <div className="flex items-start justify-between gap-2">
-                <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg border text-xs font-medium ${cfg.bg} ${cfg.color}`}>
+                <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg border text-sm font-medium ${cfg.bg} ${cfg.color}`}>
                     {cfg.icon}
                     {cfg.label}
                 </div>
-                <span className="text-[10px] text-slate-500 font-medium">
+                <span className="text-xs text-slate-500 font-medium">
                     {DIFFICULTY_LABEL[scenario.difficulty] ?? scenario.difficulty}
                 </span>
             </div>
 
             <div>
-                <h4 className="text-sm font-semibold text-slate-100 mb-1">{scenario.title}</h4>
-                <p className="text-xs text-slate-400 line-clamp-2">{scenario.messageBody}</p>
+                <h4 className="text-base font-semibold text-slate-100 mb-1">{scenario.title}</h4>
+                <p className="text-sm text-slate-400 line-clamp-2">{scenario.messageBody}</p>
             </div>
 
             <button
                 onClick={() => onAssign(scenario.id)}
                 disabled={assigning}
-                className="mt-auto flex items-center justify-center gap-2 px-3 py-2 bg-violet-600/10 hover:bg-violet-600/20 border border-violet-500/30 rounded-xl text-xs font-semibold text-violet-300 transition-all cursor-pointer disabled:opacity-50"
+                className="mt-auto flex items-center justify-center gap-2 px-3 py-2 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/30 rounded-xl text-sm font-semibold text-blue-300 transition-all cursor-pointer disabled:opacity-50"
             >
                 <Play size={12} />
                 Asignar entrenamiento

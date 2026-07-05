@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { deleteAccount } from "../../../infrastructure/api/delete-account-api";
+import axios from "axios";
 
 interface Props {
     isOpen: boolean;
@@ -37,14 +38,18 @@ export default function DeleteAccountModal({
 
             navigate("/login");
 
-        } catch (error: any) {
+        } catch (error: unknown) {
 
-            console.error(error);
+            let message = "No se pudo eliminar la cuenta.";
 
-            const message =
-                error?.response?.data?.message
-                ||
-                "No se pudo eliminar la cuenta.";
+            if (axios.isAxiosError(error)) {
+                const data = error.response?.data;
+                if (typeof data === "string" && data.trim()) {
+                    message = data;
+                } else if (data && typeof data === "object" && "message" in data) {
+                    message = String((data as { message: string }).message);
+                }
+            }
 
             toast.error(message);
 

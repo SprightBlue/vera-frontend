@@ -2,6 +2,7 @@ import { useState } from "react";
 import ProtectedPersonForm from "./ProtectedPersonForm";
 import { createProtectedPerson, type CreateProtectedPersonRequest } from "../../../infrastructure/api/protected-person-api";
 import { CheckCircle2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface Props {
     onClose: () => void;
@@ -19,9 +20,8 @@ function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
             
             onSuccess();
             setIsSent(true);
-        } catch (error) {
-            console.error("Error al procesar la solicitud:", error);
-            alert("Ocurrió un error al enviar la invitación.");
+        } catch {
+            toast.error("Ocurrió un error al enviar la invitación");
         } finally {
             setIsLoading(false);
         }

@@ -67,9 +67,7 @@ export default function ChangePasswordModal({
 
             onClose();
 
-        } catch (error) {
-
-            console.error(error);
+        } catch {
 
             toast.error("No se pudo cambiar la contraseña.");
 

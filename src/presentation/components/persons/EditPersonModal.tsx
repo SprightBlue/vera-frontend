@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { type ProtectedPerson, type UpdateProtectedInfo, uploadImage } from "../../../infrastructure/api/protected-person-api";
+import toast from "react-hot-toast";
 
 interface Props {
     person: ProtectedPerson;
@@ -46,8 +47,8 @@ function EditPersonModal({ person, onClose, onSuccess, onSubmit }: Props) {
         try {
             url = await uploadImage(file);
     
-        } catch (error) {
-            console.error("Error subiendo imagen:", error);
+        } catch {
+            toast.error("No se pudo subir la imagen");
         }
         return url;
     }
@@ -65,8 +66,8 @@ function EditPersonModal({ person, onClose, onSuccess, onSubmit }: Props) {
 
             onSuccess();
     
-        } catch (error) {
-            console.error("Error al guardar persona:", error);
+        } catch {
+            toast.error("No se pudo guardar la información");
         }
         finally {
             setSelectedImage(null);

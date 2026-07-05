@@ -11,7 +11,7 @@ import {
 import ChangePasswordModal from "../../components/settings/ChangePasswordModal";
 import ChangeEmailModal from "../../components/settings/ChangeEmailModal";
 import DeleteAccountModal from "../../components/settings/DeleteAccountModal";
-
+import toast from "react-hot-toast";
 
 function Settings() {
 
@@ -51,9 +51,9 @@ function Settings() {
                     country: data.country ?? ""
                 });
 
-            } catch (error) {
+            } catch {
 
-                console.error("Error cargando perfil", error);
+                toast.error("No se pudo cargar el perfil");
 
             }
 
@@ -82,15 +82,13 @@ function Settings() {
                 fullName: updatedProfile.fullName
             });
 
-            alert("Perfil actualizado correctamente");
+            toast.success("Perfil actualizado correctamente");
 
             setIsEditing(false);
 
-        } catch (error) {
+        } catch {
 
-            console.error(error);
-
-            alert("No se pudo actualizar el perfil");
+            toast.error("No se pudo actualizar el perfil");
 
         }
 
@@ -120,9 +118,9 @@ function Settings() {
                 image: imageUrl
             });
 
-        } catch (error) {
+        } catch {
 
-            console.error(error);
+            toast.error("No se pudo subir la imagen");
 
         } finally {
 
