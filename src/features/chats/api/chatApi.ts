@@ -7,11 +7,6 @@ export interface ChatMessage {
     content: string;
 }
 
-export interface ChatInitParams {
-    analysisId: string | null;
-    alertId: string | null;
-}
-
 export interface ChatSession {
     id: string;
     title: string;
@@ -23,14 +18,11 @@ const cleanId = (id: string): string => {
 };
 
 export const chatApi = {
-    initializeChat: async ({ analysisId, alertId }: ChatInitParams): Promise<string> => {
+    initializeChat: async (): Promise<string> => {
         const response = await api.post<string>(
             '/api/v1/chats/init',
             null,
-            {
-                params: { analysisId, alertId },
-                responseType: 'text'
-            }
+            { responseType: 'text' }
         );
         return cleanId(response.data);
     },

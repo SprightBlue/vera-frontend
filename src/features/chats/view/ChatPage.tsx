@@ -1,6 +1,6 @@
 import { type SyntheticEvent } from "react";
 import { useSearchParams } from "react-router-dom";
-import { AlertCircle, Loader2, RefreshCw, SidebarClose, SidebarOpen, Send } from "lucide-react";
+import { Loader2, SidebarClose, SidebarOpen, Send } from "lucide-react";
 
 import Sidebar from "@/presentation/components/Sidebar.tsx";
 import Header from "@/presentation/components/Header.tsx";
@@ -14,8 +14,6 @@ function ChatPage() {
     const { user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const analysisId = searchParams.get("analysisId");
-    const alertId = searchParams.get("alertId");
     const currentChatId = searchParams.get("currentChatId");
 
     const {
@@ -31,7 +29,7 @@ function ChatPage() {
         toggleSidebar,
         sendMessage,
         deleteChatSession
-    } = useChat(analysisId, alertId, currentChatId);
+    } = useChat(currentChatId);
 
     const handleSelectChat = (id: string): void => {
         setWelcomeInputValue("");
@@ -62,11 +60,14 @@ function ChatPage() {
     };
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-[#050816]">
+        <div className="flex h-screen w-screen overflow-hidden bg-[#050816] font-sans antialiased select-none text-slate-100">
             <Sidebar />
 
-            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 xl:ml-56 transition-all duration-300">
-                <Header userName={user?.fullName} title="Asistente con Inteligencia Artificial" />
+            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 lg:ml-56 transition-all duration-300">
+                <Header
+                    userName={user?.fullName}
+                    title="Asistente con Inteligencia Artificial"
+                />
 
                 <div className="flex-1 flex overflow-hidden min-h-0 w-full relative">
 
@@ -74,53 +75,44 @@ function ChatPage() {
 
                         <button
                             onClick={toggleSidebar}
-                            className="absolute right-6 top-6 z-40 p-2.5 rounded-xl text-slate-400 hover:text-blue-500 bg-[#070B1A]/80 hover:bg-[#070B1A] border border-[#161f38] transition-all backdrop-blur-sm cursor-pointer shadow-xl active:scale-95"
+                            className="absolute right-[clamp(1rem,2vw,2rem)] top-[clamp(1rem,1.5vw,1.5rem)] z-40 p-2 text-slate-500 hover:text-blue-400 transition-colors cursor-pointer bg-[#0a0f24]/60 border border-[#182033] rounded-xl shadow-md"
                             title={isSidebarOpen ? "Ocultar historial" : "Mostrar historial"}
                         >
-                            {isSidebarOpen ? <SidebarClose size={18} /> : <SidebarOpen size={18} />}
+                            {isSidebarOpen ? <SidebarClose size={14} /> : <SidebarOpen size={14} />}
                         </button>
 
                         <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
                             {isLoadingChat ? (
-                                <div className="flex-1 flex flex-col items-center justify-center py-10 px-8 gap-4 animate-fade-in duration-300">
-                                    <Loader2 size={32} className="text-blue-500 animate-spin" />
-                                    <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 font-medium select-none tracking-wide animate-pulse">
-                                        Sincronizando chat...
-                                    </p>
+                                <div className="flex-1 flex flex-col items-center justify-center py-24 select-none animate-fade-in">
+                                    <Loader2 size={22} className="text-blue-500 animate-spin stroke-[1.5] mb-2" />
+                                    <span className="text-[10px] font-bold text-slate-500 tracking-widest uppercase animate-pulse">
+                                        Cargando
+                                    </span>
                                 </div>
                             ) : error ? (
-                                <div className="flex-1 flex flex-col items-center justify-center py-10 px-8 gap-6 max-w-3xl mx-auto text-center animate-fade-in">
-                                    <div className="w-20 h-20 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/20 shadow-lg shadow-red-500/5">
-                                        <AlertCircle size={36} />
-                                    </div>
-                                    <div className="space-y-3">
-                                        <h3 className="text-[clamp(1.5rem,2vw,2rem)] font-bold text-white tracking-tight">Ocurrió un inconveniente</h3>
-                                        <p className="text-[clamp(1rem,1.2vw,1.3rem)] text-slate-400 leading-relaxed">{error}</p>
-                                    </div>
+                                <div className="flex-1 flex flex-col items-center justify-center py-20 select-none animate-fade-in">
                                     <button
                                         onClick={handleRetry}
-                                        className="flex items-center gap-3 px-8 py-4 rounded-xl bg-linear-to-r from-blue-600 to-blue-700 text-[clamp(1rem,1.2vw,1.2rem)] font-semibold text-white shadow-lg shadow-blue-600/20 hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+                                        className="text-[11px] font-bold text-slate-400 hover:text-slate-200 tracking-widest uppercase transition-colors cursor-pointer"
                                     >
-                                        <RefreshCw size={16} />
-                                        Reintentar carga
+                                        Reintentar
                                     </button>
                                 </div>
-                            ) : !analysisId && !alertId && !currentChatId && messages.length === 0 ? (
-                                <div className="flex-1 flex flex-col items-center justify-center py-10 px-8 gap-8 max-w-3xl mx-auto w-full animate-fade-in">
-                                    <div className="text-center select-none w-full space-y-2">
-                                        <h1 className="text-[clamp(1.75rem,3vw,2.5rem)] font-semibold bg-linear-to-r from-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+                            ) : !currentChatId && messages.length === 0 ? (
+                                <div className="flex-1 flex flex-col items-center justify-center px-[clamp(1rem,3vw,3rem)] max-w-3xl mx-auto w-full gap-[clamp(1.5rem,2.5vw,3rem)] animate-fade-in">
+                                    <div className="text-center select-none space-y-3">
+                                        <h1 className="text-[clamp(1.35rem,2vw,2.5rem)] font-bold tracking-tight text-white leading-[1.15]">
                                             Hola{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}.<br />
-                                            ¿En qué puedo ayudarte hoy?
+                                            ¿Qué consulta deseas iniciar hoy?
                                         </h1>
-                                        <p className="text-[clamp(1rem,1.15vw,1.3rem)] text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                                            El asistente con Inteligencia Artificial de Vera está preparado para ayudarte a responder tus consultas en tiempo real. Ingresá tu consulta y comenzá a interactuar con nuestro asistente.
+                                        <p className="text-[clamp(0.78rem,0.85vw,0.95rem)] text-slate-500 leading-relaxed max-w-md mx-auto font-medium">
+                                            Interactúa en tiempo real con el asistente de inteligencia artificial para obtener respuestas dinámicas y precisas.
                                         </p>
                                     </div>
 
                                     <form
-                                        key={`${currentChatId}-${analysisId}-${alertId}`}
                                         onSubmit={handleWelcomeSubmit}
-                                        className="w-full flex items-center gap-4 bg-[#070B1A] border border-[#182033] focus-within:border-blue-500/50 rounded-2xl px-5 py-4 shadow-xl transition-all duration-200"
+                                        className="w-full flex items-center gap-3 bg-linear-to-b from-[#0a0f24] to-[#070B1A] border border-[#182033] focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/20 rounded-2xl px-4 py-3.5 shadow-xl transition-all duration-200"
                                     >
                                         <input
                                             name="welcomeInput"
@@ -128,15 +120,18 @@ function ChatPage() {
                                             autoComplete="off"
                                             value={welcomeInputValue}
                                             onChange={(e) => setWelcomeInputValue(e.target.value)}
-                                            placeholder="Escribí tu consulta aquí..."
-                                            className="flex-1 bg-transparent text-slate-200 text-[clamp(1rem,1.2vw,1.2rem)] outline-none border-none placeholder:text-slate-500 min-w-0"
+                                            placeholder="Introduce tu consulta y presiona enter..."
+                                            className="flex-1 bg-transparent text-slate-200 text-[clamp(0.82rem,0.88vw,0.95rem)] outline-none placeholder:text-slate-600 min-w-0 font-medium"
                                         />
                                         <button
                                             type="submit"
                                             disabled={!welcomeInputValue.trim() || isLoadingChat}
-                                            className="p-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:bg-[#182033]/50 disabled:text-slate-500 transition-all cursor-pointer shadow-lg shadow-blue-600/10 active:scale-95 shrink-0"
+                                            className="px-4 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800/10 disabled:text-blue-400/30 text-white font-bold text-[clamp(10px,0.6vw,12px)] tracking-wider uppercase transition-all shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer shrink-0"
                                         >
-                                            <Send size={16} />
+                                            <div className="flex items-center gap-1.5">
+                                                <Send size={11} className="stroke-[2.2]" />
+                                                <span>Enviar</span>
+                                            </div>
                                         </button>
                                     </form>
                                 </div>
@@ -146,28 +141,43 @@ function ChatPage() {
                         </div>
                     </div>
 
+                    {isSidebarOpen && (
+                        <div
+                            className="xl:hidden absolute inset-0 bg-[#050816]/60 backdrop-blur-xs z-20 animate-fade-in"
+                            onClick={toggleSidebar}
+                        />
+                    )}
+
                     <div
-                        className="transition-all duration-300 h-full overflow-hidden shrink-0"
-                        style={{ width: isSidebarOpen ? "clamp(14rem, 18vw, 18rem)" : "0px" }}
+                        className={`absolute right-0 top-0 bottom-0 xl:relative z-30 transition-all duration-300 h-full overflow-hidden shrink-0 border-l border-[#182033]/40 bg-[#050816] ${
+                            isSidebarOpen
+                                ? "w-[clamp(16rem,20vw,24rem)] opacity-100"
+                                : "w-0 opacity-0 pointer-events-none"
+                        }`}
                     >
                         {isLoadingSessions ? (
-                            <div className="w-[clamp(14rem,18vw,18rem)] border-l border-[#182033] bg-[#0c1020] h-full flex flex-col items-center justify-center p-6 gap-4 transition-all duration-300">
-                                <Loader2 size={28} className="text-blue-500 animate-spin" />
-                                <p className="text-[clamp(0.9rem,1vw,1rem)] text-slate-400 font-medium select-none tracking-wide animate-pulse text-center">
-                                    Cargando historial...
-                                </p>
+                            <div className="w-full h-full flex flex-col items-center justify-center select-none animate-fade-in">
+                                <Loader2 size={18} className="text-slate-600 animate-spin stroke-[1.5] mb-2" />
+                                <span className="text-[9px] font-bold text-slate-600 tracking-widest uppercase">
+                                    Cargando
+                                </span>
                             </div>
                         ) : (
                             <ChatSidebar
                                 sessions={sessions}
                                 activeChatId={currentChatId}
-                                onSelectChat={handleSelectChat}
-                                onNewChat={handleNewChat}
+                                onSelectChat={(id) => {
+                                    handleSelectChat(id);
+                                    if (window.innerWidth < 1280) toggleSidebar();
+                                }}
+                                onNewChat={() => {
+                                    handleNewChat();
+                                    if (window.innerWidth < 1280) toggleSidebar();
+                                }}
                                 onDeleteChat={handleDeleteChat}
                             />
                         )}
                     </div>
-
                 </div>
             </div>
         </div>

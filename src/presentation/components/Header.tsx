@@ -4,7 +4,7 @@ import { useNotifications } from "@/features/notification/hooks/useNotifications
 import { NotificationDropdown } from "@/features/notification/components/NotificationDropdown";
 import { NotificationModal } from "@/features/notification/components/NotificationModal";
 import { type AppNotification } from "@/features/notification/api/notifications.ts";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/presentation/context/AuthContext";
 
 interface HeaderProps {
     userName?: string;
@@ -30,15 +30,15 @@ function Header({ userName, userRole, title }: HeaderProps) {
 
     return (
         <>
-            <header className="sticky top-0 z-40 w-full flex items-center justify-between h-[5.6rem] px-6 xl:px-8 bg-[#050816]/90 backdrop-blur-md border-b border-[#182033] transition-all">
+            <header className="sticky top-0 z-40 w-full flex items-center justify-between h-[clamp(4.5rem,5vw,5.6rem)] pl-24 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 bg-[#070B1A]/80 backdrop-blur-md border-b border-[#182033] transition-all select-none">
 
-                <div className="flex flex-col min-w-0 pr-4 justify-center h-full py-2">
-                    <h2 className="text-[clamp(1.1rem,1.5vw,1.35rem)] font-semibold text-slate-200 tracking-tight truncate leading-normal pb-1">
+                <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left">
+                    <h2 className="text-[clamp(0.95rem,1.15vw,1.35rem)] font-bold text-slate-200 tracking-tight truncate leading-normal">
                         {displayTitle}
                     </h2>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-[clamp(0.8rem,1.2vw,1.5rem)] shrink-0">
                     <NotificationDropdown
                         notifications={notifications}
                         isRinging={isRinging}
@@ -47,15 +47,16 @@ function Header({ userName, userRole, title }: HeaderProps) {
                         onSelect={(n) => { if (n.type === 'ALERT') { const p = n.payload as { alertId: string }; navigate(`/alerts/${p.alertId}`); } }}
                     />
 
-                    <div className="flex items-center gap-4 border-l border-[#182033] pl-6">
+                    <div className="flex items-center gap-2.5 sm:gap-3.5 border-l border-[#182033] pl-[clamp(0.8rem,1.2vw,1.5rem)]">
                         <div className="hidden sm:flex flex-col items-end leading-tight">
-                            <span className="text-[0.9rem] font-semibold text-slate-200 mb-0.5">{finalUserName}</span>
-                            <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-slate-200">{finalUserRole}</span>
+                            <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-semibold text-slate-200 mb-0.5 whitespace-nowrap">{finalUserName}</span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 whitespace-nowrap">{finalUserRole}</span>
                         </div>
+
                         {user?.image ? (
-                            <img src={user.image} alt="Perfil" className="w-10 h-10 rounded-full object-cover shrink-0 border border-[#182033]" />
+                            <img src={user.image} alt="Perfil" className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl object-cover shrink-0 border border-[#182033]" />
                         ) : (
-                            <div className="w-10 h-10 rounded-full bg-[#070B1A] flex items-center justify-center text-blue-500 font-bold text-sm shrink-0 border border-[#182033]">
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0a0f24] flex items-center justify-center text-blue-400 font-bold text-xs sm:text-sm shrink-0 border border-[#182033]">
                                 {finalUserName.charAt(0).toUpperCase()}
                             </div>
                         )}
