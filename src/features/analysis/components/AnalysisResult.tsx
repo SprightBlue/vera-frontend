@@ -1,148 +1,164 @@
-import { BarChart3, ShieldAlert, FileText, CheckCircle2, AlertTriangle, Lightbulb, Clock, Globe } from 'lucide-react';
+import {
+    FileText,
+    Clock,
+    Globe,
+    MessageSquareShare,
+    Loader2,
+    Tag
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type { AnalysisResultDto } from '@/features/analysis/api/analysisApi.ts';
 import { getRiskConfig } from '@/features/analysis/utils/riskConfig';
 
 type Props = {
     result: AnalysisResultDto | null;
-    error: string | null;
-    showPlaceholder?: boolean;
+    isStartingChat: boolean;
+    onStartChat: (id: string) => Promise<string | null>;
 };
 
-function AnalysisResult({ result, showPlaceholder = true }: Props) {
+function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
+    const navigate = useNavigate();
+
     if (!result) {
-        if (!showPlaceholder) return null;
-
         return (
-            <div className="flex-1 flex flex-col items-center justify-center text-center select-none py-14 gap-3 animate-fade-in">
-                <BarChart3 size={44} className="text-slate-600 stroke-[1.2]" />
-
-                <p className="text-[clamp(1rem,1.15vw,1.3rem)] text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                    El análisis del contenido se mostrará aquí una vez que se complete el procesamiento.
-                </p>
+            <div className="w-full flex items-center justify-center text-center select-none py-36 animate-fade-in">
+                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                    Esperando contenido para analizar
+                </span>
             </div>
         );
     }
 
     const config = getRiskConfig(result.riskLevel);
     const percentage = result.riskPercentage ?? 0;
+    const isHighRisk = result.riskLevel?.toUpperCase() === 'HIGH' || result.riskLevel?.toUpperCase() === 'ALTO';
 
-    const radius = 50;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffsetTarget = circumference - (percentage / 100) * circumference;
+    const handleStartAnalysisChat = async (): Promise<void> => {
+        if (!result.id || isStartingChat) return;
+        const chatId = await onStartChat(result.id);
+        if (chatId) {
+            navigate(`/chat?currentChatId=${chatId}`);
+        }
+    };
 
     return (
-        <section className="w-full space-y-[clamp(1.2rem,1.5vw,2rem)] pb-10 font-sans">
+        <section className="w-full space-y-[clamp(1rem,1.5vw,2rem)] pb-8 font-sans animate-fade-in">
 
-            <div className={`rounded-2xl border p-6 flex items-start gap-4 shadow-md ${config.bgColor} ${config.borderColor} ${
-                percentage >= 70 ? 'animate-[pulse_3s_infinite]' : ''
-            }`}>
+            <div className={`rounded-2xl border-y border-r border-[#182033] bg-linear-to-b from-[#0a0f24] to-[#070B1A] p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl relative overflow-hidden ${config.borderColor} border-l-4`}>
+                <div className={`absolute top-0 right-0 w-[clamp(180px,18vw,320px)] h-[clamp(180px,18vw,320px)] rounded-full filter blur-[80px] opacity-10 pointer-events-none ${
+                    isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
+                }`} />
 
-                <div className={`mt-0.5 shrink-0 ${
-                    percentage >= 70
-                        ? 'animate-[pulse_1.5s_infinite]'
-                        : percentage >= 40
-                            ? 'animate-[pulse_2.5s_infinite]'
-                            : ''
-                }`}>
-                    {percentage >= 70 ? (
-                        <ShieldAlert className="h-6 w-6 text-red-400" />
-                    ) : percentage >= 40 ? (
-                        <AlertTriangle className="h-6 w-6 text-yellow-400" />
-                    ) : (
-                        <CheckCircle2 className="h-6 w-6 text-green-400" />
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10">
+                    <div className="flex items-start gap-3.5 min-w-0 flex-1">
+                        <div className="space-y-1 min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <h3 className="text-[clamp(0.95rem,1.1vw,1.2rem)] font-bold tracking-tight text-white truncate max-w-sm sm:max-w-md select-text">
+                                    {result.title || 'Contenido Analizado'}
+                                </h3>
+                                <span className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider border shrink-0 ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
+                                    {config.label} {percentage}%
+                                </span>
+                            </div>
+
+                            <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium select-text max-w-380">
+                                {isHighRisk
+                                    ? 'Se detectó un peligro inminente bajo indicadores críticos de fraude. Te recomendamos de forma tajante cortar comunicación y resguardar tus credenciales.'
+                                    : percentage >= 40
+                                        ? 'Se identificaron patrones irregulares o sospechosos en la estructura del mensaje. Procedé con precaución.'
+                                        : 'El contenido cumple con los parámetros básicos de seguridad analizados.'}
+                            </p>
+                        </div>
+                    </div>
+
+                    {isHighRisk && (
+                        <button
+                            onClick={handleStartAnalysisChat}
+                            disabled={isStartingChat}
+                            className="w-full md:w-36 h-9 shrink-0 flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800/10 disabled:text-blue-400/30 text-white font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer group/btn"
+                        >
+                            {isStartingChat ? (
+                                <>
+                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                    <span>Conectando</span>
+                                </>
+                            ) : (
+                                <>
+                                    <MessageSquareShare className="h-3.5 w-3.5 transition-transform group-hover/btn:scale-105" />
+                                    <span>Iniciar Chat</span>
+                                </>
+                            )}
+                        </button>
                     )}
                 </div>
 
-                <div className="space-y-1">
-                    <h3 className={`text-[clamp(1.1rem,1.25vw,1.4rem)] font-bold tracking-tight ${config.textColor}`}>
-                        {result.title || 'Análisis Completado'}
-                    </h3>
-                    <p className="text-[clamp(0.85rem,0.95vw,1.1rem)] text-slate-400 leading-relaxed max-w-5xl">
-                        {percentage >= 70
-                            ? 'Peligro inminente detectado. Te recomendamos rotundamente no interactuar con el remitente ni abrir archivos.'
-                            : percentage >= 40
-                                ? 'Se identificaron patrones irregulares o sospechosos. Procedé con estricto cuidado.'
-                                : 'No se detectaron amenazas bajo los criterios analizados de seguridad.'}
-                    </p>
+                <div className="w-full h-1 bg-slate-800/40 rounded-full mt-4 overflow-hidden">
+                    <div
+                        className={`h-full rounded-full transition-all duration-1000 ${
+                            isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
+                        }`}
+                        style={{ width: `${percentage}%` }}
+                    />
                 </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-[clamp(1rem,1.5vw,2rem)]">
-                {[
-                    { label: 'Origen', value: `${result.source}`, icon: <Globe className="h-4 w-4 text-slate-200" />, customText: 'text-slate-200' },
-                    { label: 'Tipo de Riesgo', value: result.riskType || 'No identificado', icon: null, customText: 'text-slate-200 truncate' },
-                    { label: 'Fecha', value: result.createdAt, icon: <Clock className="h-4 w-4 text-slate-200" />, customText: 'text-slate-200 font-semibold' }
-                ].map((item, index) => (
-                    <div key={index} className="rounded-2xl border border-[#182033] bg-[#070B1A] p-5 shadow-md">
-                        <p className="text-slate-200 text-[10px] font-bold uppercase tracking-wider">{item.label}</p>
-                        <p className={`text-[clamp(0.85rem,0.95vw,1.1rem)] font-bold mt-1.5 flex items-center gap-2 ${item.customText}`}>
-                            {item.icon} {item.value}
-                        </p>
-                    </div>
-                ))}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-[#070B1A]/40 border border-[#182033]/60 rounded-xl px-4 py-2.5 text-[clamp(0.7rem,0.75vw,0.8rem)] text-slate-400 select-none">
+                <div className="flex items-center gap-1.5">
+                    <Globe size={12} className="text-slate-500" />
+                    <span>Dónde: <strong className="text-slate-200 font-semibold select-text">{result.source}</strong></span>
+                </div>
+                <div className="w-1 h-1 bg-slate-700 rounded-full shrink-0" />
+                <div className="flex items-center gap-1.5">
+                    <Clock size={12} className="text-slate-500" />
+                    <span>Cuándo: <strong className="text-slate-200 font-semibold select-text">{result.createdAt}</strong></span>
+                </div>
+                <div className="w-1 h-1 bg-slate-700 rounded-full shrink-0" />
+                <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                    <Tag size={12} className="text-slate-500 shrink-0" />
+                    <span className="truncate">
+                        Categoría: <strong className="text-blue-400 font-bold ml-0.5 select-text">{result.riskType || 'General'}</strong>
+                    </span>
+                </div>
             </div>
 
-            <div className="grid gap-[clamp(1rem,1.5vw,2rem)] grid-cols-12 items-stretch">
+            <div className="w-full space-y-[clamp(1rem,1.2vw,1.5rem)]">
 
-                <div className="col-span-4 rounded-2xl border border-[#182033] bg-[#070B1A] p-6 flex flex-col items-center justify-center shadow-md select-none cursor-default">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-200 w-full text-left mb-4">
-                        Nivel de Riesgo
-                    </p>
-                    <div className="relative flex items-center justify-center h-28 w-28 my-auto">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 116 116">
-                            <circle cx="58" cy="58" r={radius} className="stroke-slate-800/20" strokeWidth="6" fill="transparent" />
-                            <circle
-                                cx="58"
-                                cy="58"
-                                r={radius}
-                                className={`stroke-current ${config.strokeColor}`}
-                                strokeWidth="6"
-                                fill="transparent"
-                                strokeDasharray={circumference}
-                                strokeDashoffset={strokeDashoffsetTarget}
-                            />
-                        </svg>
-
-                        <div className="absolute flex flex-col items-center justify-center">
-                            <span className="text-2xl font-black text-slate-200 tracking-tight">{percentage}%</span>
-                            <span className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${config.textColor}`}>
-                                {config.label}
-                            </span>
-                        </div>
+                <div className="bg-[#070B1A]/40 border border-[#182033]/60 rounded-2xl p-[clamp(0.9rem,1.3vw,1.5rem)] space-y-2">
+                    <div className="flex items-center gap-2 text-slate-400 font-bold text-[9px] uppercase tracking-widest select-none">
+                        <FileText className="h-3.5 w-3.5 text-blue-400" />
+                        <h4>Resumen analítico del Contenido</h4>
                     </div>
-                </div>
-
-                <div className="col-span-8 rounded-2xl border border-[#182033] bg-[#070B1A] p-6 flex flex-col justify-start shadow-md">
-                    <div className="flex items-center gap-2 text-blue-400/80 font-bold text-[10px] uppercase tracking-wider mb-3.5 select-none">
-                        <FileText className="h-4 w-4 text-blue-400/80 stroke-[1.5]" />
-                        <h4>Resumen del contenido</h4>
-                    </div>
-                    <p className="text-[clamp(0.85rem,0.95vw,1.05rem)] text-slate-400 leading-relaxed bg-[#050816]/70 p-4 rounded-xl border border-[#182033]/40 grow font-sans">
+                    <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium select-text">
                         {result.contentSummary || 'No se pudo generar un resumen conceptual.'}
                     </p>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-[clamp(1rem,1.5vw,2rem)]">
-                <div className="rounded-2xl border border-[#182033] bg-[#070B1A] p-6 flex flex-col shadow-md">
-                    <h4 className={`text-[11px] font-bold uppercase tracking-wider mb-3.5 flex items-center gap-2 ${config.textColor}`}>
-                        <AlertTriangle className="h-4 w-4 text-red-500/80 stroke-[1.5]" /> Patrones Sospechosos
-                    </h4>
-                    <p className="text-[clamp(0.85rem,0.95vw,1.05rem)] text-slate-400 leading-relaxed pl-4 border-l border-slate-800/80 grow font-sans">
-                        {result.suspiciousPatterns}
-                    </p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(1rem,1.2vw,1.5rem)] items-stretch">
+
+                    <div className="space-y-2 flex flex-col">
+                        <h4 className="text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 text-red-400/90 select-none">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> Patrones Sospechosos Detectados
+                        </h4>
+                        <div className="bg-[#070B1A]/20 border-l-2 border-red-500/50 p-[clamp(0.9rem,1.3vw,1.5rem)] flex-1">
+                            <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-300 leading-relaxed font-medium whitespace-pre-line select-text">
+                                {result.suspiciousPatterns}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2 flex flex-col">
+                        <h4 className="text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 text-emerald-400/90 select-none">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Recomendación Sugerida
+                        </h4>
+                        <div className="bg-[#070B1A]/20 border-l-2 border-emerald-500/50 p-[clamp(0.9rem,1.3vw,1.5rem)] flex-1">
+                            <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-300 leading-relaxed font-medium whitespace-pre-line select-text">
+                                {result.recommendation || 'No se requieren acciones complejas.'}
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
-
-                <div className="rounded-2xl border border-[#182033] bg-[#070B1A] p-6 flex flex-col shadow-md">
-                    <h4 className="text-[11px] font-bold uppercase tracking-wider mb-3.5 flex items-center gap-2 text-green-400">
-                        <Lightbulb className="h-4 w-4 text-green-400/80 stroke-[1.5]" /> Recomendaciones Sugeridas
-                    </h4>
-                    <p className="text-[clamp(0.85rem,0.95vw,1.05rem)] text-slate-400 leading-relaxed pl-4 border-l border-slate-800/80 grow font-sans">
-                        {result.recommendation || 'No se requieren acciones complejas. Mantenga el estado de alerta activa.'}
-                    </p>
-                </div>
             </div>
-
         </section>
     );
 }

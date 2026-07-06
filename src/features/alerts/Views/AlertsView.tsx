@@ -1,124 +1,289 @@
-import { useEffect, useState } from 'react';
+import { useState, type ChangeEvent, type SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../presentation/context/AuthContext';
-import Sidebar from '../../../presentation/components/Sidebar';
-import Header from '../../../presentation/components/Header';
-import { useAlerts } from '../hooks/useAlerts';
-import { Inbox } from "lucide-react";
+import { useAuth } from '@/presentation/context/AuthContext.tsx';
+import Sidebar from '@/presentation/components/Sidebar';
+import Header from '@/presentation/components/Header';
+import { useAlerts } from '@/features/alerts/hooks/useAlerts';
+import { type RiskLevel } from '@/features/alerts/api/alertsApi.ts';
+import { riskConfigAlert } from '@/features/alerts/utils/riskConfigAlert.ts';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  RefreshCw,
+  Search,
+  Eye
+} from "lucide-react";
 
-type FilterType = 'ALL' | 'UNRESOLVED' | 'RESOLVED';
+type RiskFilterType = RiskLevel | 'NONE';
+type StatusFilterType = 'PENDING' | 'RESOLVED' | 'NONE';
 
-export function AlertsView() {
+function AlertsView() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(0);
-  const [filter, setFilter] = useState<FilterType>('ALL');
+  const [inputValue, setInputValue] = useState<string>('');
+  const [search, setSearch] = useState<string>('');
 
-  const { alerts, totalPages, loading, error, loadAlerts } = useAlerts();
+  const [activeRisk, setActiveRisk] = useState<RiskFilterType>('NONE');
+  const [activeStatus, setActiveStatus] = useState<StatusFilterType>('NONE');
 
-  useEffect(() => {
-    const isResolved = filter === 'ALL' ? undefined : filter === 'RESOLVED';
-    void loadAlerts(page, isResolved);
-  }, [page, filter, loadAlerts]);
+  const handleRiskToggle = (risk: RiskLevel) => {
+    forceLoading();
+    setActiveRisk(prev => prev === risk ? 'NONE' : risk);
+    setPage(0);
+  };
+
+  const handleStatusToggle = (status: 'PENDING' | 'RESOLVED') => {
+    forceLoading();
+    setActiveStatus(prev => prev === status ? 'NONE' : status);
+    setPage(0);
+  };
+
+  const handleSearchSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    forceLoading();
+    setSearch(inputValue.trim());
+    setPage(0);
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    if (!e.target.value.trim()) {
+      forceLoading();
+      setSearch('');
+      setPage(0);
+    }
+  };
+
+  const { alerts, totalPages, totalElements, loading, error, retry, forceLoading } = useAlerts({
+    page,
+    resolved: activeStatus === 'NONE' ? undefined : activeStatus === 'RESOLVED',
+    riskLevel: activeRisk === 'NONE' ? undefined : activeRisk,
+    search: search || undefined
+  });
 
   return (
-      <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-inter">
+      <div className="flex h-screen w-screen overflow-hidden bg-[#050816] text-slate-100 font-sans antialiased select-none">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
+
+        <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
           <Header
               userName={user?.fullName ?? "Usuario"}
               title="Historial de Alertas"
-              subtitle="Monitorea y gestiona el registro completo de actividad."
           />
 
-          <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-5xl w-full">
-              <div className="flex gap-2 mb-8">
-                {(['ALL', 'UNRESOLVED', 'RESOLVED'] as const).map((f) => (
-                    <button
-                        key={f}
-                        onClick={() => { setFilter(f); setPage(0); }}
-                        className={`px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg border transition-all cursor-pointer ${
-                            filter === f
-                                ? 'bg-blue-600 border-blue-500 text-white'
-                                : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
-                        }`}
-                    >
-                      {f === 'ALL' ? 'Todas' : f === 'UNRESOLVED' ? 'Pendientes' : 'Resueltas'}
-                    </button>
-                ))}
-              </div>
+          <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1rem,1.8vw,2.5rem)] flex flex-col justify-between">
+            <div className="mx-auto max-w-480 w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
 
-              {error && (
-                  <div className="p-4 mb-6 rounded-lg bg-red-950/30 border border-red-900 text-red-400 text-sm">
-                    {error}
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 w-full border-b border-[#182033]/60 pb-5">
+
+                <form
+                    onSubmit={handleSearchSubmit}
+                    className="flex flex-col gap-2 md:w-1/2 w-full"
+                >
+                  <span className="text-[clamp(9px,0.55vw,11px)] font-bold tracking-widest text-slate-500 uppercase">Motor de Búsqueda</span>
+                  <div className="relative flex items-center w-full group">
+                    <Search size={13} className="absolute left-4 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
+                    <input
+                        type="text"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        placeholder="Buscar por Titulo o Contenido..."
+                        className="h-10 w-full bg-[#0a0f24]/50 border border-[#182033] rounded-xl pl-10 pr-4 text-[clamp(9px,0.55vw,11px)] font-semibold tracking-widest text-slate-200 placeholder-slate-600 outline-hidden hover:border-slate-700 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all uppercase"
+                    />
                   </div>
-              )}
+                </form>
 
-              <div className="flex flex-col gap-4 min-h-100">
-                {loading ? (
-                    <div className="animate-pulse space-y-4">
-                      {[1, 2, 3].map((i) => (
-                          <div key={i} className="rounded-2xl border border-slate-900 bg-slate-900/20 p-6 flex justify-between items-center">
-                            <div className="space-y-3"><div className="h-4 w-48 bg-slate-800 rounded" /><div className="h-3 w-32 bg-slate-800/60 rounded" /></div>
-                            <div className="h-8 w-24 bg-slate-800 rounded" />
-                          </div>
-                      ))}
-                    </div>
-                ) : alerts.length > 0 ? alerts.map((alert) => (
-                    <div key={alert.id} className="group p-6 rounded-2xl bg-slate-900/20 border border-slate-900 flex items-center justify-between hover:border-slate-700 transition-all">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-3">
-                          <h4 className="font-semibold text-slate-100">{alert.title}</h4>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${alert.isResolved ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border border-amber-500/20"}`}>
-                        {alert.isResolved ? "Resuelta" : "Pendiente"}
-                      </span>
-                        </div>
-                        <p className="text-sm text-slate-400 mt-1">Usuario: {alert.protectedFullName ?? "N/A"} • {new Date(alert.createdAt).toLocaleDateString()}</p>
-                      </div>
+                <div className="flex flex-wrap items-center gap-[clamp(1rem,1.5vw,2rem)]">
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[clamp(9px,0.55vw,11px)] font-bold tracking-widest text-slate-500 uppercase">Estado De Alerta</span>
+                    <div className="flex items-center gap-2">
                       <button
-                          onClick={() => navigate(`/alerts/${alert.id}`)}
-                          className="px-4 py-2 bg-slate-900 hover:bg-indigo-600 border border-slate-800 hover:border-indigo-500 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
+                          onClick={() => handleStatusToggle('PENDING')}
+                          className={`px-4 py-2 rounded-xl border text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                              activeStatus === 'PENDING'
+                                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 shadow-md shadow-amber-500/3'
+                                  : 'bg-[#0a0f24]/40 border-[#182033] text-slate-400 hover:text-slate-200 hover:bg-[#131b35]/20'
+                          }`}
                       >
-                        Ver Detalles
+                        Pendientes
+                      </button>
+
+                      <button
+                          onClick={() => handleStatusToggle('RESOLVED')}
+                          className={`px-4 py-2 rounded-xl border text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                              activeStatus === 'RESOLVED'
+                                  ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-md shadow-emerald-500/3'
+                                  : 'bg-[#0a0f24]/40 border-[#182033] text-slate-400 hover:text-slate-200 hover:bg-[#131b35]/20'
+                          }`}
+                      >
+                        Resueltas
                       </button>
                     </div>
-                )) : (
-                    <div className="flex flex-col items-center justify-center pt-20 gap-4 text-center">
-                      <div className="p-4 rounded-full bg-slate-900 border border-slate-800">
-                        <Inbox size={40} className="text-slate-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-slate-200 font-semibold text-lg">No hay alertas registradas</h3>
-                        <p className="text-slate-500 text-sm max-w-xs mx-auto mt-1">
-                          Actualmente no tienes alertas que coincidan con los criterios seleccionados.
-                        </p>
-                      </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[clamp(9px,0.55vw,11px)] font-bold tracking-widest text-slate-500 uppercase">Nivel de Riesgo</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                          onClick={() => handleRiskToggle('LOW')}
+                          className={`px-4 py-2 rounded-xl border text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                              activeRisk === 'LOW'
+                                  ? 'bg-green-500/10 border-green-500/40 text-green-400 shadow-md shadow-green-500/3'
+                                  : 'bg-[#0a0f24]/40 border-[#182033] text-slate-400 hover:text-slate-200 hover:bg-[#131b35]/20'
+                          }`}
+                      >
+                        Bajo
+                      </button>
+
+                      <button
+                          onClick={() => handleRiskToggle('MEDIUM')}
+                          className={`px-4 py-2 rounded-xl border text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                              activeRisk === 'MEDIUM'
+                                  ? 'bg-yellow-500/10 border-yellow-500/40 text-yellow-400 shadow-md shadow-yellow-500/3'
+                                  : 'bg-[#0a0f24]/40 border-[#182033] text-slate-400 hover:text-slate-200 hover:bg-[#131b35]/20'
+                          }`}
+                      >
+                        Medio
+                      </button>
+
+                      <button
+                          onClick={() => handleRiskToggle('HIGH')}
+                          className={`px-4 py-2 rounded-xl border text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                              activeRisk === 'HIGH'
+                                  ? 'bg-red-500/10 border-red-500/40 text-red-400 shadow-md shadow-red-500/3'
+                                  : 'bg-[#0a0f24]/40 border-[#182033] text-slate-400 hover:text-slate-200 hover:bg-[#131b35]/20'
+                          }`}
+                      >
+                        Alto
+                      </button>
                     </div>
-                )}
+                  </div>
+
+                </div>
+
               </div>
 
-              {totalPages > 0 && (
-                  <div className="flex justify-between mt-8 pt-6 border-t border-slate-900">
-                    <span className="text-xs text-slate-500 font-mono">Página {page + 1} de {totalPages}</span>
+              {loading ? (
+                  <div className="w-full flex-1 flex flex-col items-center justify-center py-36 select-none animate-fade-in">
+                    <Loader2 size={22} className="text-blue-500 animate-spin stroke-[1.5] mb-2" />
+                    <span className="text-[10px] font-bold text-slate-500 tracking-widest uppercase animate-pulse">
+                      Cargando
+                    </span>
+                  </div>
+              ) : error ? (
+                  <div className="w-full flex-1 flex items-center justify-center py-24 select-none animate-fade-in">
+                    <button
+                        onClick={retry}
+                        className="flex items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-slate-200 tracking-widest uppercase transition-colors cursor-pointer group"
+                    >
+                      <RefreshCw size={12} className="stroke-[2.5] text-slate-500 group-hover:text-slate-200 transition-colors" />
+                      <span>Reintentar</span>
+                    </button>
+                  </div>
+              ) : (
+                  <div className="w-full flex-1">
+                    {alerts.length > 0 ? (
+                        <div className="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-4 auto-rows-max animate-fade-in">
+                          {alerts.map((alert) => {
+                            const level: RiskLevel = (alert.riskLevel as RiskLevel) || 'LOW';
+                            const config = riskConfigAlert[level];
+
+                            return (
+                                <div
+                                    key={alert.id}
+                                    className={`group rounded-2xl border-y border-r border-l-4 bg-linear-to-b from-[#0a0f24] to-[#070B1A] border-[#182033] ${config.borderLeft} ${config.hoverBorderLeft} ${config.hoverBorderY} ${config.hoverBorderR} p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-stretch justify-between gap-5 transition-all duration-300`}
+                                >
+                                  <div className={`absolute top-0 right-0 w-[clamp(140px,14vw,260px)] h-[clamp(140px,14vw,260px)] rounded-full filter blur-[70px] opacity-10 pointer-events-none ${config.glowColor}`} />
+
+                                  <div className="flex flex-col justify-between min-w-0 flex-1 relative z-10 gap-2">
+                                    <span className="text-[clamp(0.75rem,0.8vw,0.86rem)] font-medium text-slate-400 leading-relaxed tracking-normal select-text">
+                                      {alert.protectedFullName ?? "Sistema Central"}
+                                    </span>
+
+                                    <h3 className="text-[clamp(0.95rem,1.1vw,1.2rem)] font-bold tracking-tight text-white truncate max-w-70 sm:max-w-xs md:max-w-md select-text">
+                                      {alert.title}
+                                    </h3>
+
+                                    <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed line-clamp-2 pr-2 select-text font-medium">
+                                      {alert.contentSummary || 'Sin sumario descriptivo de anomalías anexado al registro.'}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex flex-col items-start sm:items-end justify-between gap-3 shrink-0 w-full sm:w-auto border-t sm:border-t-0 border-[#182033]/40 pt-3 sm:pt-0 relative z-10">
+                                    <span className="text-[clamp(0.75rem,0.8vw,0.86rem)] font-medium text-slate-400 leading-relaxed tracking-normal sm:text-right select-text">
+                                      {alert.createdAt}
+                                    </span>
+
+                                    <div className="flex items-center gap-1.5">
+                                      <span className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider border shrink-0 ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
+                                        Riesgo {config.label}
+                                      </span>
+                                      <span className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider border shrink-0 ${
+                                          alert.isResolved
+                                              ? "bg-emerald-500/5 text-emerald-400 border-emerald-500/20"
+                                              : "bg-amber-500/5 text-amber-400 border-amber-500/20"
+                                      }`}>
+                                        {alert.isResolved ? "Resuelta" : "Pendiente"}
+                                      </span>
+                                    </div>
+
+                                    <button
+                                        onClick={() => navigate(`/alerts/${alert.id}`)}
+                                        className="w-full sm:w-32 h-9 flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer group/btn"
+                                    >
+                                      <Eye className="h-3.5 w-3.5 transition-transform group-hover/btn:scale-105" />
+                                      <span>Ver detalles</span>
+                                    </button>
+                                  </div>
+
+                                </div>
+                            );
+                          })}
+                        </div>
+                    ) : (
+                        <div className="w-full flex-1 flex items-center justify-center py-36 select-none animate-fade-in">
+                          <span className="text-[10px] font-bold text-slate-600 tracking-widest uppercase">
+                            No hay alertas disponibles
+                          </span>
+                        </div>
+                    )}
+                  </div>
+              )}
+
+              {!error && (
+                  <div className="flex items-center justify-between mt-auto pt-5 border-t border-[#182033]/40 select-none w-full">
+                    <span className="text-[clamp(9px,0.6vw,11px)] text-slate-500 font-bold tracking-wider uppercase">
+                      Página {page + 1} de {Math.max(1, totalPages)} • Registros: {totalElements}
+                    </span>
+
                     <div className="flex gap-2">
                       <button
-                          disabled={page <= 0}
-                          onClick={() => setPage((prev) => Math.max(0, prev - 1))}
-                          className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs hover:bg-slate-800 disabled:opacity-30 cursor-pointer transition-all"
-                      >Anterior</button>
+                          disabled={page <= 0 || loading}
+                          onClick={() => { forceLoading(); setPage((prev) => Math.max(0, prev - 1)); }}
+                          className="p-2 bg-[#0a0f24] hover:bg-[#131b35]/60 border border-[#182033] rounded-xl disabled:opacity-10 disabled:cursor-not-allowed transition-all cursor-pointer"
+                      >
+                        <ChevronLeft size={14} className="text-slate-400" />
+                      </button>
                       <button
-                          disabled={page >= totalPages - 1}
-                          onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
-                          className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs hover:bg-slate-800 disabled:opacity-30 cursor-pointer transition-all"
-                      >Siguiente</button>
+                          disabled={page >= totalPages - 1 || totalPages <= 1 || loading}
+                          onClick={() => { forceLoading(); setPage((prev) => Math.min(totalPages - 1, prev + 1)); }}
+                          className="p-2 bg-[#0a0f24] hover:bg-[#131b35]/60 border border-[#182033] rounded-xl disabled:opacity-10 disabled:cursor-not-allowed transition-all cursor-pointer"
+                      >
+                        <ChevronRight size={14} className="text-slate-400" />
+                      </button>
                     </div>
                   </div>
               )}
+
             </div>
           </main>
         </div>
       </div>
   );
 }
+
+export default AlertsView;

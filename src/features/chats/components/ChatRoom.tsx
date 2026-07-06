@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, type SyntheticEvent } from "react";
-import { Send, Bot, User as UserIcon, Loader2 } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import type { ChatMessage } from "@/features/chats/api/chatApi.ts";
 
 interface ChatRoomProps {
@@ -25,26 +25,18 @@ function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
 
     return (
         <div className="flex-1 flex flex-col h-full bg-[#050816] overflow-hidden">
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-6 sm:px-8">
-                <div className="max-w-3xl mx-auto w-full py-10 space-y-8">
+            <div className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2.5vw,4rem)]">
+                <div className="max-w-360 mx-auto w-full py-[clamp(1.5rem,2vw,3rem)] space-y-5">
                     {messages.map((msg, index) => {
                         const isModel = msg.role === "MODEL";
                         return (
                             <div key={index} className={`flex w-full ${isModel ? "justify-start" : "justify-end"} animate-fade-in`}>
-                                <div className={`flex items-start gap-4 max-w-[90%] sm:max-w-[85%] ${isModel ? "flex-row" : "flex-row-reverse"}`}>
+                                <div className={`flex items-start gap-3 max-w-[85%] xl:max-w-[70%] ${isModel ? "flex-row" : "flex-row-reverse"}`}>
 
-                                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${
+                                    <div className={`rounded-2xl px-4 py-3 text-[clamp(0.82rem,0.88vw,0.98rem)] leading-relaxed font-medium select-text ${
                                         isModel
-                                            ? "bg-[#070B1A] border-[#182033] text-blue-500 shadow-sm shadow-blue-500/5"
-                                            : "bg-linear-to-r from-blue-600 to-blue-700 border-blue-500 text-white shadow-lg shadow-blue-600/10"
-                                    }`}>
-                                        {isModel ? <Bot size={20} /> : <UserIcon size={20} />}
-                                    </div>
-
-                                    <div className={`rounded-2xl px-5 py-3.5 text-[clamp(1rem,1.1vw,1.15rem)] leading-relaxed shadow-xl transition-all ${
-                                        isModel
-                                            ? "bg-[#070B1A] border border-[#182033] text-slate-200"
-                                            : "bg-[#070B1A] border border-blue-500/30 text-blue-100 font-medium"
+                                            ? "bg-[#070B1A]/60 border border-[#182033]/60 text-slate-200 shadow-md"
+                                            : "bg-blue-600/10 border border-blue-500/20 text-blue-100 shadow-sm"
                                     }`}>
                                         {msg.content}
                                     </div>
@@ -54,10 +46,10 @@ function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
                     })}
 
                     {isSending && (
-                        <div className="flex w-full justify-start animate-pulse">
-                            <div className="flex items-center gap-3 bg-[#070B1A]/40 border border-[#182033]/60 rounded-xl px-5 py-3.5 ml-15">
-                                <Loader2 size={16} className="animate-spin text-blue-500" />
-                                <span className="text-slate-400 text-[clamp(0.9rem,1vw,1rem)] font-medium tracking-wide">Procesando respuesta...</span>
+                        <div className="flex w-full justify-start animate-fade-in">
+                            <div className="flex items-center gap-2 px-4 py-2 text-slate-500 select-none">
+                                <Loader2 size={13} className="animate-spin text-blue-500 stroke-2" />
+                                <span className="text-[10px] font-bold tracking-widest uppercase">Procesando nodo...</span>
                             </div>
                         </div>
                     )}
@@ -65,25 +57,28 @@ function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
                 </div>
             </div>
 
-            <div className="p-6 sm:p-8 border-t border-[#182033]/60 bg-[#070B1A]/20 backdrop-blur-md shrink-0">
+            <div className="p-[clamp(1rem,2vw,2.5rem)] bg-linear-to-t from-[#050816] via-[#050816]/95 to-transparent shrink-0">
                 <form
                     onSubmit={handleFormSubmit}
-                    className="max-w-3xl mx-auto w-full flex items-center gap-4 bg-[#070B1A] border border-[#182033] focus-within:border-blue-500/50 rounded-2xl px-5 py-4 shadow-xl transition-all duration-200"
+                    className="max-w-360 mx-auto w-full flex items-center gap-3 bg-linear-to-b from-[#0a0f24] to-[#070B1A] border border-[#182033] focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/20 rounded-2xl px-4 py-3.5 shadow-xl transition-all duration-200"
                 >
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         disabled={isSending}
-                        placeholder="Escribí tu consulta aquí..."
-                        className="flex-1 bg-transparent text-slate-200 text-[clamp(1rem,1.2vw,1.2rem)] outline-none border-none placeholder:text-slate-500 disabled:opacity-50 min-w-0"
+                        placeholder="Escribe una nueva consulta..."
+                        className="flex-1 bg-transparent text-slate-200 text-[clamp(0.82rem,0.88vw,0.95rem)] outline-none placeholder:text-slate-600 disabled:opacity-40 min-w-0 font-medium"
                     />
                     <button
                         type="submit"
                         disabled={!input.trim() || isSending}
-                        className="p-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:bg-[#182033]/50 disabled:text-slate-500 transition-all cursor-pointer shadow-lg shadow-blue-600/10 active:scale-95 shrink-0"
+                        className="px-4 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800/10 disabled:text-blue-400/30 text-white font-bold text-[clamp(10px,0.6vw,12px)] tracking-wider uppercase transition-all shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer shrink-0"
                     >
-                        <Send size={16} />
+                        <div className="flex items-center gap-1.5">
+                            <Send size={11} className="stroke-[2.2]" />
+                            <span>Enviar</span>
+                        </div>
                     </button>
                 </form>
             </div>

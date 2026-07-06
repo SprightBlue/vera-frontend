@@ -4,10 +4,24 @@ import AnalysisForm from '@/features/analysis/components/AnalysisForm';
 import AnalysisResult from '@/features/analysis/components/AnalysisResult';
 import Header from '@/presentation/components/Header';
 import Sidebar from '@/presentation/components/Sidebar';
-import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 
 function AnalysisPage() {
-    const { isLoading, result, error, hasInteracted, executeAnalysis } = useAnalysis();
+    const {
+        isLoading,
+        isStartingChat,
+        result,
+        error,
+        text,
+        file,
+        fileInputRef,
+        setText,
+        handleFileChange,
+        removeFile,
+        handleSubmit,
+        startAnalysisChat
+    } = useAnalysis();
+
     const { user } = useAuth();
 
     const handleRetry = () => {
@@ -15,53 +29,52 @@ function AnalysisPage() {
     };
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-[#050816] font-sans antialiased">
+        <div className="flex h-screen w-screen overflow-hidden bg-[#050816] text-slate-100 font-sans antialiased select-none">
             <Sidebar />
 
-            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 xl:ml-56">
+            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
                 <Header
                     userName={user?.fullName}
                     title="Análisis con Inteligencia Artificial"
                 />
 
-                <main className="flex-1 flex flex-col overflow-y-auto px-[clamp(1.5rem,2vw,3rem)] py-[clamp(1.5rem,2vw,3rem)] bg-[#050816]">
-                    <div className="w-full max-w-550 mx-auto flex-1 flex flex-col gap-[clamp(1.5rem,2vw,2.5rem)]">
+                <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1rem,1.8vw,2.5rem)] flex flex-col justify-between">
+                    <div className="mx-auto max-w-480 w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
 
                         <AnalysisForm
                             loading={isLoading}
-                            onAnalyze={(request) => executeAnalysis(request)}
+                            text={text}
+                            file={file}
+                            fileInputRef={fileInputRef}
+                            setText={setText}
+                            handleFileChange={handleFileChange}
+                            removeFile={removeFile}
+                            onSubmit={handleSubmit}
                         />
 
                         {isLoading ? (
-                            <div className="w-full flex-1 flex flex-col items-center justify-center py-12 gap-4">
-                                <Loader2 size={36} className="text-blue-500 animate-spin stroke-[1.5]" />
-                                <p className="text-[clamp(1rem,1.1vw,1.3rem)] text-slate-400 font-medium select-none tracking-wide animate-pulse">
-                                    Analizando contenido...
-                                </p>
+                            <div className="w-full flex-1 flex flex-col items-center justify-center py-36 select-none animate-fade-in">
+                                <Loader2 size={22} className="text-blue-500 animate-spin stroke-[1.5] mb-2" />
+                                <span className="text-[10px] font-bold text-slate-500 tracking-widest uppercase animate-pulse">
+                                    Cargando
+                                </span>
                             </div>
                         ) : error ? (
-                            <div className="w-full flex-1 flex flex-col items-center justify-center py-12 gap-6 text-center">
-                                <div className="w-16 h-16 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/20 shadow-lg shadow-red-500/5">
-                                    <AlertCircle size={30} />
-                                </div>
-                                <div className="space-y-2">
-                                    <h3 className="text-[clamp(1.2rem,1.5vw,1.6rem)] font-bold text-white tracking-tight">Ocurrió un inconveniente</h3>
-                                    <p className="text-[clamp(0.95rem,1.1vw,1.1rem)] text-slate-400 max-w-md mx-auto leading-relaxed">{error}</p>
-                                </div>
+                            <div className="w-full flex-1 flex items-center justify-center py-24 select-none animate-fade-in">
                                 <button
                                     onClick={handleRetry}
-                                    className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 cursor-pointer"
+                                    className="flex items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-slate-200 tracking-widest uppercase transition-colors cursor-pointer group"
                                 >
-                                    <RefreshCw size={14} />
-                                    Reintentar análisis
+                                    <RefreshCw size={12} className="stroke-[2.5] text-slate-500 group-hover:text-slate-200 transition-colors" />
+                                    <span>Reintentar</span>
                                 </button>
                             </div>
                         ) : (
                             <div className="w-full flex-1 flex flex-col">
                                 <AnalysisResult
                                     result={result}
-                                    error={error}
-                                    showPlaceholder={!hasInteracted}
+                                    isStartingChat={isStartingChat}
+                                    onStartChat={startAnalysisChat}
                                 />
                             </div>
                         )}

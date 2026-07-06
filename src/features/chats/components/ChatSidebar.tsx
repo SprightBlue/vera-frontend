@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react";
-import { MessageSquare, Plus, Trash2, History, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2 } from "lucide-react";
 import type { ChatSession } from "@/features/chats/api/chatApi.ts";
 
 interface ChatSidebarProps {
@@ -23,23 +23,23 @@ function ChatSidebar({ sessions, activeChatId, onSelectChat, onNewChat, onDelete
     };
 
     return (
-        <aside className="w-[clamp(14rem,18vw,18rem)] bg-[#0c1020] border-l border-[#161f38] flex flex-col h-full shrink-0 select-none overflow-hidden transition-all duration-300">
-            <div className="p-4 border-b border-[#161f38] flex-none">
+        <aside className="w-full bg-[#050816] flex flex-col h-full shrink-0 select-none overflow-hidden font-sans border-r border-[#182033]/20">
+            <div className="p-4 border-b border-[#182033]/40 flex-none">
                 <button
                     onClick={onNewChat}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:brightness-110 text-white text-[clamp(0.85rem,1vw,0.95rem)] font-semibold transition-all active:scale-[0.98] shadow-lg shadow-blue-600/10 cursor-pointer"
+                    className="w-full flex items-center justify-center gap-1.5 h-10 rounded-xl bg-blue-600/10 hover:bg-blue-600/15 border border-blue-500/20 text-blue-400 text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-150 active:scale-[0.98] cursor-pointer"
                 >
-                    <Plus size={16} />
+                    <Plus size={12} className="stroke-[2.5]" />
                     <span>Nueva consulta</span>
                 </button>
             </div>
 
-            <div className="flex-1 min-h-0 overflow-y-auto p-4 custom-scrollbar">
-                <div className="px-4 mb-3 text-[0.7rem] uppercase tracking-wider text-slate-500 font-bold flex items-center gap-2">
-                    <History size={12} /> Historial
+            <div className="flex-1 min-h-0 overflow-y-auto p-3 no-scrollbar">
+                <div className="px-3 mb-2.5 text-[clamp(9px,0.55vw,11px)] uppercase tracking-widest text-slate-600 font-bold">
+                    Historial de Consultas
                 </div>
 
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                     {sessions.map((session) => {
                         const isActive = activeChatId === session.id;
                         const isThisDeleting = deletingId === session.id;
@@ -49,30 +49,32 @@ function ChatSidebar({ sessions, activeChatId, onSelectChat, onNewChat, onDelete
                                 key={session.id}
                                 onClick={() => !isThisDeleting && onSelectChat(session.id)}
                                 disabled={isThisDeleting}
-                                className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-[clamp(0.85rem,1vw,0.95rem)] font-medium border transition-all duration-200 group relative cursor-pointer ${
+                                className={`w-full flex items-center justify-between px-4 h-11 rounded-xl text-[clamp(0.78rem,0.82vw,0.92rem)] font-medium transition-all duration-200 group relative cursor-pointer border ${
                                     isActive
-                                        ? "bg-[#070B1A] text-blue-500 border-blue-500/20 shadow-sm"
-                                        : "text-slate-400 border-transparent hover:bg-[#070B1A]/50 hover:text-white"
-                                } ${isThisDeleting ? "opacity-50 cursor-not-allowed" : ""}`}
+                                        ? "bg-linear-to-r from-[#131b35] to-[#070B1A] text-white border-[#182033] shadow-md"
+                                        : "text-slate-500 border-transparent hover:bg-[#131b35]/40 hover:text-slate-300"
+                                } ${isThisDeleting ? "opacity-40 cursor-not-allowed" : ""}`}
+                                title={session.title}
                             >
-                                <MessageSquare
-                                    size="1.25rem"
-                                    className={`shrink-0 transition-colors ${
-                                        isActive ? "text-blue-500" : "text-slate-400 group-hover:text-white"
-                                    }`}
-                                />
+                                {isActive && (
+                                    <span className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-blue-500 rounded-r-md" />
+                                )}
 
-                                <span className="truncate flex-1 text-left">{session.title}</span>
+                                <span className="truncate flex-1 text-left pr-2">
+                                    {session.title}
+                                </span>
 
-                                <div className="shrink-0 min-w-4 flex items-center justify-center">
+                                <div className="shrink-0 w-4 h-4 flex items-center justify-center relative z-10">
                                     {isThisDeleting ? (
-                                        <Loader2 size={14} className="text-red-400 animate-spin" />
+                                        <Loader2 size={11} className="text-red-400 animate-spin" />
                                     ) : (
-                                        <Trash2
-                                            size={14}
-                                            onClick={(e) => handleDirectDelete(e, session.id)}
-                                            className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-400 transition-all duration-200 cursor-pointer transform hover:scale-110"
-                                        />
+                                        <span title="Eliminar Chat" className="flex items-center justify-center">
+                                            <Trash2
+                                                size={12}
+                                                onClick={(e) => handleDirectDelete(e, session.id)}
+                                                className="opacity-0 group-hover:opacity-100 xl:opacity-0 text-slate-500 hover:text-red-400/80 transition-all cursor-pointer transform hover:scale-105"
+                                            />
+                                        </span>
                                     )}
                                 </div>
                             </button>

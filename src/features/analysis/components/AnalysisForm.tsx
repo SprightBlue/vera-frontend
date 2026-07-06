@@ -1,165 +1,116 @@
-import React, { useState, useRef } from 'react';
-import { Paperclip, File, Trash2, Search } from 'lucide-react';
+import { Paperclip, File, X, Search, Loader2 } from 'lucide-react';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
-import type { AnalyzeRequestDto } from '@/features/analysis/api/analysisApi.ts';
-import toast from "react-hot-toast";
+import {type SyntheticEvent, type ChangeEvent, type MouseEvent, type RefObject} from 'react';
 
 type Props = {
     loading: boolean;
-    onAnalyze: (request: AnalyzeRequestDto) => Promise<void>;
+    text: string;
+    file: File | null;
+    fileInputRef: RefObject<HTMLInputElement | null>;
+    setText: (text: string) => void;
+    handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    removeFile: (e?: MouseEvent) => void;
+    onSubmit: (e: SyntheticEvent, user: { fullName?: string } | null) => Promise<void>;
 };
 
-function AnalysisForm({ loading, onAnalyze }: Props) {
-    const [text, setText] = useState('');
-    const [file, setFile] = useState<File | null>(null);
-    const [isDragActive, setIsDragActive] = useState(false);
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
+function AnalysisForm({
+                          loading,
+                          text,
+                          file,
+                          fileInputRef,
+                          setText,
+                          handleFileChange,
+                          removeFile,
+                          onSubmit
+                      }: Props) {
     const { user } = useAuth();
 
-    const handleDrag = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (loading || !user) return;
-
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setIsDragActive(true);
-        } else if (e.type === "dragleave") {
-            setIsDragActive(false);
-        }
-    };
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragActive(false);
-        if (loading || !user) return;
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            setFile(e.dataTransfer.files[0]);
-        }
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
-        }
-    };
-
-    const removeFile = (e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
-        if (loading) return;
-
-        setFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-    };
-
-    const handleSubmit = async (event: React.SyntheticEvent) => {
-        event.preventDefault();
-        if ((!text.trim() && !file) || loading || !user) return;
-
-        try {
-            await onAnalyze({
-                text: text.trim() || undefined,
-                file: file,
-                source: 'WEB',
-            });
-            setText('');
-            removeFile();
-        } catch {
-            toast.error("No se pudo procesar el análisis");
-        }
-    };
-
     return (
-        <div className="w-full flex flex-col gap-[clamp(1.5rem,2vw,2.5rem)]">
+        <div className="w-full flex flex-col gap-[clamp(0.8rem,1.2vw,1.5rem)] font-sans select-none">
 
-            <div className="flex items-center justify-between gap-8 select-none border-b border-[#182033]/40 pb-6 w-full">
-                <div className="max-w-3xl shrink-0">
-                    <h2 className="text-[clamp(1rem,1.5vw,1.5rem)] text-slate-400 leading-relaxed">
-                        Hola{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}. El contenido ingresado será analizado para realizar un informe detallado. Podés ingresar texto, insertar un enlace o adjuntar un archivo.
-                    </h2>
-                </div>
-
-                <div className="shrink-0">
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading || (!text.trim() && !file) || !user}
-                        className="min-w-37.5 flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-[#182033]/50 disabled:text-slate-500 px-[clamp(1.5rem,2vw,2.5rem)] py-3.5 text-[clamp(0.85rem,0.95vw,1.05rem)] font-semibold text-white cursor-pointer shadow-lg shadow-blue-600/10 transition-all duration-200 active:scale-95"
-                    >
-                        <Search size={16} className={loading ? 'animate-pulse' : ''} />
-                        {loading ? 'Analizando...' : 'Analizar'}
-                    </button>
-                </div>
+            <div className="border-b border-[#182033]/40 pb-4 w-full">
+                <h2 className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium select-text">
+                    Hola{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}. El contenido ingresado será analizado para realizar un informe detallado. Podés ingresar el texto, insertar el enlace o adjuntar un archivo.
+                </h2>
             </div>
 
-            <div
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={handleDrop}
-                className={`w-full flex flex-col lg:flex-row gap-5 items-stretch bg-[#070B1A] border border-[#182033] focus-within:border-blue-500/50 rounded-2xl px-5 py-4 shadow-xl transition-all duration-200
-                    ${isDragActive ? 'border-blue-500/50 bg-blue-500/5' : ''}`}
-            >
-                <div className="flex-1 min-w-0">
-                    <textarea
-                        rows={4}
-                        placeholder="Ingresar aquí el texto o inserta el enlace..."
-                        value={text}
-                        onChange={(event) => setText(event.target.value)}
-                        disabled={loading || !user}
-                        className="w-full h-full bg-transparent text-slate-200 text-[clamp(1rem,1.2vw,1.2rem)] font-sans outline-none border-none placeholder:text-slate-500 resize-none disabled:opacity-40 min-h-35 leading-relaxed"
-                    />
-                </div>
+            <div className="w-full flex flex-col rounded-2xl border border-[#182033] hover:border-slate-700 focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/20 bg-linear-to-b from-[#0a0f24] to-[#070B1A] p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl transition-all duration-200 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[clamp(200px,20vw,380px)] h-[clamp(200px,20vw,380px)] rounded-full bg-blue-500/5 filter blur-[80px] pointer-events-none" />
 
-                <div className="w-[clamp(240px,16vw,320px)] shrink-0 border-l border-[#182033]/60 pl-5 flex flex-col justify-center">
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        disabled={loading || !user}
-                        className="hidden"
-                        accept="image/*,audio/*,video/*,application/pdf"
-                    />
+                <div className="relative z-10 flex flex-col w-full">
+                    <div className="w-full">
+                        <textarea
+                            rows={3}
+                            placeholder="INGRESÁ EL TEXTO, PEGÁ UN CORREO SOSPECHOSO O INSERTA UN ENLACE..."
+                            value={text}
+                            onChange={(event) => setText(event.target.value)}
+                            disabled={loading || !user}
+                            className="w-full bg-transparent text-slate-200 text-[clamp(0.82rem,0.88vw,0.95rem)] font-semibold tracking-wide outline-hidden placeholder:text-slate-600 resize-none disabled:opacity-40 leading-relaxed min-h-[clamp(90px,8vw,130px)] select-text uppercase"
+                        />
+                    </div>
 
-                    {!file ? (
-                        <div
-                            onClick={() => !loading && user && fileInputRef.current?.click()}
-                            className={`flex flex-col items-center justify-center text-center h-full min-h-35 p-3 rounded-xl bg-[#050816]/40 hover:bg-[#050816]/90 border border-[#182033]/60 hover:border-slate-700/60 select-none group transition-all duration-200
-                                ${(loading || !user) ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}`}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-[#182033]/60 pt-4 mt-2">
+
+                        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                disabled={loading || !user}
+                                className="hidden"
+                                accept="image/*,audio/*,video/*,application/pdf"
+                            />
+
+                            <button
+                                type="button"
+                                disabled={loading || !user}
+                                onClick={() => fileInputRef.current?.click()}
+                                className="flex items-center gap-2 h-9 px-3 rounded-xl text-[clamp(10px,0.65vw,12px)] text-slate-400 font-bold tracking-wider uppercase bg-[#0a0f24]/40 border border-[#182033] hover:bg-[#131b35]/20 hover:text-slate-200 transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none group shrink-0"
+                            >
+                                <Paperclip size={12} className="text-slate-500 group-hover:text-slate-400 transition-colors stroke-[2.2]" />
+                                <span>Adjuntar archivo</span>
+                            </button>
+
+                            {file && (
+                                <div className={`flex items-center gap-2 bg-[#050816]/90 border border-[#182033] pl-3 pr-2 h-9 rounded-xl max-w-xs animate-fade-in transition-opacity duration-200 ${
+                                    loading ? 'opacity-40 pointer-events-none' : ''
+                                }`}>
+                                    <File size={11} className="text-blue-400 shrink-0" />
+                                    <span className="text-[clamp(11px,0.7vw,13px)] font-bold tracking-tight text-slate-300 truncate select-text">
+                                        {file.name}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        title="Quitar archivo"
+                                        disabled={loading}
+                                        onClick={(e) => removeFile(e)}
+                                        className="p-1 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 cursor-pointer transition-colors"
+                                    >
+                                        <X size={12} className="stroke-[2.5]" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            onClick={(e) => onSubmit(e, user)}
+                            disabled={loading || (!text.trim() && !file) || !user}
+                            className="w-full sm:w-36 h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800/20 disabled:text-blue-400/40 text-white font-bold text-[clamp(10px,0.6vw,12px)] tracking-wider uppercase transition-all shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer shrink-0"
                         >
-                            <Paperclip className="text-slate-500 group-hover:text-blue-400 w-4 h-4 mb-2 shrink-0 stroke-[1.5] transition-colors" />
-                            <span className="text-xs text-slate-500 font-medium leading-snug">
-                                Adjuntá un archivo para analizar
-                            </span>
-                            <span className="text-[10px] text-slate-500 mt-0.5">
-                                doc, img, audio o video
-                            </span>
-                        </div>
-                    ) : (
-                        <div className={`flex flex-col items-center justify-center text-center h-full min-h-35 bg-[#050816]/60 p-3 rounded-xl border border-[#182033]/60 relative group ${loading ? 'opacity-40' : ''}`}>
-                            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 shrink-0 mb-1 border border-blue-500/5">
-                                <File size={16} />
-                            </div>
-                            <div className="min-w-0 w-full px-1">
-                                <p className="text-xs font-semibold text-slate-200 truncate mx-auto max-w-44">
-                                    {file.name}
-                                </p>
-                                <p className="text-[10px] text-slate-500 mt-0.5">
-                                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                                </p>
-                            </div>
-
-                            <div className="absolute top-2.5 right-2.5 shrink-0 min-w-4 flex items-center justify-center">
-                                <Trash2
-                                    size={13}
-                                    onClick={removeFile}
-                                    className={`text-slate-400 transition-colors ${loading ? 'opacity-30 pointer-events-none cursor-default' : 'hover:text-red-400 cursor-pointer'}`}
-                                />
-                            </div>
-                        </div>
-                    )}
+                            {loading ? (
+                                <>
+                                    <span>Analizando</span>
+                                    <Loader2 size={12} className="animate-spin stroke-[2.5]" />
+                                </>
+                            ) : (
+                                <>
+                                    <Search size={12} className="stroke-[2.5]" />
+                                    <span>Analizar</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
-
             </div>
         </div>
     );
