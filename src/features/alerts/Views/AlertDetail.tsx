@@ -21,6 +21,7 @@ function AlertDetail() {
     const { alertId } = useParams<{ alertId: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const isCarer = user?.role === "CARER";
     const { detail, loading, error, retry, markAsResolved, removeAlert } = useAlertDetail(alertId!);
     const [actionLoading, setActionLoading] = useState<boolean>(false);
 
@@ -68,9 +69,8 @@ function AlertDetail() {
                         ) : detail && config ? (
                             <>
                                 <div className={`rounded-2xl border-y border-r border-[#182033] bg-linear-to-b from-[#0a0f24] to-[#070B1A] p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl relative overflow-hidden ${config.borderColor} border-l-4`}>
-                                    <div className={`absolute top-0 right-0 w-[clamp(180px,18vw,320px)] h-[clamp(180px,18vw,320px)] rounded-full filter blur-[80px] opacity-10 pointer-events-none ${
-                                        isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
-                                    }`} />
+                                    <div className={`absolute top-0 right-0 w-[clamp(180px,18vw,320px)] h-[clamp(180px,18vw,320px)] rounded-full filter blur-[80px] opacity-10 pointer-events-none ${isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
+                                        }`} />
 
                                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10">
                                         <div className="space-y-1 min-w-0 flex-1">
@@ -84,39 +84,66 @@ function AlertDetail() {
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full md:w-auto shrink-0">
-                                            <button
-                                                onClick={async () => { setActionLoading(true); await markAsResolved(); setActionLoading(false); }}
-                                                disabled={detail.isResolved || actionLoading}
-                                                className={`w-full md:w-32 h-9 flex items-center justify-center gap-1.5 px-3.5 rounded-xl font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 active:scale-[0.97] ${
-                                                    detail.isResolved
-                                                        ? "bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-not-allowed"
-                                                        : "bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-600/10 cursor-pointer"
-                                                }`}
-                                            >
-                                                {actionLoading ? (
-                                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                                ) : (
-                                                    <CheckCircle className="h-3.5 w-3.5" />
-                                                )}
-                                                <span>{detail.isResolved ? "Resuelta" : "Pendiente"}</span>
-                                            </button>
+                                        {isCarer && (
 
-                                            <button
-                                                onClick={async () => { if(window.confirm("¿Desea purgar este informe forense de forma permanente?")) { await removeAlert(); navigate('/alerts'); }}}
-                                                className="w-full md:w-32 h-9 flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 shadow-lg shadow-red-600/10 active:scale-[0.97] cursor-pointer"
-                                            >
-                                                <Trash2 className="h-3.5 w-3.5" />
-                                                <span>Eliminar</span>
-                                            </button>
-                                        </div>
+                                            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full md:w-auto shrink-0">
+
+                                                <button
+                                                    onClick={async () => {
+                                                        setActionLoading(true);
+                                                        await markAsResolved();
+                                                        setActionLoading(false);
+                                                    }}
+                                                    disabled={detail.isResolved || actionLoading}
+                                                    className={`w-full md:w-32 h-9 flex items-center justify-center gap-1.5 px-3.5 rounded-xl font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 active:scale-[0.97] ${detail.isResolved
+                                                            ? "bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-not-allowed"
+                                                            : "bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-600/10 cursor-pointer"
+                                                        }`}
+                                                >
+                                                    {actionLoading
+                                                        ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                        : <CheckCircle className="h-3.5 w-3.5" />
+                                                    }
+
+                                                    <span>
+                                                        {detail.isResolved ? "Resuelta" : "Pendiente"}
+                                                    </span>
+
+                                                </button>
+
+                                                <button
+                                                    onClick={async () => {
+
+                                                        if (
+                                                            window.confirm(
+                                                                "¿Desea purgar este informe forense de forma permanente?"
+                                                            )
+                                                        ) {
+
+                                                            await removeAlert();
+
+                                                            navigate("/alerts");
+
+                                                        }
+
+                                                    }}
+                                                    className="w-full md:w-32 h-9 flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 shadow-lg shadow-red-600/10 active:scale-[0.97] cursor-pointer"
+                                                >
+                                                    <Trash2 className="h-3.5 w-3.5" />
+
+                                                    <span>Eliminar</span>
+
+                                                </button>
+
+                                            </div>
+
+                                        )}
                                     </div>
 
                                     <div className="w-full h-1 bg-slate-800/40 rounded-full mt-4 overflow-hidden">
                                         <div
-                                            className={`h-full rounded-full transition-all duration-1000 ${
-                                                isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
-                                            }`}
+                                            className={`h-full rounded-full transition-all duration-1000 ${isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
+                                                }`}
                                             style={{ width: `${percentage}%` }}
                                         />
                                     </div>
