@@ -5,13 +5,13 @@ import Login from "@/presentation/pages/Login";
 import Register from "@/presentation/pages/Register";
 import Dashboard from "@/presentation/pages/dashboard/Dashboard";
 import Settings from "@/presentation/pages/settings/Settings";
-import AlertsView from "@/features/alerts/Views/AlertsView";
+import AlertsList from "@/features/alerts/views/AlertsList.tsx";
 import AnalysisPage from "@/features/analysis/views/AnalysisPage";
 import Persons from "@/presentation/pages/persons/Persons";
 import PersonDetail from "@/presentation/pages/persons/PersonDetail";
 import PersonConfiguration from "@/presentation/pages/persons/PersonConfiguration";
 import ManualView from "@/presentation/pages/manual/ManualView";
-import AlertDetail from "@/features/alerts/Views/AlertDetail";
+import AlertDetail from "@/features/alerts/views/AlertDetail";
 import Contacts from "@/presentation/pages/contacts/Contacts";
 import ForgotPassword from "@/presentation/pages/ForgotPassword";
 import ResetPassword from "@/presentation/pages/ResetPassword";
@@ -20,10 +20,13 @@ import VerifyEmail from "@/presentation/pages/VerifyEmail";
 import TermsAndConditions from "@/presentation/pages/TermsAndConditions";
 import ChatPage from "@/features/chats/view/ChatPage";
 import AICenterPage from "@/features/AiCenterPage";
+import MonitoringCenterPage from "@/features/MonitoringCenterPage";
 import AcceptInvitePage from "@/presentation/pages/invite/AcceptInvitePage";
 import MyCarers from "@/presentation/pages/persons/My-Carers";
 import { useLocationSender } from "@/features/location/hooks/useLocationSender";
 import TrainingPage from "@/features/training/views/TrainingPage";
+import AnalysisList from "@/features/analysis/views/AnalysisList";
+import AnalysisDetail from "@/features/analysis/views/AnalysisDetail.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated, isLoading } = useAuth();
@@ -53,8 +56,11 @@ function App() {
                 <Route path="/persons" element={<PrivateRoute><Persons /></PrivateRoute>} />
                 <Route path="/persons/:id" element={<PrivateRoute><PersonDetail /></PrivateRoute>} />
                 <Route path="/persons/personConfig" element={<PrivateRoute><PersonConfiguration /></PrivateRoute>} />
-                <Route path="/alerts" element={<PrivateRoute><AlertsView /></PrivateRoute>} />
+                <Route path="/alerts" element={<PrivateRoute><AlertsList /></PrivateRoute>} />
                 <Route path="/alerts/:alertId" element={<PrivateRoute><AlertDetail /></PrivateRoute>} />
+                <Route path="/analysis-list" element={<PrivateRoute><AnalysisList /></PrivateRoute>} />
+                <Route path="/analysis/:id" element={<PrivateRoute><AnalysisDetail /></PrivateRoute>} />
+                <Route path="/monitoring-center" element={<PrivateRoute><MonitoringCenterPage /></PrivateRoute>} />
                 <Route path="/contacts" element={<PrivateRoute><Contacts /></PrivateRoute>} />
                 <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
                 <Route path="/manual" element={<PrivateRoute><ManualView /></PrivateRoute>} />

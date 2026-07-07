@@ -1,16 +1,16 @@
-import { useState, useRef, type ChangeEvent, type SyntheticEvent, type MouseEvent } from 'react';
-import type { AnalysisResultDto, AnalyzeRequestDto } from '@/features/analysis/api/analysisApi.ts';
+import {useState, useRef, type ChangeEvent, type SyntheticEvent, type MouseEvent, type RefObject} from 'react';
+import type { AnalysisDetailResponse, AnalyzeRequestDto } from '@/features/analysis/api/analysisApi.ts';
 import { analysisApi } from '@/features/analysis/api/analysisApi.ts';
 
 interface UseAnalysisReturn {
     isLoading: boolean;
     isStartingChat: boolean;
-    result: AnalysisResultDto | null;
+    result: AnalysisDetailResponse | null;
     error: string | null;
     hasInteracted: boolean;
     text: string;
     file: File | null;
-    fileInputRef: React.RefObject<HTMLInputElement | null>;
+    fileInputRef: RefObject<HTMLInputElement | null>;
     setText: (text: string) => void;
     handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
     removeFile: (e?: MouseEvent) => void;
@@ -21,7 +21,7 @@ interface UseAnalysisReturn {
 export function useAnalysis(): UseAnalysisReturn {
     const [isLoading, setIsLoading] = useState(false);
     const [isStartingChat, setIsStartingChat] = useState(false);
-    const [result, setResult] = useState<AnalysisResultDto | null>(null);
+    const [result, setResult] = useState<AnalysisDetailResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [hasInteracted, setHasInteracted] = useState(false);
 

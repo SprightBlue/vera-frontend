@@ -49,7 +49,7 @@ function ChatRoom({ messages, isSending, sendMessage }: ChatRoomProps) {
                         <div className="flex w-full justify-start animate-fade-in">
                             <div className="flex items-center gap-2 px-4 py-2 text-slate-500 select-none">
                                 <Loader2 size={13} className="animate-spin text-blue-500 stroke-2" />
-                                <span className="text-[10px] font-bold tracking-widest uppercase">Procesando nodo...</span>
+                                <span className="text-[10px] font-bold tracking-widest uppercase">Procesando</span>
                             </div>
                         </div>
                     )}

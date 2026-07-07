@@ -45,13 +45,16 @@ export interface AlertFilters {
 
 export const alertsApi = {
     getAlertsHistory: async (filters: AlertFilters = {}): Promise<PagedResponse<AlertsResponse>> => {
-        const params = new URLSearchParams();
-        if (filters.resolved !== undefined) params.append('resolved', String(filters.resolved));
-        if (filters.riskLevel) params.append('riskLevel', filters.riskLevel);
-        if (filters.search?.trim()) params.append('search', filters.search.trim());
-        if (filters.page !== undefined) params.append('page', String(filters.page));
+        const cleanParams: Record<string, string | number | boolean> = {};
 
-        const response = await api.get<PagedResponse<AlertsResponse>>(`/api/v1/alerts?${params.toString()}`);
+        if (filters.resolved !== undefined) cleanParams.resolved = filters.resolved;
+        if (filters.riskLevel) cleanParams.riskLevel = filters.riskLevel;
+        if (filters.search?.trim()) cleanParams.search = filters.search.trim();
+        if (filters.page !== undefined) cleanParams.page = filters.page;
+
+        const response = await api.get<PagedResponse<AlertsResponse>>('/api/v1/alerts', {
+            params: cleanParams
+        });
         return response.data;
     },
 
