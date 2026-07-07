@@ -21,7 +21,7 @@ export default function IncidentsPage() {
         <div className="flex min-h-screen bg-[#050816]">
             <Sidebar />
 
-            <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
+            <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] lg:ml-[224px]">
                 <Header
                     userName={user?.fullName ?? "Usuario"}
                     userRole={user?.role === 'PROTECTED' ? "Protegido/a" : "Cuidador/a"}

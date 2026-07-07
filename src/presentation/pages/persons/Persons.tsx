@@ -7,7 +7,7 @@ import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
 import { useAuth } from "../../context/AuthContext";
-import {getProtectedPersons, deleteProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import { getProtectedPersons, deleteProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 import CreateProtectedPersonModal from "../../components/protected-persons/CreateProtectedPersonModal";
 import type { ProtectedPerson } from "../../../domain/models/ProtectedPerson";
 
@@ -49,7 +49,7 @@ function Persons() {
     try {
       const protectedPersons = await getProtectedPersons();
       if (protectedPersons.length > 0) {
-          setPersons(protectedPersons);
+        setPersons(protectedPersons);
       }
     }
     catch {
@@ -60,44 +60,44 @@ function Persons() {
   // Se crea la lista filtrada y se actualiza al cambiar el valor del select
   const filteredPersons = persons.filter((person) => {
     if (relationshipFilter === "Todos") return true;
-  
+
     return person.relationship === relationshipFilter;
   });
 
   // Se elimina una persona protejida asociada a un usuario
   const handleDelete = async (id: number, fullName: string) => {
     toast((t) => (
-        <div className="bg-[#070B1A] border border-[#182033] rounded-xl p-4 shadow-lg flex flex-col gap-3 text-white min-w-[260px]">
-          <p className="text-white text-sm">
-            ¿Eliminar a <span className="font-semibold">{fullName}</span> de tus protegidos?
-          </p>
+      <div className="bg-[#070B1A] border border-[#182033] rounded-xl p-4 shadow-lg flex flex-col gap-3 text-white min-w-[260px]">
+        <p className="text-white text-sm">
+          ¿Eliminar a <span className="font-semibold">{fullName}</span> de tus protegidos?
+        </p>
 
-          <div className="flex justify-end gap-2">
-            <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">
-              Cancelar
-            </button>
-            <button
-                onClick={async () => {
-                  toast.dismiss(t.id);
+        <div className="flex justify-end gap-2">
+          <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">
+            Cancelar
+          </button>
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
 
-                  try {
-                    await deleteProtectedPerson(id);
-                    setPersons(prev =>
-                        prev.filter(person => person.id !== id)
-                    );
-                    toast.success(`${fullName} fue eliminado correctamente`);
-                  } catch {
-                    toast.error("No se pudo eliminar la persona");
-                  }
-                }}
-                className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
-            >
-              Eliminar
-            </button>
-          </div>
+              try {
+                await deleteProtectedPerson(id);
+                setPersons(prev =>
+                  prev.filter(person => person.id !== id)
+                );
+                toast.success(`${fullName} fue eliminado correctamente`);
+              } catch {
+                toast.error("No se pudo eliminar la persona");
+              }
+            }}
+            className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
+          >
+            Eliminar
+          </button>
         </div>
+      </div>
     ), {
-      style: { background: "transparent", boxShadow: "none", padding: 0,},
+      style: { background: "transparent", boxShadow: "none", padding: 0, },
     });
   };
 
@@ -105,7 +105,7 @@ function Persons() {
 
     <div className="flex min-h-screen bg-[#050816]">
       <Sidebar />
-      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
+      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] lg:ml-[224px]">
         <Header
           userName={user?.fullName ?? "Usuario"}
           title="Personas que cuido"
@@ -113,8 +113,8 @@ function Persons() {
         />
 
         <div className="flex justify-center p-8">
-        <div className="w-full max-w-5xl mx-auto rounded-2xl bg-[#070B1A] border border-[#182033] p-12">
-            <div className="flex justify-between mb-8">
+          <div className="w-full max-w-5xl mx-auto rounded-2xl bg-[#070B1A] border border-[#182033] p-12">
+            <div className="flex flex-col md:flex-row justify-between mb-8">
               {/* Filtro por tipo de relación */}
               <div className="flex items-center gap-3">
                 <label className="text-gray-500 font-semibold">
@@ -157,7 +157,7 @@ function Persons() {
               <button
                 id="add-protected-btn"
                 onClick={() => setShowModal(true)}
-                className="px-8 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium cursor-pointer"
+                className="px-8 py-2.5 mt-4 md:mt-0 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium cursor-pointer"
               >
                 <span className="text-lg pr-2">+</span>
                 Añadir protegido
@@ -215,10 +215,10 @@ function Persons() {
 
                         <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-5 mt-2">
                           {person.contactNumber && (
-                          <div className="flex items-center gap-2 text-gray-300 text-sm">
-                            <Phone size={15} />
-                            {person.contactNumber}
-                          </div>
+                            <div className="flex items-center gap-2 text-gray-300 text-sm">
+                              <Phone size={15} />
+                              {person.contactNumber}
+                            </div>
                           )}
 
                           <div className="flex items-center gap-2 text-gray-300 text-sm">
@@ -269,7 +269,6 @@ function Persons() {
             onClose={() => setShowModal(false)}
             onSuccess={() => {
               loadProtectedPersons();
-              setShowModal(false);
             }}
           />
         )}
