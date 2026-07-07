@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi.ts';
 
-export function useAlerts(filters: AlertFilters = {}) {
+interface UseAlertsProps extends Omit<AlertFilters, 'search'> {
+    searchTerm: string;
+}
+
+export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
     const [alerts, setAlerts] = useState<AlertsResponse[]>([]);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [totalElements, setTotalElements] = useState<number>(0);
@@ -10,14 +14,37 @@ export function useAlerts(filters: AlertFilters = {}) {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    const stringifiedFilters = JSON.stringify(filters);
+    const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+
+    const isDebouncing = searchTerm.trim() !== debouncedSearch;
+
+    const forceLoading = useCallback(() => {
+        setLoading(true);
+    }, []);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(searchTerm.trim());
+        }, 400);
+
+        return () => clearTimeout(handler);
+    }, [searchTerm]);
+
+    const { page, resolved, riskLevel } = otherFilters;
 
     useEffect(() => {
         let isMounted = true;
 
         const fetchInitialData = async () => {
+            setLoading(true);
             try {
-                const activeFilters = JSON.parse(stringifiedFilters);
+                const activeFilters: AlertFilters = {
+                    page,
+                    resolved,
+                    riskLevel,
+                    search: debouncedSearch || undefined
+                };
+
                 const data = await alertsApi.getAlertsHistory(activeFilters);
 
                 if (!isMounted) return;
@@ -44,13 +71,18 @@ export function useAlerts(filters: AlertFilters = {}) {
         return () => {
             isMounted = false;
         };
-    }, [stringifiedFilters]);
+    }, [page, resolved, riskLevel, debouncedSearch]);
 
     const handleRetry = useCallback(async (): Promise<void> => {
         setLoading(true);
         setError(null);
         try {
-            const activeFilters = JSON.parse(stringifiedFilters);
+            const activeFilters: AlertFilters = {
+                page,
+                resolved,
+                riskLevel,
+                search: debouncedSearch || undefined
+            };
             const data = await alertsApi.getAlertsHistory(activeFilters);
             setAlerts(data.content ?? []);
             setTotalPages(data.totalPages ?? 0);
@@ -62,11 +94,7 @@ export function useAlerts(filters: AlertFilters = {}) {
         } finally {
             setLoading(false);
         }
-    }, [stringifiedFilters]);
-
-    const forceLoading = useCallback(() => {
-        setLoading(true);
-    }, []);
+    }, [page, resolved, riskLevel, debouncedSearch]);
 
     return {
         alerts,
@@ -74,7 +102,7 @@ export function useAlerts(filters: AlertFilters = {}) {
         totalElements,
         pageNumber,
         isLastPage,
-        loading,
+        loading: loading || isDebouncing,
         error,
         retry: handleRetry,
         forceLoading

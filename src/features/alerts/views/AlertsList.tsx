@@ -3,31 +3,37 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
 import Sidebar from '@/presentation/components/Sidebar';
 import Header from '@/presentation/components/Header';
-import { useAlerts } from '@/features/alerts/hooks/useAlerts';
+import { useAlertsList } from '@/features/alerts/hooks/useAlertsList';
 import { type RiskLevel } from '@/features/alerts/api/alertsApi.ts';
-import { riskConfigAlert } from '@/features/alerts/utils/riskConfigAlert.ts';
+import { getRiskConfig } from '@/features/analysis/utils/riskConfig';
 import {
   ChevronLeft,
   ChevronRight,
   Loader2,
   RefreshCw,
   Search,
-  Eye
+  ArrowRight
 } from "lucide-react";
 
 type RiskFilterType = RiskLevel | 'NONE';
 type StatusFilterType = 'PENDING' | 'RESOLVED' | 'NONE';
 
-function AlertsView() {
+function AlertsList() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(0);
   const [inputValue, setInputValue] = useState<string>('');
-  const [search, setSearch] = useState<string>('');
 
   const [activeRisk, setActiveRisk] = useState<RiskFilterType>('NONE');
   const [activeStatus, setActiveStatus] = useState<StatusFilterType>('NONE');
+
+  const { alerts, totalPages, totalElements, loading, error, retry, forceLoading } = useAlertsList({
+    page,
+    resolved: activeStatus === 'NONE' ? undefined : activeStatus === 'RESOLVED',
+    riskLevel: activeRisk === 'NONE' ? undefined : activeRisk,
+    searchTerm: inputValue
+  });
 
   const handleRiskToggle = (risk: RiskLevel) => {
     forceLoading();
@@ -41,28 +47,14 @@ function AlertsView() {
     setPage(0);
   };
 
-  const handleSearchSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    forceLoading();
-    setSearch(inputValue.trim());
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
     setPage(0);
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    if (!e.target.value.trim()) {
-      forceLoading();
-      setSearch('');
-      setPage(0);
-    }
+  const handleSearchSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
   };
-
-  const { alerts, totalPages, totalElements, loading, error, retry, forceLoading } = useAlerts({
-    page,
-    resolved: activeStatus === 'NONE' ? undefined : activeStatus === 'RESOLVED',
-    riskLevel: activeRisk === 'NONE' ? undefined : activeRisk,
-    search: search || undefined
-  });
 
   return (
       <div className="flex h-screen w-screen overflow-hidden bg-[#050816] text-slate-100 font-sans antialiased select-none">
@@ -189,13 +181,18 @@ function AlertsView() {
                     {alerts.length > 0 ? (
                         <div className="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-4 auto-rows-max animate-fade-in">
                           {alerts.map((alert) => {
-                            const level: RiskLevel = (alert.riskLevel as RiskLevel) || 'LOW';
-                            const config = riskConfigAlert[level];
+                            const level: RiskLevel = alert.riskLevel || 'LOW';
+                            const config = getRiskConfig(level); // Consumiendo Helper Unificado
+
+                            const permanentBorderColor =
+                                level === 'HIGH' ? 'border-red-500/40' :
+                                    level === 'MEDIUM' ? 'border-yellow-500/40' :
+                                        'border-green-500/40';
 
                             return (
                                 <div
                                     key={alert.id}
-                                    className={`group rounded-2xl border-y border-r border-l-4 bg-linear-to-b from-[#0a0f24] to-[#070B1A] border-[#182033] ${config.borderLeft} ${config.hoverBorderLeft} ${config.hoverBorderY} ${config.hoverBorderR} p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-stretch justify-between gap-5 transition-all duration-300`}
+                                    className={`group rounded-2xl border-y border-r border-l-4 bg-linear-to-b from-[#0a0f24] to-[#070B1A] ${permanentBorderColor} ${config.borderLeft} p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-stretch justify-between gap-5 transition-all duration-300`}
                                 >
                                   <div className={`absolute top-0 right-0 w-[clamp(140px,14vw,260px)] h-[clamp(140px,14vw,260px)] rounded-full filter blur-[70px] opacity-10 pointer-events-none ${config.glowColor}`} />
 
@@ -214,7 +211,7 @@ function AlertsView() {
                                   </div>
 
                                   <div className="flex flex-col items-start sm:items-end justify-between gap-3 shrink-0 w-full sm:w-auto border-t sm:border-t-0 border-[#182033]/40 pt-3 sm:pt-0 relative z-10">
-                                    <span className="text-[clamp(0.75rem,0.8vw,0.86rem)] font-medium text-slate-400 leading-relaxed tracking-normal sm:text-right select-text">
+                                    <span className="text-[clamp(0.72rem,0.76vw,0.82rem)] font-medium text-slate-500 leading-relaxed tracking-normal sm:text-right select-text mt-1 sm:mt-0">
                                       {alert.createdAt}
                                     </span>
 
@@ -233,13 +230,12 @@ function AlertsView() {
 
                                     <button
                                         onClick={() => navigate(`/alerts/${alert.id}`)}
-                                        className="w-full sm:w-32 h-9 flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer group/btn"
+                                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl border border-[#182033] bg-[#0a0f24]/60 text-[#94a3b8] hover:text-white text-[10px] font-bold uppercase tracking-widest cursor-pointer group/btn transition-all duration-150 active:scale-[0.98]"
                                     >
-                                      <Eye className="h-3.5 w-3.5 transition-transform group-hover/btn:scale-105" />
-                                      <span>Ver detalles</span>
+                                      <span>Ver Detalles</span>
+                                      <ArrowRight size={12} className="transform group-hover/btn:translate-x-0.5 transition-transform text-slate-400 group-hover/btn:text-white" />
                                     </button>
                                   </div>
-
                                 </div>
                             );
                           })}
@@ -286,4 +282,4 @@ function AlertsView() {
   );
 }
 
-export default AlertsView;
+export default AlertsList;

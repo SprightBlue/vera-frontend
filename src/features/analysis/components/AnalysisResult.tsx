@@ -7,11 +7,11 @@ import {
     Tag
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { AnalysisResultDto } from '@/features/analysis/api/analysisApi.ts';
+import type { AnalysisDetailResponse } from '@/features/analysis/api/analysisApi.ts';
 import { getRiskConfig } from '@/features/analysis/utils/riskConfig';
 
 type Props = {
-    result: AnalysisResultDto | null;
+    result: AnalysisDetailResponse | null;
     isStartingChat: boolean;
     onStartChat: (id: string) => Promise<string | null>;
 };
@@ -23,7 +23,7 @@ function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
         return (
             <div className="w-full flex items-center justify-center text-center select-none py-36 animate-fade-in">
                 <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                    Esperando contenido para analizar
+                    En esta sección se mostrarán los resultados del análisis.
                 </span>
             </div>
         );
@@ -57,7 +57,7 @@ function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
                                     {result.title || 'Contenido Analizado'}
                                 </h3>
                                 <span className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider border shrink-0 ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
-                                    {config.label} {percentage}%
+                                    Riesgo {config.label} {percentage}%
                                 </span>
                             </div>
 
@@ -105,7 +105,7 @@ function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-[#070B1A]/40 border border-[#182033]/60 rounded-xl px-4 py-2.5 text-[clamp(0.7rem,0.75vw,0.8rem)] text-slate-400 select-none">
                 <div className="flex items-center gap-1.5">
                     <Globe size={12} className="text-slate-500" />
-                    <span>Dónde: <strong className="text-slate-200 font-semibold select-text">{result.source}</strong></span>
+                    <span>Dónde: <strong className="text-slate-200 font-semibold select-text">{result.source || 'No especificado'}</strong></span>
                 </div>
                 <div className="w-1 h-1 bg-slate-700 rounded-full shrink-0" />
                 <div className="flex items-center gap-1.5">
@@ -141,7 +141,7 @@ function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
                         </h4>
                         <div className="bg-[#070B1A]/20 border-l-2 border-red-500/50 p-[clamp(0.9rem,1.3vw,1.5rem)] flex-1">
                             <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-300 leading-relaxed font-medium whitespace-pre-line select-text">
-                                {result.suspiciousPatterns}
+                                {result.suspiciousPatterns || 'Sin patrones de riesgo explícitos identificados.'}
                             </p>
                         </div>
                     </div>

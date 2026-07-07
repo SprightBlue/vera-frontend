@@ -33,15 +33,15 @@ function Sidebar() {
         ...(user?.role === 'CARER' ? [
             { label: "Personas", path: "/persons", icon: Users, id: "nav-personas" },
             { label: "Contactos", path: "/contacts", icon: ContactRound, id: "nav-contactos" },
-            { label: "Centro IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
-            { label: "Historial", path: "/alerts", icon: History, id: "nav-historial" },
+            { label: "Funciones IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-center" },
+            { label: "Historial", path: "/monitoring-center", icon: History, id: "nav-monitoring-center" },
             { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
             { label: "Entrenamiento", path: "/training", icon: Brain, id: "nav-entrenamiento" },
         ] : []),
         ...(user?.role === 'PROTECTED' ? [
             { label: "Cuidadores", path: "/my-carers", icon: ShieldCheck, id: "nav-mis-cuidadores" },
             { label: "Funciones IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-functions" },
-            { label: "Historial", path: "/alerts", icon: History, id: "nav-history" },
+            { label: "Historial", path: "/alerts", icon: History, id: "nav-alerts" },
             { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
         ] : [])
     ];
