@@ -14,7 +14,7 @@ function MonitoringCenterPage() {
 
                 <Header
                     userName={user?.fullName}
-                    title="Historial de Seguridad"
+                    title="Historial"
                 />
 
                 <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1.2rem,2vw,2.5rem)] flex flex-col justify-between">
@@ -22,7 +22,7 @@ function MonitoringCenterPage() {
 
                         <div className="border-b border-[#182033]/40 pb-4 w-full select-text">
                             <h2 className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium max-w-4xl">
-                                Hola{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}. Este es tu espacio de control. Desde aquí podés revisar los avisos automáticos de seguridad del sistema y acceder al historial de todo el contenido que enviaste a analizar.
+                                Este es tu espacio de control. Desde aquí podés revisar los avisos automáticos de seguridad del sistema y acceder al historial de todo el contenido que enviaste a analizar.
                             </h2>
                         </div>
 

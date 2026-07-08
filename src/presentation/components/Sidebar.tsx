@@ -41,7 +41,7 @@ function Sidebar() {
         ...(user?.role === 'PROTECTED' ? [
             { label: "Cuidadores", path: "/my-carers", icon: ShieldCheck, id: "nav-mis-cuidadores" },
             { label: "Funciones IA", path: "/ai-center", icon: Sparkles, id: "nav-ai-functions" },
-            { label: "Historial", path: "/alerts", icon: History, id: "nav-alerts" },
+            { label: "Historial", path: "/analysis-list", icon: History, id: "nav-alerts" },
             { label: "Incidentes", path: "/incidents", icon: AlertTriangle, id: "nav-incidentes" },
         ] : [])
     ];
