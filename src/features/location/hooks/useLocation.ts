@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react';
-import { locationApi, type UserLocationResponse } from '../api/locationApi.ts';
+import { useState, useEffect, useRef } from 'react';
+import { locationApi, type UserLocationResponse } from '@/features/location/api/locationApi.ts';
 import toast from "react-hot-toast";
 
 export const useLocation = (trustContactId: number) => {
     const [location, setLocation] = useState<UserLocationResponse | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [loading, setLoading] = useState(false);
+    const stompClientRef = useRef<any>(null);
 
     useEffect(() => {
         if (!trustContactId) return;
 
         const client = locationApi.createStompClient();
+        stompClientRef.current = client;
 
         const initializeLocation = async () => {
             setLoading(true);
@@ -28,7 +30,7 @@ export const useLocation = (trustContactId: number) => {
         void initializeLocation();
 
         client.onConnect = () => {
-            console.log(`DEBUG: Suscrito al canal del protegido. ID Relación: ${trustContactId}`);
+            console.log(`STOMP: Suscrito al mapa del protegido. ID Relación: ${trustContactId}`);
 
             client.subscribe(`/topic/trust-contact/${trustContactId}`, (message) => {
                 const data: UserLocationResponse = JSON.parse(message.body);
@@ -37,15 +39,18 @@ export const useLocation = (trustContactId: number) => {
             });
         };
 
-        client.onStompError = () => {
-            toast.error("Error de conexión en tiempo real con la ubicación");
+        client.onStompError = (frame) => {
+            console.error("Error STOMP en mapa:", frame);
+            toast.error("Error de conexión en tiempo real con el mapa");
         };
 
         client.activate();
 
         return () => {
-            console.log("DEBUG: Cancelando suscripción al mapa...");
-            void client.deactivate();
+            if (stompClientRef.current) {
+                console.log("STOMP: Cancelando suscripción al mapa...");
+                stompClientRef.current.deactivate();
+            }
         };
     }, [trustContactId]);
 

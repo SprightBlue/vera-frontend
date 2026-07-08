@@ -66,7 +66,7 @@ function ChatPage() {
             <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 lg:ml-56 transition-all duration-300">
                 <Header
                     userName={user?.fullName}
-                    title="Asistente con Inteligencia Artificial"
+                    title="Asistente Virtual"
                 />
 
                 <div className="flex-1 flex overflow-hidden min-h-0 w-full relative">

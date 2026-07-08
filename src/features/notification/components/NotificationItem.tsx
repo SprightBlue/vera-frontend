@@ -1,5 +1,6 @@
-import { ShieldAlert, UserPlus, Info, X as XIcon, ShieldCheck } from "lucide-react";
-import { type AppNotification } from "../api/notifications.ts";
+import { X as XIcon, ArrowRight, CheckCircle, Trash2 } from "lucide-react";
+import { type AppNotification } from "@/features/notification/api/notificationsApi.ts";
+import { getNotificationConfig } from "@/features/notification/utils/notificationConfig";
 
 interface ItemProps {
     notif: AppNotification;
@@ -8,48 +9,86 @@ interface ItemProps {
 }
 
 export function NotificationItem({ notif, onAction, onSelect }: ItemProps) {
-    const renderIcon = () => {
-        const baseClass = "w-5 h-5 shrink-0";
-        switch (notif.type) {
-            case 'ALERT': return <ShieldAlert className={`${baseClass} text-red-500`} />;
-            case 'ALERT_SOLVED': return <ShieldCheck className={`${baseClass} text-emerald-500`} />;
-            case 'INVITATION': return <UserPlus className={`${baseClass} text-blue-400`} />;
-            default: return <Info className={`${baseClass} text-slate-500`} />;
-        }
-    };
+    const config = getNotificationConfig(notif.type);
+
+    const invitationId = notif.payload && typeof notif.payload === 'object'
+        ? (notif.payload as Record<string, string | number>).id
+        : null;
 
     return (
-        <div className={`p-5 rounded-xl border transition-all duration-300 flex items-start gap-5 relative group bg-slate-900/50 border-slate-800 hover:border-slate-700/50 ${notif.isRead ? 'opacity-60' : 'opacity-100'}`}>
+        <div className={`group rounded-2xl border-y border-r border-l-4 bg-linear-to-b from-[#0a0f24] to-[#070B1A] ${config.permanentBorder} ${config.borderLeft} p-[clamp(0.8rem,1.1vw,1.4rem)] shadow-xl relative overflow-hidden flex flex-col gap-3.5 transition-all duration-150`}>
+
+            <div className={`absolute top-0 right-0 w-[clamp(120px,14vw,280px)] h-[clamp(120px,14vw,280px)] rounded-full filter blur-[70px] opacity-10 pointer-events-none ${config.glowColor}`} />
 
             <button
+                type="button"
                 onClick={(e) => { e.stopPropagation(); onAction(notif, 'DELETE'); }}
-                className="absolute top-2 right-2 p-1.5 bg-slate-950/50 text-slate-300 hover:text-red-400 hover:bg-red-950/50 border border-slate-800 rounded-md transition-all cursor-pointer opacity-0 group-hover:opacity-100"
-                title="Eliminar"
+                className="absolute top-0 right-0 w-[clamp(1.6rem,2vw,2.5rem)] h-[clamp(1.6rem,2vw,2.5rem)] flex items-center justify-center text-slate-500 hover:bg-red-500 hover:text-white active:bg-red-600 transition-colors duration-100 rounded-tr-2xl rounded-bl-md cursor-pointer z-30 select-none"
+                title="Eliminar notificación"
             >
-                <XIcon size={12} strokeWidth={3} />
+                <XIcon className="w-[clamp(10px,0.65vw,14px)] h-[clamp(10px,0.65vw,14px)]" strokeWidth={2.5} />
             </button>
 
-            <div className="mt-0.5">{renderIcon()}</div>
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4 relative z-10 w-full pr-6 sm:pr-8">
 
-            <div className="flex-1 min-w-0 pr-6">
-                <p className="text-base font-bold text-white leading-6">
-                    {notif.title}
-                </p>
-               <p className="text-sm text-slate-200 mt-1 leading-6">{notif.message}</p>
+                <div className="flex flex-col gap-1 min-w-0 flex-1 w-full">
+                    <h3 className="text-[clamp(0.85rem,0.95vw,1.15rem)] font-bold tracking-tight text-white select-text truncate">
+                        {notif.title}
+                    </h3>
+                    <p className="text-[clamp(0.72rem,0.76vw,0.9rem)] text-slate-400 leading-relaxed font-medium select-text line-clamp-2 pr-1">
+                        {notif.message}
+                    </p>
+                </div>
 
-                {notif.type === 'INVITATION' && (
-                    <div className="flex gap-2 mt-3">
-                        <button onClick={() => onAction(notif, 'ACCEPT')} className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-[13px] font-bold transition-all cursor-pointer">Aceptar</button>
-                        <button onClick={() => onAction(notif, 'REJECT')} className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[13px] font-bold transition-all cursor-pointer">Rechazar</button>
+                <div className="flex items-start shrink-0 gap-3 select-none pl-0 sm:pl-4 border-l-0 sm:border-l border-slate-800/40 w-full sm:w-auto justify-between sm:justify-end h-full">
+                    <div className="flex flex-col items-start sm:items-end gap-1.5 text-left sm:text-right">
+                        <span className="text-[clamp(0.7rem,0.72vw,0.85rem)] font-medium text-slate-500 mt-0.5 whitespace-nowrap">
+                            {notif.createdAt}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded-md text-[clamp(7.5px,0.5vw,10px)] font-black uppercase tracking-wider border shrink-0 ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
+                            {config.label}
+                        </span>
                     </div>
-                )}
-
-                {notif.type === 'ALERT' && (
-                    <div className="mt-3">
-                        <button onClick={() => onSelect(notif)} className="px-4 py-2 text-[13px] bg-blue-900/30 border border-blue-500/30 text-blue-300 font-bold rounded-lg hover:bg-blue-900/50 transition-all cursor-pointer">Ver detalles</button>
-                    </div>
-                )}
+                </div>
             </div>
+
+            {(notif.type === 'ALERT' || (notif.type === 'INVITATION' && invitationId)) && (
+                <div className="w-full flex items-center justify-end gap-2 border-t border-[#182033]/60 pt-3 relative z-10">
+                    {notif.type === 'INVITATION' && invitationId && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => onAction(notif, 'ACCEPT')}
+                                className="h-[clamp(1.6rem,2vw,2.4rem)] flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[clamp(8.5px,0.55vw,11px)] uppercase tracking-wider transition-all duration-150 shadow-lg shadow-emerald-600/10 cursor-pointer active:scale-[0.97]"
+                            >
+                                <CheckCircle className="h-[clamp(11px,0.7vw,15px)] w-[clamp(11px,0.7vw,15px)]" />
+                                <span>Aceptar</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => onAction(notif, 'REJECT')}
+                                className="h-[clamp(1.6rem,2vw,2.4rem)] flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-[clamp(8.5px,0.55vw,11px)] uppercase tracking-wider transition-all duration-150 shadow-lg shadow-red-600/10 cursor-pointer active:scale-[0.97]"
+                            >
+                                <Trash2 className="h-[clamp(11px,0.7vw,15px)] w-[clamp(11px,0.7vw,15px)]" />
+                                <span>Rechazar</span>
+                            </button>
+                        </>
+                    )}
+
+                    {notif.type === 'ALERT' && (
+                        <button
+                            type="button"
+                            onClick={() => onSelect(notif)}
+                            className="w-full sm:w-auto h-[clamp(1.6rem,2vw,2.4rem)] flex items-center justify-center gap-1.5 px-3.5 rounded-xl border border-[#182033] bg-[#0a0f24]/60 text-[#94a3b8] hover:text-white text-[clamp(9px,0.58vw,11.5px)] font-bold uppercase tracking-widest cursor-pointer group/btn transition-all duration-150 active:scale-[0.98]"
+                        >
+                            <span>Ver Detalles</span>
+                            <ArrowRight className="w-[clamp(11px,0.7vw,15px)] h-[clamp(11px,0.7vw,15px)] transform group-hover/btn:translate-x-0.5 transition-transform text-slate-400 group-hover/btn:text-white" />
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
+
+export default NotificationItem;

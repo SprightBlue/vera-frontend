@@ -30,7 +30,7 @@ function AnalysisForm({
 
             <div className="border-b border-[#182033]/40 pb-4 w-full">
                 <h2 className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium select-text">
-                    Hola{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}. El contenido ingresado será analizado para realizar un informe detallado. Podés ingresar el texto, insertar el enlace o adjuntar un archivo.
+                    El contenido ingresado será analizado para realizar un informe detallado. Podés ingresar el texto, insertar el enlace o adjuntar un archivo.
                 </h2>
             </div>
 

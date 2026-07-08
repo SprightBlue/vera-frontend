@@ -30,8 +30,24 @@ import AnalysisDetail from "@/features/analysis/views/AnalysisDetail.tsx";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
     const { isAuthenticated, isLoading } = useAuth();
-    if (isLoading) return <div>Cargando...</div>;
+    if (isLoading) return <div className="h-screen w-screen bg-[#070B1A] flex items-center justify-center text-slate-400">Cargando...</div>;
     return isAuthenticated ? children : <Navigate to="/login" replace />;
+}
+
+interface RoleRouteProps {
+    children: ReactNode;
+    allowedRoles: string[];
+}
+
+function RoleRoute({ children, allowedRoles }: RoleRouteProps) {
+    const { isAuthenticated, user, isLoading } = useAuth();
+
+    if (isLoading) return <div className="h-screen w-screen bg-[#070B1A] flex items-center justify-center text-slate-400">Cargando...</div>;
+
+    if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+    const hasRole = user?.role && allowedRoles.includes(user.role);
+    return hasRole ? children : <Navigate to="/dashboard" replace />;
 }
 
 function App() {
@@ -56,17 +72,39 @@ function App() {
                 <Route path="/persons" element={<PrivateRoute><Persons /></PrivateRoute>} />
                 <Route path="/persons/:id" element={<PrivateRoute><PersonDetail /></PrivateRoute>} />
                 <Route path="/persons/personConfig" element={<PrivateRoute><PersonConfiguration /></PrivateRoute>} />
-                <Route path="/alerts" element={<PrivateRoute><AlertsList /></PrivateRoute>} />
-                <Route path="/alerts/:alertId" element={<PrivateRoute><AlertDetail /></PrivateRoute>} />
                 <Route path="/analysis-list" element={<PrivateRoute><AnalysisList /></PrivateRoute>} />
                 <Route path="/analysis/:id" element={<PrivateRoute><AnalysisDetail /></PrivateRoute>} />
-                <Route path="/monitoring-center" element={<PrivateRoute><MonitoringCenterPage /></PrivateRoute>} />
                 <Route path="/contacts" element={<PrivateRoute><Contacts /></PrivateRoute>} />
                 <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
                 <Route path="/manual" element={<PrivateRoute><ManualView /></PrivateRoute>} />
                 <Route path="/incidents" element={<PrivateRoute><Incidents /></PrivateRoute>} />
                 <Route path="/training" element={<PrivateRoute><TrainingPage /></PrivateRoute>} />
                 <Route path="/my-carers" element={<PrivateRoute><MyCarers /></PrivateRoute>} />
+
+                <Route
+                    path="/alerts"
+                    element={
+                        <RoleRoute allowedRoles={['CARER']}>
+                            <AlertsList />
+                        </RoleRoute>
+                    }
+                />
+                <Route
+                    path="/alerts/:alertId"
+                    element={
+                        <RoleRoute allowedRoles={['CARER']}>
+                            <AlertDetail />
+                        </RoleRoute>
+                    }
+                />
+                <Route
+                    path="/monitoring-center"
+                    element={
+                        <RoleRoute allowedRoles={['CARER']}>
+                            <MonitoringCenterPage />
+                        </RoleRoute>
+                    }
+                />
             </Routes>
         </BrowserRouter>
     );

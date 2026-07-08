@@ -253,7 +253,7 @@ function AlertsList() {
               {!error && (
                   <div className="flex items-center justify-between mt-auto pt-5 border-t border-[#182033]/40 select-none w-full">
                     <span className="text-[clamp(9px,0.6vw,11px)] text-slate-500 font-bold tracking-wider uppercase">
-                      Página {page + 1} de {Math.max(1, totalPages)} • Registros: {totalElements}
+                      Página {page + 1} de {Math.max(1, totalPages)} • Elementos: {totalElements}
                     </span>
 
                     <div className="flex gap-2">
