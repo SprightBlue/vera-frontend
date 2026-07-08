@@ -133,13 +133,13 @@ function Settings() {
         <div className="flex min-h-screen bg-[#050816]">
             <Sidebar />
 
-            <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
+            <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] lg:ml-[224px]">
                 <Header
                     title="Configuración"
                     subtitle="Personaliza tu experiencia y gestiona tu cuenta."
                 />
 
-                <div className="p-8 flex-1">
+                <div className="p-8 flex-1 w-full max-w-4xl mx-auto">
                     {/* PAGE TITLE */}
 
 
@@ -177,7 +177,7 @@ function Settings() {
 
                                 <button
                                     onClick={() => setIsEditing(!isEditing)}
-                                    className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium"
+                                    className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium cursor-pointer"
                                 >
                                     {isEditing ? "Cancelar" : "Editar perfil"}
                                 </button>
@@ -257,77 +257,79 @@ function Settings() {
                         )}
                     </div>
 
-                    {/* PREFERENCIAS DE NOTIFICACIÓN */}
-                    <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
-                        <h2 className="text-2xl font-semibold text-white mb-6">Preferencias de notificación</h2>
-                        <div className="space-y-5">
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <h3 className="text-white font-medium">Alertas por correo</h3>
-                                    <p className="text-slate-400 text-sm">Recibir notificaciones importantes por email</p>
+                    <div className="md:flex md:justify-between">
+                        {/* PREFERENCIAS DE NOTIFICACIÓN */}
+                        <div className="md:w-[48%] bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
+                            <h2 className="text-2xl font-semibold text-white mb-6">Preferencias de notificación</h2>
+                            <div className="space-y-5">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <h3 className="text-white font-medium">Alertas por correo</h3>
+                                        <p className="text-slate-400 text-sm">Recibir notificaciones importantes por email</p>
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="w-5 h-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                        checked={emailAlerts}
+                                        onChange={(e) => setEmailAlerts(e.target.checked)}
+                                        disabled={!isEditing}
+                                    />
                                 </div>
-                                <input
-                                    type="checkbox"
-                                    className="w-5 h-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                    checked={emailAlerts}
-                                    onChange={(e) => setEmailAlerts(e.target.checked)}
-                                    disabled={!isEditing}
-                                />
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <h3 className="text-white font-medium">Alertas críticas inmediatas</h3>
-                                    <p className="text-slate-400 text-sm">Notificar eventos de alto riesgo en tiempo real</p>
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <h3 className="text-white font-medium">Alertas críticas inmediatas</h3>
+                                        <p className="text-slate-400 text-sm">Notificar eventos de alto riesgo en tiempo real</p>
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="w-5 h-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                        checked={criticalAlerts}
+                                        onChange={(e) => setCriticalAlerts(e.target.checked)}
+                                        disabled={!isEditing}
+                                    />
                                 </div>
-                                <input
-                                    type="checkbox"
-                                    className="w-5 h-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                    checked={criticalAlerts}
-                                    onChange={(e) => setCriticalAlerts(e.target.checked)}
-                                    disabled={!isEditing}
-                                />
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <h3 className="text-white font-medium">Resumen semanal</h3>
-                                    <p className="text-slate-400 text-sm">Recibir resumen de actividad y análisis</p>
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <h3 className="text-white font-medium">Resumen semanal</h3>
+                                        <p className="text-slate-400 text-sm">Recibir resumen de actividad y análisis</p>
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="w-5 h-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                        checked={weeklySummary}
+                                        onChange={(e) => setWeeklySummary(e.target.checked)}
+                                        disabled={!isEditing}
+                                    />
                                 </div>
-                                <input
-                                    type="checkbox"
-                                    className="w-5 h-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                    checked={weeklySummary}
-                                    onChange={(e) => setWeeklySummary(e.target.checked)}
-                                    disabled={!isEditing}
-                                />
                             </div>
                         </div>
-                    </div>
 
-                    {/* SEGURIDAD DE CUENTA */}
-                    <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8">
-                        <h2 className="text-2xl font-semibold text-white mb-6">Seguridad de cuenta</h2>
-                        <div className="space-y-4">
-                            <button
-                                onClick={() => setShowPasswordModal(true)}
-                                className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors"
-                            >
-                                <span>Cambiar contraseña</span>
-                                <span className="text-slate-400">→</span>
-                            </button>
-                            <button
-                                onClick={() => setShowEmailModal(true)}
-                                className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors"
-                            >
-                                <span>Cambiar correo electrónico</span>
-                                <span className="text-slate-400">→</span>
-                            </button>
-                            <button
-                                onClick={() => setShowDeleteAccountModal(true)}
-                                className="w-full flex justify-between items-center border border-red-900 rounded-2xl px-5 py-4 text-red-500 hover:bg-red-950/20 transition-colors"
-                            >
-                                <span>Eliminar cuenta</span>
-                                <span>⚠</span>
-                            </button>
+                        {/* SEGURIDAD DE CUENTA */}
+                        <div className="md:w-[48%] bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
+                            <h2 className="text-2xl font-semibold text-white mb-6">Seguridad de cuenta</h2>
+                            <div className="space-y-4">
+                                <button
+                                    onClick={() => setShowPasswordModal(true)}
+                                    className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors cursor-pointer"
+                                >
+                                    <span>Cambiar contraseña</span>
+                                    <span className="text-slate-400">→</span>
+                                </button>
+                                <button
+                                    onClick={() => setShowEmailModal(true)}
+                                    className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors cursor-pointer"
+                                >
+                                    <span>Cambiar correo electrónico</span>
+                                    <span className="text-slate-400">→</span>
+                                </button>
+                                <button
+                                    onClick={() => setShowDeleteAccountModal(true)}
+                                    className="w-full flex justify-between items-center border border-red-900 rounded-2xl px-5 py-4 text-red-500 hover:bg-red-950/20 transition-colors cursor-pointer"
+                                >
+                                    <span>Eliminar cuenta</span>
+                                    <span>⚠</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

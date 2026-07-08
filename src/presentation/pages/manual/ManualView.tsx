@@ -146,7 +146,7 @@ function ManualView() {
       <Sidebar />
       
       {/* Contenedor principal con el margen ajustado al Sidebar */}
-      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
+      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] lg:ml-[224px]">
         <Header 
           userName={user?.fullName || "Usuario"} 
           title="Manual de Uso 📖"

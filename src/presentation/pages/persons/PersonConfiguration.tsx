@@ -86,7 +86,7 @@ function PersonConfiguration() {
     <div className="flex min-h-screen bg-[#050816]">
       <Sidebar />
 
-      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] xl:ml-[224px]">
+      <main className="flex-1 flex flex-col min-w-0 ml-[79.2px] lg:ml-[224px]">
         <Header
           userName={user?.fullName || "Usuario"}
           title="Personas que cuido"
@@ -210,7 +210,7 @@ function PersonConfiguration() {
             <button
               type="button"
               className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
-              onClick={() => navigate(`/persons`)}
+              onClick={() => navigate(`/persons/${id}`)}
             >
               Cancelar
             </button>

@@ -1,3 +1,4 @@
+import { Info, Settings, User } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
@@ -45,7 +46,10 @@ function ProtectedPersonForm({ onSubmit }: Props) {
 
             {/* PERSONAL INFO */}
             <div className="bg-[#111827] border border-[#1f2937] rounded-2xl p-6 flex flex-col gap-5">
-                <h3 className="text-white font-semibold text-lg">Información Personal</h3>
+                <div className="flex gap-2">
+                    <User className="w-5 h-5 mt-[3.5px] text-slate-400" />
+                    <h3 className="text-white font-semibold text-lg">Información Personal</h3>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
@@ -102,7 +106,10 @@ function ProtectedPersonForm({ onSubmit }: Props) {
 
             {/* PROTECTION SETTINGS */}
             <div className="bg-[#111827] border border-[#1f2937] rounded-2xl p-6 flex flex-col gap-6">
-                <h3 className="text-white font-semibold text-lg">Configuración de Protección</h3>
+                <div className="flex gap-2">
+                    <Settings className="w-5 h-5 mt-[3.5px] text-slate-400" />
+                    <h3 className="text-white font-semibold text-lg">Configuración de Protección</h3>
+                </div>
 
                 {/* HIGH RISK */}
                 <div className="flex items-center justify-between">
@@ -152,7 +159,7 @@ function ProtectedPersonForm({ onSubmit }: Props) {
                                 key={level}
                                 type="button"
                                 onClick={() => setNotificationSensitivity(level)}
-                                className={`px-5 py-2 rounded-xl border transition-all cursor-pointer ${
+                                className={`w-[100px] py-2 rounded-full border transition-all cursor-pointer ${
                                     notificationSensitivity === level
                                         ? "bg-blue-600 border-blue-500 text-white"
                                         : "border-[#1f2937] bg-[#0b1220] text-slate-300"
@@ -166,23 +173,32 @@ function ProtectedPersonForm({ onSubmit }: Props) {
             </div>
 
             {/* ACTIONS */}
-            <div className="flex items-center justify-end gap-4">
-                {/* Dejamos que el modal se encargue de cerrar la vista limpia si se cancela */}
-                <button
-                    type="button"
-                    className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
-                    onClick={() => window.history.back()}
-                >
-                    Cancelar
-                </button>
+            <div className="flex justify-between">
+                <div className="flex items-start gap-3 text-gray-500 max-w-sm">
+                    <Info className="w-6 h-6 text-green-600 mt-1" />
+                    <p className="text-md leading-relaxed">
+                    Al enviar la invitación, el protegido recibirá una solicitud
+                    para instalar VERA.
+                    </p>
+                </div>
+                <div className="flex items-center gap-4">
+                    {/* Dejamos que el modal se encargue de cerrar la vista limpia si se cancela */}
+                    <button
+                        type="button"
+                        className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
+                        onClick={() => window.history.back()}
+                    >
+                        Cancelar
+                    </button>
 
-                {/* Botón puramente SUBMIT: No lleva onClick para no interferir con la llamada HTTP */}
-                <button
-                    type="submit"
-                    className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer"
-                >
-                    Enviar Invitación
-                </button>
+                    {/* Botón puramente SUBMIT: No lleva onClick para no interferir con la llamada HTTP */}
+                    <button
+                        type="submit"
+                        className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer"
+                    >
+                        Enviar Invitación
+                    </button>
+                </div>
             </div>
         </form>
     );
