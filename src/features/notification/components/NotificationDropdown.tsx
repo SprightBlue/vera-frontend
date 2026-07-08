@@ -47,7 +47,7 @@ export function NotificationDropdown({ notifications, isRinging, handleAction, o
             </button>
 
             {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-96 max-h-[80vh] overflow-hidden bg-[#050816] border border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute right-0 mt-3 w-[430px] max-h-[80vh] overflow-hidden bg-[#050816] border border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col animate-in fade-in zoom-in-95 duration-200">
                     <div className="px-5 py-4 border-b border-slate-800 bg-[#070B1A]">
                         <h4 className="text-white font-bold tracking-wide">Notificaciones</h4>
                     </div>
