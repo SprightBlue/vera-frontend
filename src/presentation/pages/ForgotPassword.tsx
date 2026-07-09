@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authRepository } from '../../infrastructure/api/auth.repository';
 import veraLogo from '../../assets/Isologo_Vera.png';
+import toast from "react-hot-toast";
 
 /* ---------------- ICONOS ---------------- */
 
@@ -90,9 +91,8 @@ export default function ForgotPassword() {
 
     } catch {
 
-      alert(
-        'No se pudo enviar el correo de recuperación.'
-      );
+      toast.error("No se pudo enviar el correo de recuperación");
+      
 
     } finally {
 

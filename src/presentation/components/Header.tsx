@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useNotifications } from "@/features/notification/hooks/useNotifications";
 import NotificationDropdown from "@/features/notification/components/NotificationDropdown";
 import { useAuth } from "@/presentation/context/AuthContext";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 interface HeaderProps {
     userName?: string;
@@ -79,13 +80,7 @@ function Header({ userName, userRole, title }: HeaderProps) {
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 whitespace-nowrap">{finalUserRole}</span>
                     </div>
 
-                    {user?.image ? (
-                        <img src={user.image} alt="Perfil" className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl object-cover shrink-0 border border-[#182033]" />
-                    ) : (
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0a0f24] flex items-center justify-center text-blue-400 font-bold text-xs sm:text-sm shrink-0 border border-[#182033]">
-                            {finalUserName.charAt(0).toUpperCase()}
-                        </div>
-                    )}
+                    <PersonAvatar fullName={finalUserName} image={user?.image} size="header" shape="circle" className="bg-[#0a0f24] text-blue-400"/>
                 </div>
             </div>
         </header>

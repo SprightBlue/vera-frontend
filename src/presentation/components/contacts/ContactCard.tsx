@@ -2,6 +2,7 @@ import {useState} from "react";
 import {Mail, Phone, Trash2, CheckCircle2, Clock} from "lucide-react";
 import type {Contact} from "../../../domain/models/Contact";
 import toast from "react-hot-toast";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 interface Props {
     contact: Contact;
@@ -13,7 +14,7 @@ function ContactCard({contact, onRemove}: Props) {
 
     const handleRemove = () => {
         toast((t) => (
-            <div className="bg-[#070B1A] border border-[#182033] rounded-xl p-4 shadow-lg flex flex-col gap-3 text-white min-w-[260px]">
+            <div className="flex-col gap-3 text-white min-w-[260px]">
             <span className="text-sm leading-snug">
                 ¿Eliminar a <b>{contact.fullName}</b> de tus contactos de confianza?
             </span>
@@ -40,7 +41,13 @@ function ContactCard({contact, onRemove}: Props) {
                 </div>
             </div>
         ), {
-            style: { background: "transparent", boxShadow: "none", padding: 0,},
+            style: {
+                background: "#070B1A",
+                border: "1px solid #182033",
+                borderRadius: "0.75rem",
+                padding: "1rem",
+                boxShadow: "0 10px 15px -3px rgba(0,0,0,0.4)",
+            },
         });
     };
 
@@ -50,18 +57,7 @@ function ContactCard({contact, onRemove}: Props) {
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                    {contact.image ? (
-                        <img
-                            src={contact.image}
-                            alt={contact.fullName}
-                            className="w-11 h-11 rounded-full object-cover flex-shrink-0 border border-[#182033]"
-                        />
-                    ) : (
-                        <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                            {contact.fullName.charAt(0).toUpperCase()}
-                        </div>
-                    )}
-                    <div className="min-w-0 flex items-center gap-2 flex-wrap">
+                    <PersonAvatar fullName={contact.fullName} image={contact.image} size="sm" />                    <div className="min-w-0 flex items-center gap-2 flex-wrap">
                         <p className="text-white font-semibold text-lg leading-tight truncate">
                             {contact.fullName}
                         </p>

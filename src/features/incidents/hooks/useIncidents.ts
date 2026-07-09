@@ -8,15 +8,14 @@ import {
 import type { IncidentSummary, IncidentDetail } from "../../../domain/models/Incident";
 import { useAuth } from "../../../presentation/context/AuthContext";
 import toast from "react-hot-toast";
-
-export interface Person { id: number; fullName: string; status: string; }
+import type {ProtectedPerson} from "@/domain/models/ProtectedPerson.ts";
 
 export const PAGE_SIZE = 5;
 
 export function useIncidents() {
     const { user } = useAuth();
 
-    const [persons, setPersons] = useState<Person[]>([]);
+    const [persons, setPersons] = useState<ProtectedPerson[]>([]);
     const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
     const [incidents, setIncidents] = useState<IncidentSummary[]>([]);
     const [totalElements, setTotalElements] = useState(0);
@@ -35,8 +34,7 @@ export function useIncidents() {
         } else if (user?.role === 'CARER') {
             getProtectedPersons()
                 .then(data => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const active = (data as any[]).filter(p => p.status === "ACTIVE") as Person[];
+                    const active = data.filter(p => p.status === "ACTIVE");
                     setPersons(active);
                     if (active.length > 0) setSelectedPersonId(active[0].id);
                 })
