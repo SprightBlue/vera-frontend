@@ -10,6 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons, deleteProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 import CreateProtectedPersonModal from "../../components/protected-persons/CreateProtectedPersonModal";
 import type { ProtectedPerson } from "../../../domain/models/ProtectedPerson";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 function Persons() {
 
@@ -65,40 +66,48 @@ function Persons() {
   });
 
   // Se elimina una persona protejida asociada a un usuario
-  const handleDelete = async (id: number, fullName: string) => {
-    toast((t) => (
-      <div className="bg-[#070B1A] border border-[#182033] rounded-xl p-4 shadow-lg flex flex-col gap-3 text-white min-w-[260px]">
-        <p className="text-white text-sm">
-          ¿Eliminar a <span className="font-semibold">{fullName}</span> de tus protegidos?
-        </p>
-
-        <div className="flex justify-end gap-2">
-          <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">
-            Cancelar
-          </button>
-          <button
-            onClick={async () => {
-              toast.dismiss(t.id);
-
-              try {
-                await deleteProtectedPerson(id);
-                setPersons(prev =>
-                  prev.filter(person => person.id !== id)
-                );
-                toast.success(`${fullName} fue eliminado correctamente`);
-              } catch {
-                toast.error("No se pudo eliminar la persona");
-              }
-            }}
-            className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
-          >
-            Eliminar
-          </button>
-        </div>
-      </div>
-    ), {
-      style: { background: "transparent", boxShadow: "none", padding: 0, },
-    });
+  const handleDelete = async (id: number, fullName: string, status: string) => {
+    toast(
+        (t) => (
+            <div className="flex flex-col gap-3 text-white min-w-[260px]">
+              <p className="text-white text-sm">
+                ¿Eliminar a <span className="font-semibold">{fullName}</span> de tus protegidos?
+              </p>
+              <div className="flex justify-end gap-2">
+                <button
+                    onClick={() => toast.dismiss(t.id)}
+                    className="px-3 py-1.5 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                    onClick={async () => {
+                      toast.dismiss(t.id);
+                      try {
+                        await deleteProtectedPerson(id, status);
+                        setPersons(prev => prev.filter(person => person.id !== id));
+                        toast.success(`${fullName} fue eliminado correctamente`);
+                      } catch {
+                        toast.error("No se pudo eliminar la persona");
+                      }
+                    }}
+                    className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+        ),
+        {
+          style: {
+            background: "#070B1A",
+            border: "1px solid #182033",
+            borderRadius: "0.75rem",
+            padding: "1rem",
+            boxShadow: "0 10px 15px -3px rgba(0,0,0,0.4)",
+          },
+        }
+    );
   };
 
   return (
@@ -184,17 +193,7 @@ function Persons() {
                     className="rounded-3xl bg-[#0d1222] border border-[#182033] p-6 flex flex-col lg:flex-row items-center justify-between"
                   >
                     <div className="flex flex-col md:flex-row items-center gap-6">
-                      {person?.image ? (
-                        <img
-                          src={person.image}
-                          alt="Perfil"
-                          className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
-                        />
-                      ) : (
-                        <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
-                          {person?.fullName?.charAt(0) || "U"}
-                        </div>
-                      )}
+                      <PersonAvatar fullName={person.fullName} image={person.image} size="md" />
                       <div className="flex flex-col gap-1">
                         <h2 className="text-white text-lg font-semibold">
                           {person.fullName}
@@ -231,14 +230,14 @@ function Persons() {
 
                     <div className="flex gap-4 mt-6 lg:mt-0">
                       <button
-                        onClick={() => handleDelete(person.id, person.fullName)}
+                        onClick={() => handleDelete(person.id, person.fullName, person.status ?? "PENDING")}
                         className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 transition px-5 py-2 rounded-xl font-medium cursor-pointer"
                       >
                         Eliminar
                       </button>
 
                       <button
-                        onClick={() => navigate(`/persons/${person.id}`)}
+                        onClick={() => navigate(`/persons/${person.id}?status=${person.status}`)}
                         className="bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-2 rounded-xl font-medium cursor-pointer"
                       >
                         Detalles

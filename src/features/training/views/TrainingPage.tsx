@@ -10,6 +10,7 @@ import { AssignTrainingModal } from "../components/AssignTrainingModal";
 import { ScenarioCard } from "../components/ScenarioCard";
 import { Send, TrendingUp, Activity, BookOpen, Inbox } from "lucide-react";
 import toast from "react-hot-toast";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 export default function TrainingPage() {
     const { user } = useAuth();
@@ -54,11 +55,7 @@ export default function TrainingPage() {
                                         onClick={() => selectPerson(p.id)}
                                         className={`flex items-center gap-2.5 pl-2 pr-4 py-2 rounded-xl border text-sm font-medium transition-all cursor-pointer ${selectedPersonId === p.id   ? "bg-blue-600/10 border-blue-500/30 text-white" : "bg-[#0d1222] border-[#182033] text-slate-400 hover:text-white hover:border-[#2a3550]"}`}
                                     >
-                                        <img
-                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(p.fullName)}&background=1d4ed8&color=fff&size=28`}
-                                            alt={p.fullName}
-                                            className="w-7 h-7 rounded-full"
-                                        />
+                                        <PersonAvatar fullName={p.fullName} image={p.image} size="xs" />
                                         {p.fullName}
                                     </button>
                                 ))}
