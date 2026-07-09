@@ -133,7 +133,7 @@ export default function Login() {
 
       navigate('/dashboard');
 
-    } catch (error) {
+    } catch {
 
       toast.error("Error al inciar sesión con Google");
 
