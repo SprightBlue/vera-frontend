@@ -50,14 +50,3 @@ export const authRepository = {
         return response.data;
     },
 };
-
-export async function uploadUserImage(image: File, email: string): Promise<string> {
-    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("email", email);
-    const response = await axios.put(`${API_URL}/api/v1/files/upload-user-image`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    return response.data.image;
-}

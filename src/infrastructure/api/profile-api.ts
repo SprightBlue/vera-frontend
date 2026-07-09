@@ -31,3 +31,25 @@ export async function updateProfile(
 
     return response.data;
 }
+
+export async function uploadUserImage(image: File, email: string): Promise<string> {
+    const formData = new FormData();
+
+    formData.append("image", image);
+    formData.append("email", email);
+
+    const response = await api.put(
+        "/api/v1/files/upload-user-image",
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
+    return response.data.image;
+}
+
+export async function deleteUserImage(id: number): Promise<void> {
+    await api.delete(`/api/v1/files/delete-user-image/${id}`);
+}

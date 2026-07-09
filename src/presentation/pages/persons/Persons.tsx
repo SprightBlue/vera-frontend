@@ -124,7 +124,7 @@ function Persons() {
                   onBlur={() => setOpenFilter(false)}>
                   <button
                     onClick={() => setOpenFilter(!open)}
-                    className="w-full px-5 py-2.5 rounded-xl bg-[#0d1222] border border-[#182033] text-white text-left hover:bg-[#181d2d] transition-all cursor-pointer"
+                    className="w-full px-5 py-2.5 rounded-xl border border-white/10 bg-[#0B1120] text-white text-left hover:bg-white/10 transition-all cursor-pointer"
                   >
                     {relationshipFilter}
 
@@ -136,7 +136,7 @@ function Persons() {
                   </button>
 
                   {open && (
-                    <div className="absolute z-10 mt-2 w-full rounded-xl bg-[#0d1222] border border-[#182033] overflow-hidden">
+                    <div className="absolute z-10 mt-2 w-full rounded-xl border border-white/10 bg-[#0B1120] overflow-hidden">
                       {options.map(option => (
                         <div
                           key={option}
@@ -144,7 +144,7 @@ function Persons() {
                             setRelationshipFilter(option);
                             setOpenFilter(false);
                           }}
-                          className="px-5 py-2.5 text-white cursor-pointer hover:bg-[#181d2d] transition-colors"
+                          className="px-5 py-2.5 text-white cursor-pointer hover:bg-white/10 transition-colors"
                         >
                           {option}
                         </div>

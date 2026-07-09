@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
-import { uploadUserImage } from "../../../infrastructure/api/auth.repository";
 import {
     getProfile,
     updateProfile,
+    uploadUserImage,
+    deleteUserImage,
     type UpdateProfileRequest
 } from "../../../infrastructure/api/profile-api";
 import ChangePasswordModal from "../../components/settings/ChangePasswordModal";
@@ -29,6 +30,10 @@ function Settings() {
         phone: "",
         country: ""
     });
+
+    // Menu de boton "Cambiar foto"
+    const [showMenu, setShowMenu] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
 
 
     // 1. NUEVO: Agregamos los estados para los checkboxes
@@ -61,6 +66,14 @@ function Settings() {
 
         loadProfile();
 
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowMenu(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
 
@@ -129,6 +142,34 @@ function Settings() {
         }
     };
 
+    // Elimina la imagen del usuario
+    const handleDeleteImage = async () => {
+
+        const confirmed = window.confirm(
+            "¿Estás seguro de que querés eliminar tu foto de perfil?"
+        );
+    
+        if (!confirmed) return;
+    
+        try {
+            setUploading(true);
+    
+            await deleteUserImage(user.id);
+
+            updateUser({
+                image: null
+            });
+    
+        } catch (error) {
+
+            toast.error("No se pudo eliminar la imagen");
+
+        } finally {
+
+            setUploading(false);
+        }
+    };
+
     return (
         <div className="flex min-h-screen bg-[#050816]">
             <Sidebar />
@@ -164,16 +205,44 @@ function Settings() {
                                     <p className="text-sm text-slate-500 mt-1">Cuenta protegida activa</p>
                                 </div>
                             </div>
-                            <div>
-                                <label className="px-5 py-3 mr-6 rounded-2xl bg-white/14 border border-white/20 backdrop-blur-sm text-white font-medium cursor-pointer hover:bg-white/20 hover:border-white/30 transition-all duration-300 active:scale-95">
-                                    {uploading ? "Actualizando.." : "Cambiar foto"}
-                                    <input
-                                        type="file"
-                                        hidden
-                                        accept="image/*"
-                                        onChange={handleSubmitImage}
-                                    />
-                                </label>
+                            
+                            {/* BOTONES CAMBIAR FOTO Y EDITAR PERFIL */}
+                            <div className="flex">
+                                <div className="mr-6" ref={menuRef}>
+                                    <button
+                                        onClick={() => setShowMenu(!showMenu)}
+                                        className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/14 border border-white/20 backdrop-blur-sm text-white font-medium hover:bg-white/20 hover:border-white/30 cursor-pointer"
+                                    >
+                                        {uploading ? "Actualizando..." : "Cambiar foto"}
+                                    </button>
+
+                                    {showMenu && (
+                                        <div className="absolute mt-2 w-52 rounded-2xl border border-white/10 bg-[#0B1120] overflow-hidden z-50 animate-fade-in">
+                                            <label className="flex items-center px-4 py-3 cursor-pointer hover:bg-white/10 transition-colors">
+                                                Actualizar foto
+                                                <input
+                                                    type="file"
+                                                    hidden
+                                                    accept="image/*"
+                                                    onChange={(e) => {
+                                                        handleSubmitImage(e);
+                                                        setShowMenu(false);
+                                                    }}
+                                                />
+                                            </label>
+
+                                            <button
+                                                onClick={() => {
+                                                    setShowMenu(false);
+                                                    handleDeleteImage();
+                                                }}
+                                                className="w-full text-left px-4 py-3 text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                                            >
+                                                Eliminar foto
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
 
                                 <button
                                     onClick={() => setIsEditing(!isEditing)}
