@@ -1,6 +1,6 @@
 import { ArrowLeft, Heart, Link, Clock3, Settings, Activity, ShieldCheck, Phone, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
@@ -10,6 +10,7 @@ import { getProtectedPersonById, updateProtectedPersonInfo } from "../../../infr
 import EditPersonModal from "../../components/persons/EditPersonModal";
 import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 import toast from "react-hot-toast";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 function PersonDetail() {
     const navigate = useNavigate();
@@ -18,6 +19,8 @@ function PersonDetail() {
     const [person, setPerson] = useState<ProtectedPerson | null>(null);
     const [cargando, setCargando] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [searchParams] = useSearchParams();
+    const status = searchParams.get("status") ?? "ACTIVE";
 
     // Se obtienen los datos del usuario protejido
     useEffect(() => {
@@ -25,7 +28,7 @@ function PersonDetail() {
             try {
                 const personId = Number(id);
                 if (!id || isNaN(personId)) return;
-                const protectedPerson = await getProtectedPersonById(personId);
+                const protectedPerson = await getProtectedPersonById(personId, status);
                 setPerson(protectedPerson);
                 console.log(protectedPerson)
             }
@@ -88,17 +91,7 @@ function PersonDetail() {
                                     <div className="flex flex-col md:flex-row gap-6">
                                         {/* Foto */}
                                         <div className="py-2">
-                                            {person?.image ? (
-                                                <img
-                                                    src={person.image}
-                                                    alt="Perfil"
-                                                    className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
-                                                />
-                                            ) : (
-                                                <div className="w-28 h-28 rounded-full object-cover border-4 border-[#182033] bg-blue-600 flex items-center justify-center text-5xl font-bold text-white">
-                                                    {person?.fullName?.charAt(0) || "U"}
-                                                </div>
-                                            )}
+                                            <PersonAvatar fullName={person?.fullName ?? ""} image={person?.image} size="lg" />
                                         </div>
 
                                         {/* Info Básica */}
@@ -119,11 +112,11 @@ function PersonDetail() {
                                             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-5 mt-3">
                                                 <div className="flex items-center gap-2 text-gray-300 text-md">
                                                     <Mail className="w-4 h-4 text-blue-400" />
-                                                    {person.email}
+                                                    {person?.email}
                                                 </div>
                                                 <div className="flex items-center gap-2 text-gray-300 text-md">
                                                     <Phone className="w-4 h-4 text-blue-400" />
-                                                    {person.contactNumber}
+                                                    {person?.contactNumber}
                                                 </div>
                                             </div>
 

@@ -12,6 +12,7 @@ import ChangePasswordModal from "../../components/settings/ChangePasswordModal";
 import ChangeEmailModal from "../../components/settings/ChangeEmailModal";
 import DeleteAccountModal from "../../components/settings/DeleteAccountModal";
 import toast from "react-hot-toast";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 function Settings() {
 
@@ -147,17 +148,7 @@ function Settings() {
                     <div className="bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
                         <div className="flex items-center justify-between flex-wrap gap-6">
                             <div className="flex items-center gap-5">
-                                {user?.image ? (
-                                    <img
-                                        src={user.image}
-                                        alt="Perfil"
-                                        className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white"
-                                    />
-                                ) : (
-                                    <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold text-white">
-                                        {user?.fullName?.charAt(0) || "U"}
-                                    </div>
-                                )}
+                                <PersonAvatar fullName={user?.fullName ?? "U"} image={user?.image} size="md" />
                                 <div>
                                     <h2 className="text-2xl font-bold text-white">{user?.fullName || "Usuario"}</h2>
                                     <p className="text-slate-400">{user?.email || "correo@ejemplo.com"}</p>

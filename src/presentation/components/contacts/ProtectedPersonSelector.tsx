@@ -1,4 +1,5 @@
 import type { ProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
 
 interface Props {
     persons: ProtectedPerson[];
@@ -39,11 +40,7 @@ function ProtectedPersonSelector({ persons, selected, onSelect, loading }: Props
                                 : "bg-[#0d1222] border-[#182033] text-slate-400 hover:text-white hover:border-[#2a3550]"
                         }`}
                     >
-                        <img
-                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(p.fullName)}&background=1d4ed8&color=fff&size=28`}
-                            alt={p.fullName}
-                            className="w-7 h-7 rounded-full"
-                        />
+                        <PersonAvatar fullName={p.fullName} image={p.image} size="xs" />
                         {p.fullName}
                     </button>
                 ))}

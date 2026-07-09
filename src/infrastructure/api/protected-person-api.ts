@@ -48,10 +48,11 @@ export async function getProtectedPersons(): Promise<ProtectedPerson[]> {
     return response.data;
 }
 
-export async function deleteProtectedPerson(id: number): Promise<void> {
-        const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
-        await axios.delete(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+export async function deleteProtectedPerson(id: number, personStatus: string): Promise<void> {
+    const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
+    await axios.delete(`${API_BASE_URL}/api/v1/trust/protected-people/${id}`, {
+        headers: {Authorization: `Bearer ${token}`},
+        params: { status: personStatus }
     });
 }
 
@@ -73,11 +74,11 @@ export async function updateProtectedPerson(id: number, configData: UpdateProtec
     });
 }
 
-export async function getProtectedPersonById(id: number): Promise<ProtectedPerson> {
+export async function getProtectedPersonById(id: number, personStatus: string): Promise<ProtectedPerson> {
     const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
     const response = await axios.get<ProtectedPerson>(
         `${API_BASE_URL}/api/v1/trust/protected-people/${id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` }, params: { status: personStatus } }
     );
     return response.data;
 }
