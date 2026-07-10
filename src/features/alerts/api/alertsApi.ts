@@ -17,9 +17,9 @@ export interface AlertsDetailResponse {
     createdAt: string;
     protectedFullName: string | null;
     title: string;
-    source: string | null;
+    source: string;
     contentSummary: string;
-    riskType: string | null;
+    riskType: string;
     riskLevel: RiskLevel;
     riskPercentage: number;
     suspiciousPatterns: string;

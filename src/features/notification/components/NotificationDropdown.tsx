@@ -61,11 +61,11 @@ export function NotificationDropdown({
 
                     <div className="px-[clamp(1rem,1.3vw,1.8rem)] py-[clamp(0.8rem,1vw,1.3rem)] border-b border-[#1e294b] bg-[#0a0f24]/80 flex items-center justify-between select-none rounded-t-2xl">
                         <span className="text-[clamp(9.5px,0.6vw,13px)] font-bold tracking-widest text-slate-300 uppercase">
-                            Bandeja de Notificaciones
+                            Panel de Notificaciones
                         </span>
                         {unreadCount > 0 && (
                             <span className="px-2.5 py-0.5 rounded-md text-[clamp(8.5px,0.55vw,11px)] font-black uppercase tracking-widest bg-blue-500/20 border border-blue-500/40 text-blue-400">
-                                {unreadCount} Alertas
+                                {unreadCount} Notificaciones Nuevas
                             </span>
                         )}
                     </div>

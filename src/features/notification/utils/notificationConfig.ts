@@ -4,7 +4,7 @@ export function getNotificationConfig(type: string): NotifColorConfig {
     switch (type) {
         case 'ALERT':
             return {
-                label: 'Crítico',
+                label: 'Alerta activa',
                 borderLeft: 'border-l-red-500',
                 permanentBorder: 'border-red-500/30',
                 glowColor: 'bg-red-500',
@@ -14,7 +14,7 @@ export function getNotificationConfig(type: string): NotifColorConfig {
             };
         case 'ALERT_SOLVED':
             return {
-                label: 'Resuelto',
+                label: 'Alerta resuelta',
                 borderLeft: 'border-l-emerald-500',
                 permanentBorder: 'border-emerald-500/30',
                 glowColor: 'bg-emerald-500',
@@ -24,7 +24,7 @@ export function getNotificationConfig(type: string): NotifColorConfig {
             };
         case 'INVITATION':
             return {
-                label: 'Pendiente',
+                label: 'Invitación pendiente',
                 borderLeft: 'border-l-amber-500',
                 permanentBorder: 'border-amber-500/30',
                 glowColor: 'bg-amber-500',
@@ -34,7 +34,7 @@ export function getNotificationConfig(type: string): NotifColorConfig {
             };
         case 'INVITATION_ACCEPTED':
             return {
-                label: 'Aceptado',
+                label: 'Invitación aceptada',
                 borderLeft: 'border-l-blue-500',
                 permanentBorder: 'border-blue-500/30',
                 glowColor: 'bg-blue-500',
@@ -44,7 +44,7 @@ export function getNotificationConfig(type: string): NotifColorConfig {
             };
         case 'INVITATION_REJECTED':
             return {
-                label: 'Rechazado',
+                label: 'Invitación rechazada',
                 borderLeft: 'border-l-fuchsia-500',
                 permanentBorder: 'border-fuchsia-500/30',
                 glowColor: 'bg-fuchsia-500',
