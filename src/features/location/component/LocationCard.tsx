@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import { useLocation } from "../hooks/useLocation";
+import { useLocation } from "../hooks/useLocation.ts";
 import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from 'leaflet';

@@ -30,7 +30,7 @@ export const locationApi = {
         const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
 
         return new Client({
-            webSocketFactory: () => new SockJS(`${API_URL}/ws-vera`), // Canal unificado
+            webSocketFactory: () => new SockJS(`${API_URL}/ws-vera`),
             connectHeaders: {
                 Authorization: token ? `Bearer ${token}` : ""
             },

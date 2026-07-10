@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useNotifications } from "@/features/notification/hooks/useNotifications";
 import NotificationDropdown from "@/features/notification/components/NotificationDropdown";
 import { useAuth } from "@/presentation/context/AuthContext";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import { PersonAvatar } from "@/presentation/components/common/PersonAvatar.tsx";
 
 interface HeaderProps {
     userName?: string;
@@ -22,7 +22,7 @@ function Header({ userName, userRole, title }: HeaderProps) {
     if (user?.role === 'ADMIN') finalUserRole = "Administrador";
     if (!user?.role && userRole) finalUserRole = userRole;
 
-    const displayTitle = title ?? `Bienvenido, ${finalUserName}`;
+    const displayTitle = title ?? `BIENVENIDO, ${finalUserName}`;
 
     const [notificationPage, setNotificationPage] = useState<number>(0);
 
@@ -44,14 +44,16 @@ function Header({ userName, userRole, title }: HeaderProps) {
     });
 
     return (
-        <header className="sticky top-0 z-45 w-full flex items-center justify-between h-[clamp(4.5rem,5vw,5.6rem)] pl-24 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 bg-[#070B1A]/80 backdrop-blur-md border-b border-[#182033] transition-all select-none">
+        <header className="sticky top-0 z-45 w-full flex items-center justify-between h-[clamp(4.5rem,5vw,5.6rem)] pl-24 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 bg-[#060a17]/90 backdrop-blur-md border-b border-[#182033]/80 transition-all select-none overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
+
             <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left">
-                <h2 className="text-[clamp(0.95rem,1.15vw,1.35rem)] font-bold text-slate-200 tracking-tight truncate leading-normal">
+                <h2 className="text-[clamp(1rem,1.2vw,1.4rem)] font-black text-white tracking-widest truncate uppercase leading-normal">
                     {displayTitle}
                 </h2>
             </div>
 
-            <div className="flex items-center gap-[clamp(0.8rem,1.2vw,1.5rem)] shrink-0">
+            <div className="flex items-center gap-[clamp(0.8rem,1.2vw,1.5rem)] shrink-0 relative z-10">
                 <NotificationDropdown
                     notifications={notifications}
                     totalPages={totalPages}
@@ -74,13 +76,17 @@ function Header({ userName, userRole, title }: HeaderProps) {
                     }}
                 />
 
-                <div className="flex items-center gap-2.5 sm:gap-3.5 border-l border-[#182033] pl-[clamp(0.8rem,1.2vw,1.5rem)]">
+                <div className="flex items-center gap-3 border-l border-[#182033]/80 pl-[clamp(0.8rem,1.2vw,1.5rem)]">
                     <div className="hidden sm:flex flex-col items-end leading-tight">
-                        <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-semibold text-slate-200 mb-0.5 whitespace-nowrap">{finalUserName}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 whitespace-nowrap">{finalUserRole}</span>
+                        <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-black tracking-wide text-slate-200 mb-0.5 whitespace-nowrap uppercase">
+                            {finalUserName}
+                        </span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 whitespace-nowrap">
+                            {finalUserRole}
+                        </span>
                     </div>
 
-                    <PersonAvatar fullName={finalUserName} image={user?.image} size="header" shape="circle" className="bg-[#0a0f24] text-blue-400"/>
+                    <PersonAvatar fullName={finalUserName} image={user?.image} size="header" shape="circle" className="bg-[#0a0f24] text-blue-400 border border-[#182033]/60 shadow-lg shadow-black/30" />
                 </div>
             </div>
         </header>
