@@ -54,7 +54,10 @@ function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
                     </div>
                 ) : (
                     <div className={`mt-4 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}>
-                        <ProtectedPersonForm onSubmit={handleCreate} />
+                        <ProtectedPersonForm 
+                            onClose={onClose}
+                            onSubmit={handleCreate} 
+                        />
 
                         {isLoading && (
                             <p className="text-sm text-blue-400 font-medium text-center mt-4 animate-pulse">

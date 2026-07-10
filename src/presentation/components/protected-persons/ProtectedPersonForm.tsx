@@ -11,9 +11,10 @@ interface Props {
         weeklySummaryEnabled: boolean;
         notificationSensitivity: string;
     }) => void;
+    onClose: () => void;
 }
 
-function ProtectedPersonForm({ onSubmit }: Props) {
+function ProtectedPersonForm({ onSubmit, onClose }: Props) {
     const [fullName, setFullName] = useState("");
     const [relationshipType, setRelationshipType] = useState("FAMILY_MEMBER");
     const [phone, setPhone] = useState("");
@@ -185,8 +186,8 @@ function ProtectedPersonForm({ onSubmit }: Props) {
                     {/* Dejamos que el modal se encargue de cerrar la vista limpia si se cancela */}
                     <button
                         type="button"
-                        className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
-                        onClick={() => window.history.back()}
+                        className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 bg-[#0b1220] hover:bg-[#111827] cursor-pointer"
+                        onClick={onClose}
                     >
                         Cancelar
                     </button>

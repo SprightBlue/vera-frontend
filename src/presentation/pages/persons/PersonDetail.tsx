@@ -67,7 +67,7 @@ function PersonDetail() {
                             <ArrowLeft size={20} />
                         </button>
                         <div>
-                            <h1 className="text-2xl font-semibold text-white">Detalles de perfil</h1>
+                            <h1 className="text-2xl font-semibold text-white">Detalle de perfil</h1>
                         </div>
                     </div>
                     {/* Pantalla de carga */}

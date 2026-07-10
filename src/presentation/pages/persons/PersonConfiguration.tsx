@@ -209,8 +209,8 @@ function PersonConfiguration() {
 
             <button
               type="button"
-              className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
-              onClick={() => navigate(`/persons/${id}`)}
+              className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 bg-[#0b1220] hover:bg-[#111827] cursor-pointer"
+              onClick={() => navigate('/persons')}
             >
               Cancelar
             </button>

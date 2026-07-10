@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { type ProtectedPerson, type UpdateProtectedInfo, uploadImage } from "../../../infrastructure/api/protected-person-api";
+import type { ProtectedPerson, UpdateProtectedInfo } from "@/domain/models/ProtectedPerson";
+import { uploadImage } from "../../../infrastructure/api/protected-person-api";
 import toast from "react-hot-toast";
 
 interface Props {
