@@ -1,4 +1,3 @@
-// src/features/dashboard/presentation/Dashboard.tsx
 import { useState } from 'react';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
 import { useDashboard } from '@/features/dashboard/hooks/useDashboard.ts';
@@ -8,19 +7,20 @@ import CreateProtectedPersonModal from '@/presentation/components/protected-pers
 import { DashboardBanner } from '../components/DashboardBanner';
 import { DashboardStats } from '../components/DashboardStats';
 import { DashboardHero } from '../components/DashboardHero';
-import {Sparkles, UserPlus} from "lucide-react";
-import {useNavigate} from "react-router-dom";
+import { Sparkles, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const { user } = useAuth();
-    const { data, loading, error, retry } = useDashboard();
+    const { data, loading, error, refetch } = useDashboard();
     const [showModal, setShowModal] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const hasProtected = data ? (data.hasProtectedPersons ?? (data.top3ConnectedUsers && data.top3ConnectedUsers.length > 0)) : false;
+    // Ahora determinamos si tiene protegidos mediante la existencia del último contacto vinculado
+    const hasProtected = data ? !!data.latestTrustContact : false;
     const currentRole = (user?.role === 'PROTECTED' || user?.role === 'CARER') ? user.role : 'CARER';
 
-    // El Hero toma el control del espacio de estadísticas únicamente si ya no está cargando, no hay error y no hay protegidos vinculados
+    // El Hero toma el control del espacio si es Cuidador y todavía no vinculó a nadie
     const shouldShowHero = !loading && !error && currentRole === 'CARER' && !hasProtected;
 
     return (
@@ -35,7 +35,6 @@ function Dashboard() {
 
                 <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1rem,1.8vw,2.5rem)] flex flex-col justify-between">
                     <div className="mx-auto max-w-480 w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
-
 
                         {currentRole === "CARER" ? (
                             <DashboardBanner
@@ -57,8 +56,7 @@ function Dashboard() {
                             />
                         )}
 
-
-                        {/* SECCIÓN MÉTRICAS / CARGA / HERO FLUIDO */}
+                        {/* SECCIÓN MÉTRICAS / HERO */}
                         {shouldShowHero ? (
                             <DashboardHero onAddProtectedClick={() => setShowModal(true)} />
                         ) : (
@@ -66,7 +64,7 @@ function Dashboard() {
                                 loading={loading}
                                 error={error}
                                 data={data}
-                                retry={retry}
+                                refetch={refetch}
                                 role={currentRole}
                                 hasProtected={hasProtected}
                             />
@@ -82,7 +80,7 @@ function Dashboard() {
                     onClose={() => setShowModal(false)}
                     onSuccess={() => {
                         setShowModal(false);
-                        retry(); // Forzar actualización limpia del WS y el estado
+                        void refetch(); // Ejecuta una recarga HTTP limpia del estado actual del panel
                     }}
                 />
             )}
