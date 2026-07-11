@@ -24,7 +24,7 @@ export function OptionCard({ title, description, to, buttonLabel, variant }: Opt
             <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
 
             <div className="relative z-10 w-full space-y-2.5">
-                <h3 className="text-[clamp(1rem,1.15vw,1.3rem)] font-black tracking-wide text-white uppercase select-text group-hover:text-slate-100 transition-colors">
+                <h3 className="text-[clamp(1rem,1.15vw,1.3rem)] font-display font-black text-white select-text group-hover:text-slate-100 transition-colors">
                     {title}
                 </h3>
                 <p className="text-[clamp(0.78rem,0.82vw,0.88rem)] text-slate-400 leading-relaxed font-medium select-text max-w-prose">
@@ -36,7 +36,7 @@ export function OptionCard({ title, description, to, buttonLabel, variant }: Opt
                 <Link to={to} className="w-full sm:w-auto block">
                     <ActionButton
                         variant={variant}
-                        className="w-full sm:w-40 h-10 rounded-lg font-black tracking-widest uppercase transition-transform duration-150 active:scale-[0.96]"
+                        className="w-full sm:w-40 h-10 rounded-lg transition-transform duration-150 active:scale-[0.96]"
                     >
                         {buttonLabel}
                     </ActionButton>

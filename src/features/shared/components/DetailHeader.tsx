@@ -61,17 +61,17 @@ export function DetailHeader({
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10">
                 <div className="space-y-1.5 min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2.5">
-                        <h3 className="text-[clamp(1.1rem,1.3vw,1.5rem)] font-black tracking-wide text-white uppercase select-text">
+                        <h3 className="text-[clamp(1.1rem,1.3vw,1.5rem)] font-display font-black tracking-wide text-white uppercase select-text">
                             {title || 'Contenido Analizado'}
                         </h3>
 
-                        <span className={`px-2.5 py-0.5 rounded-sm text-[clamp(10px,0.55vw,11px)] font-black tracking-widest uppercase border shrink-0 shadow-xs ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
+                        <span className={`px-2.5 py-0.5 rounded-sm text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider uppercase border shrink-0 shadow-xs ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
                             Riesgo {riskLevel} {percentage}%
                         </span>
                     </div>
 
                     {subtitle && (
-                        <p className="text-[clamp(0.78rem,0.82vw,0.88rem)] text-slate-400 leading-relaxed font-medium select-text uppercase tracking-wide">
+                        <p className="text-[clamp(0.78rem,0.82vw,0.88rem)] text-slate-400 leading-relaxed font-sans font-medium select-text uppercase tracking-wider">
                             {subtitle}
                         </p>
                     )}

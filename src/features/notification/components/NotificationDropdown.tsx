@@ -57,7 +57,7 @@ export function NotificationDropdown({
             </button>
 
             {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-[clamp(22rem,42vw,48rem)] bg-[#0d1326] border border-[#1e294b] rounded-2xl shadow-[0_30px_80px_-10px_rgba(0,0,0,0.98)] ring-1 ring-slate-700/30 z-50 flex flex-col animate-fade-in duration-150">
+                <div className="absolute right-0 mt-3 w-[clamp(22rem,42vw,48rem)] bg-[#0d1326] border border-[#1e294b] rounded-2xl shadow-[0_30px_80px_-10px_rgba(0,0,0,0.98)] ring-1 ring-slate-700/30 z-100 flex flex-col animate-fade-in duration-150">
 
                     <div className="px-[clamp(1rem,1.3vw,1.8rem)] py-[clamp(0.8rem,1vw,1.3rem)] border-b border-[#1e294b] bg-[#0a0f24]/80 flex items-center justify-between select-none rounded-t-2xl">
                         <span className="text-[clamp(9.5px,0.6vw,13px)] font-bold tracking-widest text-slate-300 uppercase">

@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
 @theme {
+    --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    --font-display: "Montserrat", "Arial Black", "Arial", sans-serif;
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+@theme {
     --color-primary: #0055E0;
     --color-primary-dark: #2628AB;
     --color-risk-low: #10B981;

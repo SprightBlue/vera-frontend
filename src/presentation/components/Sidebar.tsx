@@ -60,7 +60,7 @@ function Sidebar() {
                 to={item.path}
                 id={item.id}
                 title={item.label}
-                className={`flex items-center justify-center lg:justify-start gap-3.5 px-4 py-[clamp(0.6rem,0.75vw,0.8rem)] rounded-lg transition-all duration-150 text-[clamp(0.78rem,0.82vw,0.88rem)] font-black tracking-widest uppercase border relative group select-none active:scale-[0.98] z-10 ${
+                className={`flex items-center justify-center lg:justify-start gap-3.5 px-4 py-[clamp(0.6rem,0.75vw,0.8rem)] rounded-lg transition-all duration-150 text-[clamp(0.78rem,0.82vw,0.88rem)] font-display font-black border relative group select-none active:scale-[0.98] z-10 ${
                     isActive
                         ? "bg-linear-to-b from-[#101735] to-[#070B1A] text-white border-[#182033]/80 shadow-lg shadow-black/30 ring-1 ring-inset ring-blue-500/10"
                         : "text-slate-400 border-transparent hover:bg-[#131b35]/30 hover:text-slate-200"

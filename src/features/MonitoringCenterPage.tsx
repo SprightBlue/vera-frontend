@@ -17,10 +17,10 @@ export function MonitoringCenterPage() {
                     <div className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.5rem,2vw,2.5rem)] animate-fade-in">
 
                         <div className="border-b border-[#182033]/60 pb-5 w-full select-text relative">
-                            <span className="text-[10px] font-black tracking-widest text-amber-500 uppercase block mb-1">
+                            <span className="text-[10px] font-display font-black text-blue-500 block mb-1">
                                 Tu Cuaderno de Notas y Avisos
                             </span>
-                            <h2 className="text-[clamp(0.8rem,0.85vw,0.92rem)] text-slate-400 leading-relaxed font-medium max-w-4xl tracking-wide">
+                            <h2 className="text-[clamp(0.8rem,0.85vw,0.92rem)] text-slate-400 leading-relaxed font-medium max-w-4xl">
                                 Este es tu registro personal. Desde acá podés volver a mirar todas las cosas que mandaste a revisar antes y ver los avisos automáticos de seguridad que el sistema detectó para protegerte.
                             </h2>
                         </div>
@@ -30,7 +30,7 @@ export function MonitoringCenterPage() {
                                 title="Historial de Análisis"
                                 description="Entrá acá para ver una lista de todos los textos, enlaces o cadenas que revisaste antes. Podés volver a ver los resultados y los consejos de seguridad guardados."
                                 to="/analysis-list"
-                                buttonLabel="Ver mis Revisiones"
+                                buttonLabel="Ver mis Analisis"
                                 variant="info"
                             />
 

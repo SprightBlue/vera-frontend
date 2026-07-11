@@ -6,7 +6,7 @@ import Header from "@/presentation/components/Header";
 import { useAlertDetail } from "@/features/alerts/hooks/useAlertDetail";
 import { getRiskVariant, RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
 import { type RiskLevel } from "@/features/alerts/api/alertsApi";
-import {AlertCircle, CheckCircle, Trash2} from "lucide-react";
+import { AlertCircle, CheckCircle, Trash2 } from "lucide-react";
 
 import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
 import { RetryScreen } from "@/features/shared/components/RetryScreen";
@@ -42,9 +42,9 @@ export function AlertDetail() {
                         <ListButton to="/alerts" />
 
                         {loading ? (
-                            <LoadingScreen label="Cargando" />
+                            <LoadingScreen label="CARGANDO" />
                         ) : error ? (
-                            <RetryScreen onRetry={retry} label="Reintentar" />
+                            <RetryScreen onRetry={retry} label="REINTENTAR" />
                         ) : detail ? (
                             <>
                                 <DetailHeader

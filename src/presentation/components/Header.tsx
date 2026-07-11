@@ -48,7 +48,7 @@ function Header({ userName, userRole, title }: HeaderProps) {
             <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
 
             <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left">
-                <h2 className="text-[clamp(1rem,1.2vw,1.4rem)] font-black text-white tracking-widest truncate uppercase leading-normal">
+                <h2 className="text-[clamp(1rem,1.2vw,1.4rem)] font-display font-black text-white truncate leading-normal">
                     {displayTitle}
                 </h2>
             </div>
@@ -78,10 +78,10 @@ function Header({ userName, userRole, title }: HeaderProps) {
 
                 <div className="flex items-center gap-3 border-l border-[#182033]/80 pl-[clamp(0.8rem,1.2vw,1.5rem)]">
                     <div className="hidden sm:flex flex-col items-end leading-tight">
-                        <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-black tracking-wide text-slate-200 mb-0.5 whitespace-nowrap uppercase">
+                        <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-display font-black text-slate-200 mb-0.5 whitespace-nowrap">
                             {finalUserName}
                         </span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 whitespace-nowrap">
+                        <span className="text-[10px] font-display font-black text-slate-500 whitespace-nowrap">
                             {finalUserRole}
                         </span>
                     </div>
