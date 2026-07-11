@@ -19,8 +19,8 @@ export interface UpdateProtectedConfig {
 }
 
 export interface UpdateProtectedInfo {
-    fullName: string,
-    relationship: string,
-    contactNumber: string,
-    image: string
+    fullName: string;
+    relationship: string;
+    contactNumber: string;
+    image?: string;
 }

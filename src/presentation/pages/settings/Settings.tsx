@@ -91,10 +91,12 @@ function Settings() {
                 country: updatedProfile.country ?? ""
             });
 
-            updateUser({
-                ...user,
-                fullName: updatedProfile.fullName
-            });
+            if (user) {
+                updateUser({
+                    ...user,
+                    fullName: updatedProfile.fullName
+                });
+            }
 
             toast.success("Perfil actualizado correctamente");
 
@@ -146,6 +148,8 @@ function Settings() {
     // Elimina la imagen del usuario
     const handleDeleteImage = async () => {
 
+        if (!user) return;
+
         const confirmed = window.confirm(
             "¿Estás seguro de que querés eliminar tu foto de perfil?"
         );
@@ -158,7 +162,7 @@ function Settings() {
             await deleteUserImage(user.id);
 
             updateUser({
-                image: null
+                image: undefined
             });
     
         } catch (error) {

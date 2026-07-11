@@ -6,7 +6,7 @@ interface Props {
     name: string;
 }
 
-export function TrainingStatsBar({ stats, name }: Props) {
+export function TrainingStatsBar({ stats }: Props) {
     const items = [
         {
             icon: <Target size={20} className="text-blue-400" />,

@@ -18,7 +18,7 @@ function EditPersonModal({ person, onClose, onSuccess, onSubmit }: Props) {
         fullName: "",
         relationship: "Familiar",
         contactNumber: "",
-        image: null
+        image: ""
     });
 
     // Se cambian cuando se actualizan los datos del formulario al haber un cambio
@@ -38,7 +38,7 @@ function EditPersonModal({ person, onClose, onSuccess, onSubmit }: Props) {
             fullName: person.fullName,
             relationship: person.relationship,
             contactNumber: person.contactNumber,
-            image: person.image
+            image: person.image ?? ""
         });
     }, [person]);
 
@@ -59,20 +59,31 @@ function EditPersonModal({ person, onClose, onSuccess, onSubmit }: Props) {
         e.preventDefault();
     
         try {
-            setUploading(true);
-            const url = await handleImageUpload(selectedImage);
     
-            formData.image = url;
-            await onSubmit(person.id, formData);
-
+            setUploading(true);
+    
+            let imageUrl = formData.image;
+    
+            if (selectedImage) {
+                imageUrl = await handleImageUpload(selectedImage);
+            }
+    
+            await onSubmit(person.id, {
+                ...formData,
+                image: imageUrl
+            });
+    
             onSuccess();
     
         } catch {
+    
             toast.error("No se pudo guardar la información");
-        }
-        finally {
+    
+        } finally {
+    
             setSelectedImage(null);
             setUploading(false);
+    
         }
     }
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getProtectedPersons, type ProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import { getProtectedPersons } from "../../../infrastructure/api/protected-person-api";
+import type { ProtectedPerson } from "@/domain/models/ProtectedPerson";
 
 export function useProtectedPersonSelector() {
     const [persons, setPersons] = useState<ProtectedPerson[]>([]);
