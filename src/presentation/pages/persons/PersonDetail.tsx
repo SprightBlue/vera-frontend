@@ -45,7 +45,7 @@ function PersonDetail() {
 
     // Se actualizan los datos del protejido al enviar el formulario
     const handleEditPerson = async (id:number, updatedPerson: UpdateProtectedInfo) => {
-        const protectedPerson = await updateProtectedPersonInfo(id, updatedPerson);
+        const protectedPerson = await updateProtectedPersonInfo(id, updatedPerson, status);
         setPerson(protectedPerson);
     };
 

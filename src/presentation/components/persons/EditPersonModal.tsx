@@ -3,7 +3,6 @@ import type { ProtectedPerson, UpdateProtectedInfo } from "@/domain/models/Prote
 import { uploadImage } from "../../../infrastructure/api/protected-person-api";
 import toast from "react-hot-toast";
 import { ActionButton } from "@/features/shared/components/ActionButton";
-import { UI_BUTTON_STYLES } from "@/features/shared/utils/styleConfig";
 
 interface Props {
     person: ProtectedPerson;
