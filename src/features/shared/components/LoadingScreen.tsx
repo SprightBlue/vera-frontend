@@ -11,7 +11,7 @@ export function LoadingScreen({ label = "Cargando Sistema..." }: LoadingScreenPr
 
             <Loader2 className="text-blue-500 animate-spin stroke-[1.5] mb-3 w-[clamp(24px,1.8vw,32px)] h-[clamp(24px,1.8vw,32px)] relative z-10" />
 
-            <span className="text-[clamp(10px,0.6vw,14px)] font-black text-slate-500 tracking-widest uppercase animate-pulse text-center px-4 relative z-10">
+            <span className="text-[clamp(10px,0.6vw,14px)] font-sans font-bold text-slate-500 tracking-wider uppercase animate-pulse text-center px-4 relative z-10">
                 {label}
             </span>
         </div>

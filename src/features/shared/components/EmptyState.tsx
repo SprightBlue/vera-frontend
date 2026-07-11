@@ -11,7 +11,7 @@ export function EmptyState({ label = "HISTORIAL VACÍO" }: EmptyStateProps) {
 
             <Inbox className="text-slate-600 stroke-[1.5] mb-3 w-[clamp(24px,1.8vw,32px)] h-[clamp(24px,1.8vw,32px)] relative z-10" />
 
-            <span className="text-[clamp(10px,0.6vw,14px)] font-black text-slate-500 tracking-widest uppercase text-center px-4 relative z-10">
+            <span className="text-[clamp(10px,0.6vw,14px)] font-sans font-bold text-slate-500 tracking-wider uppercase text-center px-4 relative z-10">
                 {label}
             </span>
         </div>

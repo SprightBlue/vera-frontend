@@ -112,7 +112,7 @@ export function AnalysisList() {
                                         })}
                                     </div>
                                 ) : (
-                                    <EmptyState label="HISTORIAL VACÍO" />
+                                    <EmptyState label="Tu historial de análisis se encuentra limpio." />
                                 )}
                             </div>
                         )}

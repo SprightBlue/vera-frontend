@@ -14,7 +14,7 @@ import { DetailMetaRow } from "@/features/shared/components/DetailMetaRow";
 import { DetailContentBox } from "@/features/shared/components/DetailContentBox";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 import { ListButton } from "@/features/shared/components/ListButton.tsx";
-import {useState} from "react";
+import { useState } from "react";
 
 export function AnalysisDetail() {
     const { id } = useParams<{ id: string }>();
@@ -48,9 +48,9 @@ export function AnalysisDetail() {
                         <ListButton to="/analysis-list" />
 
                         {loading ? (
-                            <LoadingScreen label="Cargando" />
+                            <LoadingScreen label="CARGANDO" />
                         ) : error ? (
-                            <RetryScreen onRetry={retry} label="Reintentar" />
+                            <RetryScreen onRetry={retry} label="REINTENTAR" />
                         ) : detail ? (
                             <>
                                 <DetailHeader

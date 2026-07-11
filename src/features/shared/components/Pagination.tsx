@@ -39,7 +39,7 @@ export function Pagination({ page, totalPages, totalElements, loading, onPageCha
 
     return (
         <div className="flex items-center justify-between mt-auto pt-[clamp(1rem,1.2vw,2rem)] border-t border-[#182033]/40 select-none w-full mx-auto max-w-7xl">
-            <span className="text-[clamp(9px,0.55vw,11px)] text-slate-500 font-black tracking-widest uppercase">
+            <span className="text-[clamp(9px,0.55vw,11px)] text-slate-500 font-sans font-bold tracking-wider uppercase">
                 Página {page + 1} de {Math.max(1, totalPages)} • {totalElements} Elementos
             </span>
 
@@ -57,7 +57,7 @@ export function Pagination({ page, totalPages, totalElements, loading, onPageCha
                         return (
                             <span
                                 key={`ellipsis-${idx}`}
-                                className="text-slate-600 text-[11px] font-black tracking-widest px-1.5 cursor-default select-none h-8 flex items-center justify-center animate-pulse"
+                                className="text-slate-600 text-[11px] font-sans font-bold tracking-wider px-1.5 cursor-default select-none h-8 flex items-center justify-center animate-pulse"
                             >
                                 ...
                             </span>
@@ -70,7 +70,7 @@ export function Pagination({ page, totalPages, totalElements, loading, onPageCha
                             key={`page-${item}`}
                             disabled={loading}
                             onClick={() => handlePageClick(item as number)}
-                            className={`text-[11px] font-black tracking-widest px-3 h-8 min-w-8 rounded-lg border transition-all duration-150 flex items-center justify-center disabled:opacity-50 select-none
+                            className={`text-[11px] font-sans font-bold tracking-wider px-3 h-8 min-w-8 rounded-lg border transition-all duration-150 flex items-center justify-center disabled:opacity-50 select-none
                                 ${isCurrent
                                 ? "bg-blue-600/10 border-blue-500/40 text-blue-400 shadow-inner shadow-blue-500/10 ring-1 ring-inset ring-blue-500/20 cursor-default"
                                 : "bg-linear-to-b from-[#0a0f24] to-[#060a17] hover:from-[#101735] hover:to-[#0a0f24] border-[#182033]/80 ring-1 ring-inset ring-[#161f35]/30 text-slate-400 hover:text-slate-200 shadow-lg shadow-black/20 active:scale-[0.95] cursor-pointer"

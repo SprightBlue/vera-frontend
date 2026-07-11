@@ -120,7 +120,7 @@ export function AlertsList() {
                           })}
                         </div>
                     ) : (
-                        <EmptyState label="HISTORIAL VACÍO" />
+                        <EmptyState label="¡Todo está perfecto! No hay alertas urgentes en este momento." />
                     )}
                   </div>
               )}

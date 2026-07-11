@@ -3,7 +3,7 @@ import { useAuth } from "@/presentation/context/AuthContext";
 
 import Login from "@/presentation/pages/Login";
 import Register from "@/presentation/pages/Register";
-import Dashboard from "@/features/dashboard/views/Dashboard.tsx";
+import { Dashboard } from "@/features/dashboard/views/Dashboard.tsx";
 import Settings from "@/presentation/pages/settings/Settings";
 import { AlertsList } from "@/features/alerts/views/AlertsList.tsx";
 import AnalysisPage from "@/features/analysis/views/AnalysisPage";
