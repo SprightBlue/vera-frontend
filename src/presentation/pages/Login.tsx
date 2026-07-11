@@ -6,6 +6,7 @@ import veraLogo from '../../assets/Isologo_Vera.png';
 import { GoogleLogin } from '@react-oauth/google';
 import type { CredentialResponse } from '@react-oauth/google';
 import toast from "react-hot-toast";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 /* ---------------- ICONOS ---------------- */
 

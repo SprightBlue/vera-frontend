@@ -1,5 +1,6 @@
 import { Info, Settings, User } from "lucide-react";
 import { useState } from "react";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     onSubmit: (data: {
@@ -183,22 +184,12 @@ function ProtectedPersonForm({ onSubmit, onClose }: Props) {
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    {/* Dejamos que el modal se encargue de cerrar la vista limpia si se cancela */}
-                    <button
-                        type="button"
-                        className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 bg-[#0b1220] hover:bg-[#111827] cursor-pointer"
-                        onClick={onClose}
-                    >
+                    <ActionButton type="button" variant="neutral" onClick={onClose}>
                         Cancelar
-                    </button>
-
-                    {/* Botón puramente SUBMIT: No lleva onClick para no interferir con la llamada HTTP */}
-                    <button
-                        type="submit"
-                        className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer"
-                    >
+                    </ActionButton>
+                    <ActionButton type="submit" variant="info">
                         Enviar Invitación
-                    </button>
+                    </ActionButton>
                 </div>
             </div>
         </form>

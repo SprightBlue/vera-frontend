@@ -2,6 +2,7 @@ import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import axios from "axios";
 import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     onInvite: (data: AddContactRequest) => Promise<void>;
@@ -195,23 +196,18 @@ function AddContactForm({ onInvite, onCancel }: Props) {
             )}
 
             <div className="flex items-center justify-end gap-3">
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    disabled={saving}
-                    className="px-4 py-2 rounded-xl text-slate-400 text-sm font-medium hover:text-white hover:bg-white/5 transition-all disabled:opacity-50"
-                >
+                <ActionButton variant="neutral" onClick={onCancel} disabled={saving}>
                     Cancelar
-                </button>
-                <button
-                    type="button"
+                </ActionButton>
+                <ActionButton
+                    variant="info"
+                    icon={UserPlus}
                     disabled={saving}
+                    isLoading={saving}
                     onClick={() => void handleSubmit()}
-                    className="flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all disabled:opacity-50"
                 >
-                    <UserPlus size={14} />
                     {saving ? "Enviando..." : "Agregar contacto"}
-                </button>
+                </ActionButton>
             </div>
 
             <p className="text-xs text-slate-600">

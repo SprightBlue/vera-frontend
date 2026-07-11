@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Phone, Mail, ChevronDown, Users } from "lucide-react";
+import { ActionButton } from "@/features/shared/components/ActionButton";
+
 import toast from "react-hot-toast";
 
 import Sidebar from "../../components/Sidebar";
@@ -74,13 +76,11 @@ function Persons() {
                 ¿Eliminar a <span className="font-semibold">{fullName}</span> de tus protegidos?
               </p>
               <div className="flex justify-end gap-2">
-                <button
-                    onClick={() => toast.dismiss(t.id)}
-                    className="px-3 py-1.5 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition"
-                >
+                <ActionButton variant="neutral" onClick={() => toast.dismiss(t.id)} className="!h-8 px-4 text-sm">
                   Cancelar
-                </button>
-                <button
+                </ActionButton>
+                <ActionButton
+                    variant="danger"
                     onClick={async () => {
                       toast.dismiss(t.id);
                       try {
@@ -91,10 +91,10 @@ function Persons() {
                         toast.error("No se pudo eliminar la persona");
                       }
                     }}
-                    className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
+                    className="!h-8 px-4 text-sm"
                 >
                   Eliminar
-                </button>
+                </ActionButton>
               </div>
             </div>
         ),
@@ -163,14 +163,14 @@ function Persons() {
                 </div>
               </div>
               {/* Boton para añadir protejido */}
-              <button
-                id="add-protected-btn"
-                onClick={() => setShowModal(true)}
-                className="px-8 py-2.5 mt-4 md:mt-0 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium cursor-pointer"
+              <ActionButton
+                  id="add-protected-btn"
+                  variant="info"
+                  onClick={() => setShowModal(true)}
+                  className="mt-4 md:mt-0"
               >
-                <span className="text-lg pr-2">+</span>
-                Añadir protegido
-              </button>
+                + Añadir protegido
+              </ActionButton>
             </div>
             {/* Tarjetas de personas protejidas */}
             {cargando ? (
@@ -229,19 +229,13 @@ function Persons() {
                     </div>
 
                     <div className="flex gap-4 mt-6 lg:mt-0">
-                      <button
-                        onClick={() => handleDelete(person.id, person.fullName, person.status ?? "PENDING")}
-                        className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 transition px-5 py-2 rounded-xl font-medium cursor-pointer"
-                      >
+                      <ActionButton variant="danger" className="!h-9 mt-4 md:mt-0" onClick={()=> handleDelete(person.id, person.fullName, person.status ?? "PENDING")}>
                         Eliminar
-                      </button>
+                      </ActionButton>
 
-                      <button
-                        onClick={() => navigate(`/persons/${person.id}?status=${person.status}`)}
-                        className="bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-2 rounded-xl font-medium cursor-pointer"
-                      >
+                      <ActionButton variant="info"  className="!h-9 mt-4 md:mt-0" onClick={() => navigate(`/persons/${person.id}?status=${person.status}`)}>
                         Detalles
-                      </button>
+                      </ActionButton>
                     </div>
                   </div>
                 ))}

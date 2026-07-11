@@ -22,7 +22,7 @@ function Header({ userName, userRole, title }: HeaderProps) {
     if (user?.role === 'ADMIN') finalUserRole = "Administrador";
     if (!user?.role && userRole) finalUserRole = userRole;
 
-    const displayTitle = title ?? `BIENVENIDO, ${finalUserName}`;
+    const displayTitle = title ?? `Hola, ${finalUserName}`;
 
     const [notificationPage, setNotificationPage] = useState<number>(0);
 
@@ -81,11 +81,16 @@ function Header({ userName, userRole, title }: HeaderProps) {
                         <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-display font-black text-slate-200 mb-0.5 whitespace-nowrap">
                             {finalUserName}
                         </span>
-                        <span className="text-[10px] font-display font-black text-slate-500 whitespace-nowrap">
+                        <span className="text-[10px] font-display font-black uppercase text-slate-500 whitespace-nowrap">
                             {finalUserRole}
                         </span>
                     </div>
-
+                    <button
+                        type="button"
+                        onClick={() => navigate("/settings")}
+                        title="Ir a configuración"
+                        className="rounded-full cursor-pointer transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
+                    >
                     <PersonAvatar
                         fullName={finalUserName}
                         image={user?.image}
@@ -93,6 +98,7 @@ function Header({ userName, userRole, title }: HeaderProps) {
                         shape="circle"
                         className="bg-[#040714] text-blue-400 border border-blue-500/20 shadow-lg shadow-black/40"
                     />
+                    </button>
                 </div>
             </div>
         </header>

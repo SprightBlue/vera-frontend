@@ -1,4 +1,5 @@
 import { Plus, UserPlus } from "lucide-react";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface EmptyStateCardProps {
     onAddClick?: () => void;
@@ -26,26 +27,10 @@ function EmptyStateCard({ onAddClick }: EmptyStateCardProps) {
                 </p>
             </div>
 
-            {/* Botón con hover effect premium */}
-            <button
-                onClick={onAddClick}
-                className="
-                    mt-8
-                    group
-                    flex items-center gap-2
-                    px-6 py-3
-                    bg-blue-600 hover:bg-blue-500
-                    text-white font-medium
-                    rounded-xl
-                    transition-all duration-300
-                    shadow-lg shadow-blue-900/20
-                    hover:shadow-blue-600/30
-                    active:scale-[0.98]
-                "
-            >
-                <Plus size={20} />
-                <span>Añadir protegido</span>
-            </button>
+            {/* Botón */}
+            <ActionButton variant="info" icon={Plus} onClick={onAddClick} className="mt-8">
+                Añadir protegido
+            </ActionButton>
         </div>
     );
 }

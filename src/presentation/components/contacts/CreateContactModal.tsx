@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
 import AddContactForm from "./AddContactForm";
 import toast from "react-hot-toast";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     onClose: () => void;
@@ -52,13 +53,9 @@ function CreateContactModal({ onClose, onSuccess, onInvite }: Props) {
                             La solicitud fue depositada directamente en la bandeja de notificaciones
                             del contacto en tiempo real. Podrás ver su estado en cuanto sea aceptada.
                         </p>
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition cursor-pointer"
-                        >
+                        <ActionButton variant="info" onClick={onClose} className="mt-6">
                             Entendido
-                        </button>
+                        </ActionButton>
                     </div>
                 ) : (
                     <div className={isLoading ? "opacity-50 pointer-events-none" : ""}>

@@ -11,6 +11,7 @@ import EditPersonModal from "../../components/persons/EditPersonModal";
 import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 import toast from "react-hot-toast";
 import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 function PersonDetail() {
     const navigate = useNavigate();
@@ -114,10 +115,12 @@ function PersonDetail() {
                                                     <Mail className="w-4 h-4 text-blue-400" />
                                                     {person?.email}
                                                 </div>
-                                                <div className="flex items-center gap-2 text-gray-300 text-md">
-                                                    <Phone className="w-4 h-4 text-blue-400" />
-                                                    {person?.contactNumber}
-                                                </div>
+                                                {person?.contactNumber?.trim() && (
+                                                    <div className="flex items-center gap-2 text-gray-300 text-md">
+                                                        <Phone className="w-4 h-4 text-blue-400" />
+                                                        {person.contactNumber}
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <p className="text-gray-400 mt-4 max-w-xl leading-relaxed">
@@ -145,18 +148,21 @@ function PersonDetail() {
                                     </div>
 
                                     {/* Botones */}
-                                    <div className="flex flex-row">
-                                        <button
+                                    <div className="flex flex-row gap-4">
+                                        <ActionButton
                                             id="add-protected-btn"
+                                            variant="neutral"
                                             onClick={() => setShowModal(true)}
-                                            className="px-5 py-3 mr-5 rounded-2xl bg-white/14 border border-white/20 backdrop-blur-sm text-white font-medium cursor-pointer hover:bg-white/20 hover:border-white/30 transition-all duration-300 active:scale-95 whitespace-nowrap"
                                         >
                                             Editar perfil
-                                        </button>
-                                        <button onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer">
-                                            <Settings className="w-5 h-5" />
+                                        </ActionButton>
+                                        <ActionButton
+                                            variant="info"
+                                            icon={Settings}
+                                            onClick={() => navigate('/persons/personConfig', { state: { personId: person?.id } })}
+                                        >
                                             Ajustes
-                                        </button>
+                                        </ActionButton>
                                     </div>
                                 </div>
                             </div>

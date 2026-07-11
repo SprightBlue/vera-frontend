@@ -3,6 +3,7 @@ import ProtectedPersonForm from "./ProtectedPersonForm";
 import { createProtectedPerson, type CreateProtectedPersonRequest } from "../../../infrastructure/api/protected-person-api";
 import { CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     onClose: () => void;
@@ -44,13 +45,9 @@ function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
                         <p className="text-slate-400 text-sm max-w-md leading-relaxed">
                             La solicitud fue depositada directamente en la bandeja de notificaciones del protegido en tiempo real. Podrás ver su estado en tu panel en cuanto sea aceptada.
                         </p>
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition cursor-pointer"
-                        >
+                        <ActionButton variant="info" onClick={onClose} className="mt-6">
                             Entendido
-                        </button>
+                        </ActionButton>
                     </div>
                 ) : (
                     <div className={`mt-4 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}>

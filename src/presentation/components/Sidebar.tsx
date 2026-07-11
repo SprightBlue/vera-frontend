@@ -98,6 +98,11 @@ function Sidebar() {
 
             <div className="shrink-0 h-[clamp(4.5rem,5vw,5.6rem)] flex items-center justify-center lg:justify-start px-5 lg:px-6 border-b border-[#22315c]/20 relative overflow-hidden z-10">
                 <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
+                <Link
+                    to="/dashboard"
+                    title="Ir a Principal"
+                    className="flex items-center justify-center lg:justify-start w-full cursor-pointer transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.99]"
+                >
                 <img
                     src={logoVeraIcon}
                     alt="Vera"
@@ -108,6 +113,7 @@ function Sidebar() {
                     alt="Vera"
                     className="hidden lg:block w-[75%] max-w-32 min-w-10 h-auto object-contain filter brightness-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.15)]"
                 />
+                </Link>
             </div>
 
             <nav className="flex-1 flex flex-col gap-1.5 p-[clamp(0.5rem,0.6vw,1rem)] overflow-y-auto no-scrollbar relative z-10">

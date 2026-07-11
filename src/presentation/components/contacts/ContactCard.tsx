@@ -3,6 +3,7 @@ import {Mail, Phone, Trash2, CheckCircle2, Clock} from "lucide-react";
 import type {Contact} from "../../../domain/models/Contact";
 import toast from "react-hot-toast";
 import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     contact: Contact;
@@ -19,10 +20,10 @@ function ContactCard({contact, onRemove}: Props) {
                 ¿Eliminar a <b>{contact.fullName}</b> de tus contactos de confianza?
             </span>
                 <div className="flex justify-end gap-2">
-                    <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg bg-[#111827] hover:bg-[#1f2937] transition">
+                    <ActionButton variant="neutral" onClick={() => toast.dismiss(t.id)} className="h-9 px-4 text-sm">
                         Cancelar
-                    </button>
-                    <button
+                    </ActionButton>
+                    <ActionButton variant="danger"
                         onClick={async () => {
                             toast.dismiss(t.id);
                             setRemoving(true);
@@ -34,10 +35,9 @@ function ContactCard({contact, onRemove}: Props) {
                             } finally {
                                 setRemoving(false);
                             }
-                        }}
-                        className="px-3 py-1.5 text-sm rounded-lg bg-red-500 hover:bg-red-600 transition text-white">
+                        }} className="h-9 px-4 text-sm">
                         Eliminar
-                    </button>
+                    </ActionButton>
                 </div>
             </div>
         ), {
@@ -57,7 +57,8 @@ function ContactCard({contact, onRemove}: Props) {
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                    <PersonAvatar fullName={contact.fullName} image={contact.image} size="sm" />                    <div className="min-w-0 flex items-center gap-2 flex-wrap">
+                    <PersonAvatar fullName={contact.fullName} image={contact.image} size="sm" />
+                    <div className="min-w-0 flex items-center gap-2 flex-wrap">
                         <p className="text-white font-semibold text-lg leading-tight truncate">
                             {contact.fullName}
                         </p>

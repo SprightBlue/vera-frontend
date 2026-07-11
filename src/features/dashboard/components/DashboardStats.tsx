@@ -97,7 +97,7 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
 
                     {latestUpdatedChat ? (
                         <DashboardCard
-                            tagLabel="Último Consulta con la IA"
+                            tagLabel="Última Consulta con la IA"
                             title={latestUpdatedChat.title}
                             timestampLabel={latestUpdatedChat.updatedAt}
                             actionLabel="Abrir el chat"
@@ -155,6 +155,7 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                                             { label: alert.isResolved ? "Resuelta" : "Pendiente", variant: alert.isResolved ? "success" : "warning" }
                                         ]}
                                         onActionClick={() => navigate(`/alerts/${alert.id}`)}
+                                        actionVariant="info"
                                         actionLabel="Ver Detalles"
                                     />
                                 );

@@ -15,6 +15,7 @@ interface ItemCardProps {
     badges: BadgeConfig[];
     onActionClick: () => void;
     actionLabel?: string;
+    actionVariant?: UIVariant;
 }
 
 export function ItemCard({
@@ -23,6 +24,7 @@ export function ItemCard({
                              description,
                              timestamp,
                              primaryVariant,
+                             actionVariant = "info",
                              badges,
                              onActionClick,
                              actionLabel = "Ver Detalles"
@@ -72,7 +74,7 @@ export function ItemCard({
                 </div>
 
                 <ActionButton
-                    variant={primaryVariant}
+                    variant={actionVariant}
                     onClick={onActionClick}
                     className="w-full sm:w-40 h-9 font-sans font-bold tracking-wider uppercase"
                 >

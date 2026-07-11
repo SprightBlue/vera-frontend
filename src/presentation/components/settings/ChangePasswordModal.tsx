@@ -5,6 +5,7 @@ import {
 } from "../../../infrastructure/api/password-api";
 import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
 
@@ -183,33 +184,24 @@ export default function ChangePasswordModal({
 
                 <div className="flex justify-end gap-3 mt-8">
 
-                    <button
+                    <ActionButton
+                        variant="neutral"
                         onClick={() => {
-
-                            setForm({
-                                currentPassword: "",
-                                newPassword: "",
-                                confirmPassword: ""
-                            });
-
+                            setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
                             onClose();
-
                         }}
-                        className="px-5 py-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
                     >
                         Cancelar
-                    </button>
+                    </ActionButton>
 
-                    <button
-                        type="button"
+                    <ActionButton
+                        variant="success"
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white"
+                        isLoading={loading}
                     >
-                        {loading
-                            ? "Actualizando..."
-                            : "Cambiar contraseña"}
-                    </button>
+                        {loading ? "Actualizando..." : "Guardar"}
+                    </ActionButton>
 
                 </div>
 
