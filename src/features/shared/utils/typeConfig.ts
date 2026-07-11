@@ -1,7 +1,22 @@
 import { type RiskLevel } from '@/features/alerts/api/alertsApi.ts';
 import { type ToggleOption } from '@/features/shared/components/FilterToggleGroup';
+import { type UIVariant } from '@/features/shared/utils/styleConfig';
 
-export type UIVariantType = 'success' | 'warning' | 'danger';
+export type UIVariantType = UIVariant;
+
+export type NotificationType = 'ALERT' | 'ALERT_SOLVED' | 'INVITATION' | 'INVITATION_ACCEPTED' | 'INVITATION_REJECTED';
+
+interface NotificationTypeConfig {
+    variant: UIVariant;
+}
+
+export const NOTIFICATION_MAP: Record<NotificationType, NotificationTypeConfig> = {
+    ALERT: { variant: 'danger' },
+    ALERT_SOLVED: { variant: 'success' },
+    INVITATION: { variant: 'warning' },
+    INVITATION_ACCEPTED: { variant: 'info' },
+    INVITATION_REJECTED: { variant: 'purple' }
+};
 
 export const RISK_VARIANT_MAP: Record<RiskLevel, UIVariantType> = {
     HIGH: 'danger',

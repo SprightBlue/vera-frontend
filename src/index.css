@@ -8,7 +8,7 @@
 
 @utility font-display {
     font-family: var(--font-display);
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: 0.04em;
 }
 
@@ -24,10 +24,10 @@
 @layer base {
     :root {
         font-size: 100%;
-        color: #e5e7eb;
-        background-color: #050816;
+        color: #0b0f19;
+        background-color: #0b0f19;
         scrollbar-width: thin;
-        scrollbar-color: #334155 #050816;
+        scrollbar-color: #334155  #0b0f19;
     }
 
     ::-webkit-scrollbar {
@@ -36,7 +36,7 @@
     }
 
     ::-webkit-scrollbar-track {
-        background: #050816;
+        background: #0b0f19;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -48,7 +48,7 @@
         margin: 0;
         width: 100%;
         min-height: 100vh;
-        background-color: #050816;
+        background-color: #0b0f19;
         color: white;
         font-family: system-ui, -apple-system, sans-serif;
         -webkit-font-smoothing: antialiased;

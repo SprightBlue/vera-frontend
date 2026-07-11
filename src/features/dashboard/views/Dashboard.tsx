@@ -26,7 +26,7 @@ export function Dashboard() {
             <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
                 <Header
                     userName={user?.fullName ?? "Usuario"}
-                    title="Centro de Control"
+                    title={`Bienvenido a Vera, ${user?.fullName ?? "Usuario"}`}
                 />
 
                 <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1rem,1.8vw,2.5rem)] flex flex-col">
