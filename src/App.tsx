@@ -1,8 +1,6 @@
-import type { ReactNode } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/presentation/context/AuthContext";
 
-// Tus imports de páginas normales...
 import Login from "@/presentation/pages/Login";
 import Register from "@/presentation/pages/Register";
 import Dashboard from "@/features/dashboard/views/Dashboard.tsx";
@@ -29,14 +27,11 @@ import TrainingPage from "@/features/training/views/TrainingPage";
 import { AnalysisList } from "@/features/analysis/views/AnalysisList";
 import { AnalysisDetail } from "@/features/analysis/views/AnalysisDetail.tsx";
 
-// Tu Provider de Geolocalización
 import { LocationProvider } from "@/features/location/hooks/LocationContext.tsx";
 
-// 1. Guarda Privada ultra simplificada (No bloquea transiciones internas)
 function PrivateRoute() {
     const { isAuthenticated, isLoading } = useAuth();
 
-    // Solo muestra la pantalla de carga si el estado inicial absoluto está procesándose
     if (isLoading && !isAuthenticated) {
         return <div className="h-screen w-screen bg-[#070B1A] flex items-center justify-center text-slate-400">Verificando credenciales...</div>;
     }
@@ -44,14 +39,13 @@ function PrivateRoute() {
     return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
-// 2. Guarda de Roles tolerante a micro-loadings
 interface RoleRouteProps {
     allowedRoles: string[];
 }
 function RoleRoute({ allowedRoles }: RoleRouteProps) {
     const { isAuthenticated, user, isLoading } = useAuth();
 
-    if (isLoading) return null; // Retorna vacío el milisegundo que tarda en validar, no rompe la pantalla
+    if (isLoading) return null;
     if (!isAuthenticated) return <Navigate to="/login" replace />;
 
     const hasRole = user?.role && allowedRoles.includes(user.role);
@@ -77,7 +71,7 @@ function App() {
                     {/* --- RUTAS PRIVADAS --- */}
                     <Route element={<PrivateRoute />}>
 
-                        {/* 🔓 Rutas Compartidas */}
+                        {/* Rutas Compartidas */}
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/ai-center" element={<AICenterPage />} />
                         <Route path="/analysis" element={<AnalysisPage />} />
@@ -93,14 +87,14 @@ function App() {
                         <Route path="/incidents" element={<Incidents />} />
                         <Route path="/training" element={<TrainingPage />} />
 
-                        {/* 🔐 Filtro Exclusivo: CARER ONLY */}
+                        {/* Filtro Exclusivo: CARER ONLY */}
                         <Route element={<RoleRoute allowedRoles={['CARER']} />}>
                             <Route path="/alerts" element={<AlertsList />} />
                             <Route path="/alerts/:alertId" element={<AlertDetail />} />
                             <Route path="/monitoring-center" element={<MonitoringCenterPage />} />
                         </Route>
 
-                        {/* 🔐 Filtro Exclusivo: PROTECTED ONLY */}
+                        {/* Filtro Exclusivo: PROTECTED ONLY */}
                         <Route element={<RoleRoute allowedRoles={['PROTECTED']} />}>
                             <Route path="/my-carers" element={<MyCarers />} />
                         </Route>
