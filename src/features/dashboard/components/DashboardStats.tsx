@@ -6,9 +6,8 @@ import { ItemCard } from "@/features/shared/components/ItemCard";
 import { type DashboardResponse } from "@/features/dashboard/api/dashboardApi";
 import { RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
 
-import { MetricsCard } from "@/features/shared/components/MetricsCard";
-import { ChatCard } from "@/features/shared/components/ChatCard";
-import { ContactCard } from "@/features/shared/components/ContactCard";
+import { MetricsCard } from "@/features/dashboard/components/MetricsCard.tsx";
+import { DashboardCard } from "@/features/dashboard/components/DashboardCard.tsx";
 import { EmptyCard } from "@/features/shared/components/EmptyCard";
 
 interface DashboardStatsProps {
@@ -32,18 +31,50 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
     const isCarer = role === "CARER";
     const { latestUpdatedChat, latestTrustContact } = data;
 
+    const renderContactAvatar = () => {
+        if (!latestTrustContact) {
+            return (
+                <div className="w-9 h-9 rounded-full bg-[#0b122c] border border-dashed border-[#1c2848] text-slate-500 font-sans font-bold text-xs flex items-center justify-center">
+                    --
+                </div>
+            );
+        }
+
+        if (latestTrustContact.oppositeUserImage) {
+            return (
+                <img
+                    src={latestTrustContact.oppositeUserImage}
+                    alt={latestTrustContact.oppositeUserFullName}
+                    className="w-9 h-9 rounded-full object-cover border border-[#1c2848] shadow-[0_0_10px_rgba(59,130,246,0.1)]"
+                />
+            );
+        }
+
+        const initials = latestTrustContact.oppositeUserFullName
+            .split(" ")
+            .map(n => n[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
+
+        return (
+            <div className="w-9 h-9 rounded-full bg-[#0b122c] border border-[#1c2848] text-blue-400 font-sans font-bold text-xs flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+                {initials}
+            </div>
+        );
+    };
+
     return (
         <div className="w-full flex flex-col gap-6 animate-fade-in">
 
             <div className="w-full grid grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] select-none border-b border-[#182033]/60 pb-3">
                 <div className="xl:col-span-5">
-                    <h2 className="text-[clamp(11px,0.72vw,13px)] font-display font-black text-white uppercase tracking-[0.18em]">
+                    <h2 className="text-[clamp(11px,0.72vw,13px)] font-sans font-bold text-white uppercase tracking-[0.18em]">
                         Actividad reciente
                     </h2>
                 </div>
-
                 <div className="xl:col-span-7 hidden xl:block">
-                    <h2 className="text-[clamp(11px,0.72vw,13px)] font-display font-black text-white uppercase tracking-[0.18em]">
+                    <h2 className="text-[clamp(11px,0.72vw,13px)] font-sans font-bold text-white uppercase tracking-[0.18em]">
                         {isCarer ? "Últimas alertas recibidas" : "Últimos análisis realizados"}
                     </h2>
                 </div>
@@ -53,7 +84,7 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
 
                 <div className="xl:col-span-5 flex flex-col gap-4 w-full">
                     <div className="xl:hidden border-b border-[#182033]/30 pb-2 mb-1">
-                        <h2 className="text-[11px] font-display font-black text-white uppercase tracking-[0.15em]">
+                        <h2 className="text-[11px] font-display font-bold text-white uppercase tracking-[0.15em]">
                             Actividad reciente
                         </h2>
                     </div>
@@ -65,7 +96,14 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                     />
 
                     {latestUpdatedChat ? (
-                        <ChatCard latestChat={latestUpdatedChat} />
+                        <DashboardCard
+                            tagLabel="Último Consulta con la IA"
+                            title={latestUpdatedChat.title}
+                            timestampLabel={latestUpdatedChat.updatedAt}
+                            actionLabel="Abrir el chat"
+                            variant="purple"
+                            onActionClick={() => navigate(latestUpdatedChat.id ? `/chat?currentChatId=${latestUpdatedChat.id}` : "/chat")}
+                        />
                     ) : (
                         <EmptyCard
                             title="Sin charts iniciados"
@@ -74,7 +112,15 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                     )}
 
                     {latestTrustContact ? (
-                        <ContactCard trustContact={latestTrustContact} />
+                        <DashboardCard
+                            tagLabel="Último contacto agregado"
+                            title={latestTrustContact.oppositeUserFullName}
+                            timestampLabel={latestTrustContact.createdAt}
+                            actionLabel="Ver Perfil"
+                            variant="info"
+                            onActionClick={() => navigate("/contacts")}
+                            avatarNode={renderContactAvatar()}
+                        />
                     ) : (
                         <EmptyCard
                             title="Sin contactos vinculados"
@@ -85,7 +131,7 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
 
                 <div className="xl:col-span-7 flex flex-col gap-4 w-full">
                     <div className="xl:hidden border-b border-[#182033]/30 pb-2 mb-1">
-                        <h2 className="text-[11px] font-display font-black text-white uppercase tracking-[0.15em]">
+                        <h2 className="text-[11px] font-sans font-bold text-white uppercase tracking-[0.15em]">
                             {isCarer ? "Últimas alertas recibidas" : "Últimos análisis realizados"}
                         </h2>
                     </div>

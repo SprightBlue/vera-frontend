@@ -16,6 +16,7 @@ export interface AppNotification {
     isRead: boolean;
     readAt: string | null;
     createdAt: string;
+    isLive?: boolean;
 }
 
 export interface PagedResponse<T> {
@@ -25,16 +26,6 @@ export interface PagedResponse<T> {
     totalElements: number;
     totalPages: number;
     isLast: boolean;
-}
-
-export interface NotifColorConfig {
-    label: string;
-    borderLeft: string;
-    permanentBorder: string;
-    glowColor: string;
-    bgColor: string;
-    borderColor: string;
-    textColor: string;
 }
 
 export async function fetchAllNotifications(page = 0): Promise<PagedResponse<AppNotification>> {

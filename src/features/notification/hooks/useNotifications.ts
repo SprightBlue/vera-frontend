@@ -16,8 +16,6 @@ interface UseNotificationsProps {
     userEmail: string | undefined;
 }
 
-const ITEMS_PER_PAGE = 5;
-
 export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [totalPages, setTotalPages] = useState<number>(0);
@@ -107,27 +105,23 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 switch (data.event) {
                     case "NEW_NOTIFICATION":
                         if (data.notification) {
-                            setNotifications((prev) => [data.notification, ...prev]);
+                            if (pageNumber === 0) {
+                                setNotifications((prev) => [
+                                    {
+                                        ...data.notification,
+                                        createdAt: "Recién ahora"
+                                    },
+                                    ...prev
+                                ]);
+                            }
                             setUnreadCount(data.unreadCount ?? 0);
                             triggerBell();
-
-                            setTotalElements((prevElements) => {
-                                const nextElements = prevElements + 1;
-                                setTotalPages(Math.ceil(nextElements / ITEMS_PER_PAGE));
-                                return nextElements;
-                            });
                         }
                         break;
 
                     case "NOTIFICATION_DELETED":
                         setNotifications((prev) => prev.filter((n) => n.id !== data.id));
                         setUnreadCount(data.unreadCount ?? 0);
-
-                        setTotalElements((prevElements) => {
-                            const nextElements = Math.max(0, prevElements - 1);
-                            setTotalPages(Math.ceil(nextElements / ITEMS_PER_PAGE));
-                            return nextElements;
-                        });
                         break;
 
                     case "UNREAD_COUNT_UPDATE":
@@ -143,7 +137,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         return () => {
             if (stompClientRef.current) void stompClientRef.current.deactivate();
         };
-    }, [userEmail, triggerBell]);
+    }, [userEmail, triggerBell, pageNumber]);
 
     const handleMarkAllRead = async () => {
         if (unreadCount === 0) return;
@@ -169,12 +163,6 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
             if (action === "DELETE") {
                 await deleteNotification(notif.id);
                 setNotifications((prev) => prev.filter((n) => n.id !== notif.id));
-
-                setTotalElements((prevElements) => {
-                    const nextElements = Math.max(0, prevElements - 1);
-                    setTotalPages(Math.ceil(nextElements / ITEMS_PER_PAGE));
-                    return nextElements;
-                });
             } else if (notif.type === "INVITATION") {
                 const invitationId = notif.payload && typeof notif.payload === "object"
                     ? (notif.payload as Record<string, string | number>).id
