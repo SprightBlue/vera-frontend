@@ -83,7 +83,7 @@ export async function getProtectedPersonById(id: number, personStatus: string): 
     return response.data;
 }
 
-export async function updateProtectedPersonInfo(id: number, updatedPerson: UpdateProtectedInfo): Promise<ProtectedPerson> {
+export async function updateProtectedPersonInfo(id: number, updatedPerson: UpdateProtectedInfo, personStatus: string): Promise<ProtectedPerson> {
     const token = localStorage.getItem('vera_token') || sessionStorage.getItem('vera_token');
     const payload = {
         fullName: updatedPerson.fullName,
@@ -93,7 +93,8 @@ export async function updateProtectedPersonInfo(id: number, updatedPerson: Updat
     };
 
     const response = await axios.patch(`${API_BASE_URL}/api/v1/trust/protected-people/edit-person/${id}`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        params: { status: personStatus }
     });
 
     return response.data;
