@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { deleteAccount } from "../../../infrastructure/api/delete-account-api";
 import axios from "axios";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     isOpen: boolean;
@@ -105,25 +106,18 @@ export default function DeleteAccountModal({
 
                 <div className="flex justify-end gap-3 mt-8">
 
-                    <button
-                        onClick={onClose}
-                        className="px-5 py-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
-                    >
+                    <ActionButton variant="neutral" onClick={onClose}>
                         Cancelar
-                    </button>
+                    </ActionButton>
 
-                    <button
-
+                    <ActionButton
+                        variant="danger"
                         onClick={handleDeleteAccount}
-                        disabled={
-                            confirmation !== "ELIMINAR"
-                            ||
-                            loading
-                        }
-                        className="px-5 py-3 rounded-2xl bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white"
+                        disabled={confirmation !== "ELIMINAR" || loading}
+                        isLoading={loading}
                     >
                         Eliminar cuenta
-                    </button>
+                    </ActionButton>
 
                 </div>
 

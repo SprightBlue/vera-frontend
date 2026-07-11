@@ -11,6 +11,7 @@ import { ScenarioCard } from "../components/ScenarioCard";
 import { Send, TrendingUp, Activity, BookOpen, Inbox } from "lucide-react";
 import toast from "react-hot-toast";
 import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {ActionButton} from "@/features/shared/components/ActionButton.tsx";
 
 export default function TrainingPage() {
     const { user } = useAuth();
@@ -91,13 +92,9 @@ export default function TrainingPage() {
                                     {firstName} todavía no completó ningún entrenamiento. Podés asignarle uno para empezar.
                                 </p>
                             </div>
-                            <button
-                                onClick={() => setShowAssignModal(true)}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-semibold text-white transition-all cursor-pointer"
-                            >
-                                <Send size={14} />
+                            <ActionButton variant="info" icon={Send} onClick={() => setShowAssignModal(true)}>
                                 Asignar primer entrenamiento
-                            </button>
+                            </ActionButton>
                         </div>
                     ) : (
                         <div className="space-y-6">
@@ -108,13 +105,9 @@ export default function TrainingPage() {
                                     Así va el entrenamiento de{" "}
                                     <span className="text-white">{firstName}</span>
                                 </h2>
-                                <button
-                                    onClick={() => setShowAssignModal(true)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-semibold text-white transition-all cursor-pointer"
-                                >
-                                    <Send size={13} />
+                                <ActionButton variant="info" icon={Send} onClick={() => setShowAssignModal(true)}>
                                     Enviar entrenamiento
-                                </button>
+                                </ActionButton>
                             </div>
 
                             {/* Stats */}
@@ -136,12 +129,9 @@ export default function TrainingPage() {
                                             Escenarios reales, decisiones importantes y consejos de VERA para estar siempre un paso adelante.
                                         </p>
                                     </div>
-                                    <button
-                                        onClick={() => setShowAssignModal(true)}
-                                        className="mt-4 self-start flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-semibold text-white transition-all cursor-pointer"
-                                    >
+                                    <ActionButton variant="info" onClick={() => setShowAssignModal(true)} className="mt-4 self-start">
                                         Ver cómo funciona →
-                                    </button>
+                                    </ActionButton>
                                 </div>
 
                                 {/* Gráfico de progreso */}

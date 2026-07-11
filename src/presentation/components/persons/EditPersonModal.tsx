@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { ProtectedPerson, UpdateProtectedInfo } from "@/domain/models/ProtectedPerson";
 import { uploadImage } from "../../../infrastructure/api/protected-person-api";
 import toast from "react-hot-toast";
+import { ActionButton } from "@/features/shared/components/ActionButton";
+import { UI_BUTTON_STYLES } from "@/features/shared/utils/styleConfig";
 
 interface Props {
     person: ProtectedPerson;
@@ -189,19 +191,17 @@ function EditPersonModal({ person, onClose, onSuccess, onSubmit }: Props) {
 
                         {/* Botones */}
                         <div className="flex items-center justify-end gap-4">
-                            <button
-                                type="button"
-                                className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 hover:bg-[#111827] cursor-pointer"
-                                onClick={onClose}
-                            >
+                            <ActionButton type="button" variant="neutral" onClick={onClose}>
                                 Cancelar
-                            </button>
-                            <button
+                            </ActionButton>
+                            <ActionButton
+                                type="submit"
+                                variant="success"
+                                isLoading={uploading}
                                 onClick={handleSubmit}
-                                className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer"
                             >
                                 Guardar
-                            </button>
+                            </ActionButton>
                         </div>
                     </form>
                     {uploading && (

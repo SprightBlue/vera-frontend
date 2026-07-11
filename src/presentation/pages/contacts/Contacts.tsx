@@ -11,6 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useProtectedPersonSelector } from "../../hooks/contacts/useProtectedPersonSelector";
 import { useContacts } from "../../hooks/contacts/useContacts";
 import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 function TrustedContacts() {
     const { user } = useAuth();
@@ -106,13 +107,9 @@ function TrustedContacts() {
                                         className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#070B1A] border border-[#182033] text-white text-base placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
                                     />
                                 </div>
-                                <button
-                                    onClick={() => setShowForm(true)}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold transition-all whitespace-nowrap"
-                                >
-                                    <UserPlus size={15} />
+                                <ActionButton variant="info" icon={UserPlus} onClick={() => setShowForm(true)}>
                                     Agregar Contacto
-                                </button>
+                                </ActionButton>
                             </div>
 
                             {contactsError && (
@@ -150,13 +147,9 @@ function TrustedContacts() {
                                     <p className="text-slate-400 text-sm max-w-sm">
                                         Agregá personas del entorno de <span className="text-white">{selected.fullName}</span> para que VERA pueda notificarlas ante situaciones de riesgo.
                                     </p>
-                                    <button
-                                        onClick={() => setShowForm(true)}
-                                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all mt-1"
-                                    >
-                                        <UserPlus size={15} />
+                                    <ActionButton variant="info" icon={UserPlus} onClick={() => setShowForm(true)} className="mt-1">
                                         Agregar primer contacto
-                                    </button>
+                                    </ActionButton>
                                 </div>
                             )}
 

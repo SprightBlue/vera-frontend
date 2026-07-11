@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons, updateProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 import { toast } from "react-hot-toast/headless";
+import {ActionButton} from "@/features/shared/components/ActionButton.tsx";
 
 // Definimos una interfaz local para evitar problemas con 'any'
 interface APIProtectedPerson {
@@ -200,20 +201,12 @@ function PersonConfiguration() {
 
           {/* Botones de acción */}
           <div className="flex justify-center gap-4 pt-2">
-            <button
-              onClick={handleSubmit}
-              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold cursor-pointer"
-            >
+            <ActionButton variant="success" onClick={handleSubmit} isLoading={isSaving}>
               {isSaving ? "Guardando..." : "Guardar preferencias"}
-            </button>
-
-            <button
-              type="button"
-              className="px-5 py-3 rounded-xl border border-[#1f2937] text-slate-300 bg-[#0b1220] hover:bg-[#111827] cursor-pointer"
-              onClick={() => navigate('/persons')}
-            >
+            </ActionButton>
+            <ActionButton variant="neutral" onClick={() => navigate('/persons')}>
               Cancelar
-            </button>
+            </ActionButton>
           </div>
         </div>
       </main>

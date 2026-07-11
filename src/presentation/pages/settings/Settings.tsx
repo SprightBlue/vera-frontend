@@ -14,6 +14,7 @@ import ChangeEmailModal from "../../components/settings/ChangeEmailModal";
 import DeleteAccountModal from "../../components/settings/DeleteAccountModal";
 import toast from "react-hot-toast";
 import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {ActionButton} from "@/features/shared/components/ActionButton.tsx";
 
 function Settings() {
 
@@ -204,12 +205,13 @@ function Settings() {
                             {/* BOTONES CAMBIAR FOTO Y EDITAR PERFIL */}
                             <div className="flex">
                                 <div className="mr-6" ref={menuRef}>
-                                    <button
+                                    <ActionButton
+                                        variant="neutral"
                                         onClick={() => setShowMenu(!showMenu)}
-                                        className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/14 border border-white/20 backdrop-blur-sm text-white font-medium hover:bg-white/20 hover:border-white/30 cursor-pointer"
+                                        isLoading={uploading}
                                     >
                                         {uploading ? "Actualizando..." : "Cambiar foto"}
-                                    </button>
+                                    </ActionButton>
 
                                     {showMenu && (
                                         <div className="absolute mt-2 w-52 rounded-2xl border border-white/10 bg-[#0B1120] overflow-hidden z-50 animate-fade-in">
@@ -239,12 +241,12 @@ function Settings() {
                                     )}
                                 </div>
 
-                                <button
+                                <ActionButton
+                                    variant={isEditing ? "neutral" : "info"}
                                     onClick={() => setIsEditing(!isEditing)}
-                                    className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium cursor-pointer"
                                 >
                                     {isEditing ? "Cancelar" : "Editar perfil"}
-                                </button>
+                                </ActionButton>
                             </div>
                         </div>
                     </div>
@@ -311,12 +313,9 @@ function Settings() {
 
                         {isEditing && (
                             <div className="flex justify-end mt-8">
-                                <button
-                                    onClick={handleSaveChanges}
-                                    className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium"
-                                >
+                                <ActionButton variant="success" onClick={handleSaveChanges}>
                                     Guardar cambios
-                                </button>
+                                </ActionButton>
                             </div>
                         )}
                     </div>
@@ -372,27 +371,27 @@ function Settings() {
                         <div className="md:w-[48%] bg-[#0d1222] border border-[#182033] rounded-3xl p-8 mb-8">
                             <h2 className="text-2xl font-semibold text-white mb-6">Seguridad de cuenta</h2>
                             <div className="space-y-4">
-                                <button
+                                <ActionButton
+                                    variant="neutral"
                                     onClick={() => setShowPasswordModal(true)}
-                                    className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors cursor-pointer"
+                                    className="w-full justify-between"
                                 >
                                     <span>Cambiar contraseña</span>
-                                    <span className="text-slate-400">→</span>
-                                </button>
-                                <button
+                                </ActionButton>
+                                <ActionButton
+                                    variant="neutral"
                                     onClick={() => setShowEmailModal(true)}
-                                    className="w-full flex justify-between items-center bg-[#12141c] border border-[#1f2937] rounded-2xl px-5 py-4 text-white hover:border-blue-500 transition-colors cursor-pointer"
+                                    className="w-full justify-between"
                                 >
                                     <span>Cambiar correo electrónico</span>
-                                    <span className="text-slate-400">→</span>
-                                </button>
-                                <button
+                                </ActionButton>
+                                <ActionButton
+                                    variant="danger"
                                     onClick={() => setShowDeleteAccountModal(true)}
-                                    className="w-full flex justify-between items-center border border-red-900 rounded-2xl px-5 py-4 text-red-500 hover:bg-red-950/20 transition-colors cursor-pointer"
+                                    className="w-full justify-between"
                                 >
-                                    <span>Eliminar cuenta</span>
-                                    <span>⚠</span>
-                                </button>
+                                    <span>⚠ Eliminar cuenta</span>
+                                </ActionButton>
                             </div>
                         </div>
                     </div>

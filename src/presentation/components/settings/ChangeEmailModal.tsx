@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 import { changeEmail, type ChangeEmailRequest } from "../../../infrastructure/api/email-api";
 import { useAuth } from "../../context/AuthContext";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {
     isOpen: boolean;
@@ -136,24 +137,18 @@ export default function ChangeEmailModal({
 
                 <div className="flex justify-end gap-3 mt-8">
 
-                    <button
-                        onClick={onClose}
-                        className="px-5 py-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
-                    >
+                    <ActionButton variant="neutral" onClick={onClose}>
                         Cancelar
-                    </button>
+                    </ActionButton>
 
-                    <button
+                    <ActionButton
+                        variant="success"
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+                        isLoading={loading}
                     >
-                        {
-                            loading
-                                ? "Actualizando..."
-                                : "Cambiar correo"
-                        }
-                    </button>
+                        {loading ? "Actualizando..." : "Guardar"}
+                    </ActionButton>
 
                 </div>
 

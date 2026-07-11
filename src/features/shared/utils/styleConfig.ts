@@ -19,7 +19,7 @@ export const UI_VARIANTS_MAP: Record<UIVariant, CoreUIStyleConfig> = {
         glowColor: 'bg-red-500',
         laserColor: 'via-red-400',
         bgColor: 'bg-red-500/10',
-        borderColor: 'border-red-500/30',
+        borderColor: 'border-red-500/10',
         textColor: 'text-red-300'
     },
     success: {
