@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Mail, Phone, Trash2, CheckCircle2, Clock} from "lucide-react";
 import type {Contact} from "../../../domain/models/Contact";
 import toast from "react-hot-toast";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {

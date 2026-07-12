@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "../../../features/shared/components/Sidebar.tsx";
+import Header from "../../../features/shared/components/Header.tsx";
 import { useAuth } from "../../context/AuthContext";
 import {
     getProfile,
@@ -13,7 +13,7 @@ import ChangePasswordModal from "../../components/settings/ChangePasswordModal";
 import ChangeEmailModal from "../../components/settings/ChangeEmailModal";
 import DeleteAccountModal from "../../components/settings/DeleteAccountModal";
 import toast from "react-hot-toast";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 import {ActionButton} from "@/features/shared/components/ActionButton.tsx";
 
 function Settings() {

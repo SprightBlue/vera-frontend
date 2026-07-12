@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi.ts';
 
 interface UseAlertsProps extends Omit<AlertFilters, 'search'> {
@@ -11,24 +11,33 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
     const [totalElements, setTotalElements] = useState<number>(0);
     const [pageNumber, setPageNumber] = useState<number>(0);
     const [isLastPage, setIsLastPage] = useState<boolean>(true);
+
     const [loading, setLoading] = useState<boolean>(true);
+    const [backgroundLoading, setBackgroundLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const [debouncedSearch, setDebouncedSearch] = useState<string>('');
 
-    const isDebouncing = searchTerm.trim() !== debouncedSearch;
-
-    const forceLoading = useCallback(() => {
-        setLoading(true);
-    }, []);
+    const alertsRef = useRef(alerts);
+    useEffect(() => {
+        alertsRef.current = alerts;
+    }, [alerts]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(searchTerm.trim());
-        }, 400);
+        }, 350);
 
         return () => clearTimeout(handler);
     }, [searchTerm]);
+
+    const forceLoading = useCallback(() => {
+        if (alertsRef.current.length === 0) {
+            setLoading(true);
+        } else {
+            setBackgroundLoading(true);
+        }
+    }, []);
 
     const { page, resolved, riskLevel } = otherFilters;
 
@@ -36,7 +45,12 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
         let isMounted = true;
 
         const fetchInitialData = async () => {
-            setLoading(true);
+            if (alertsRef.current.length === 0) {
+                setLoading(true);
+            } else {
+                setBackgroundLoading(true);
+            }
+
             try {
                 const activeFilters: AlertFilters = {
                     page,
@@ -57,12 +71,15 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
                 setError(null);
             } catch {
                 if (!isMounted) return;
-                setError('No se pudo establecer conexión con el módulo de auditoría.');
+                setError('No se pudo establecer conexión con el módulo de alertas.');
                 setAlerts([]);
                 setTotalPages(0);
                 setTotalElements(0);
             } finally {
-                if (isMounted) setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                    setBackgroundLoading(false);
+                }
             }
         };
 
@@ -90,11 +107,15 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.last ?? true);
         } catch {
-            setError('No se pudo establecer conexión con el módulo de auditoría.');
+            setError('No se pudo establecer conexión con el módulo de alertas.');
         } finally {
             setLoading(false);
+            setBackgroundLoading(false);
         }
     }, [page, resolved, riskLevel, debouncedSearch]);
+
+    const isDebouncing = searchTerm.trim() !== debouncedSearch;
+    const isBackgroundLoading = backgroundLoading || isDebouncing;
 
     return {
         alerts,
@@ -102,7 +123,8 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
         totalElements,
         pageNumber,
         isLastPage,
-        loading: loading || isDebouncing,
+        loading,
+        isBackgroundLoading,
         error,
         retry: handleRetry,
         forceLoading

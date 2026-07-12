@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { UserPlus, Search, Users } from "lucide-react";
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "../../../features/shared/components/Sidebar.tsx";
+import Header from "../../../features/shared/components/Header.tsx";
 import ProtectedPersonSelector from "../../components/contacts/ProtectedPersonSelector";
 import CreateContactModal from "../../components/contacts/CreateContactModal";
 import ContactCard from "../../components/contacts/ContactCard";

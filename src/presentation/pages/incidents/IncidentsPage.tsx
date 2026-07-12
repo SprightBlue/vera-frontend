@@ -1,11 +1,11 @@
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "../../../features/shared/components/Sidebar.tsx";
+import Header from "../../../features/shared/components/Header.tsx";
 import { useAuth } from "../../context/AuthContext";
 import { useIncidents } from "../../../features/incidents/hooks/useIncidents";
 import { IncidentTable } from "../../../features/incidents/components/IncidentTable";
 import { IncidentDetailPanel } from "../../../features/incidents/components/IncidentDetailPanel";
 import { IncidentInfoPanel } from "../../../features/incidents/components/IncidentInfoPanel";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 
 export default function IncidentsPage() {
     const { user } = useAuth();

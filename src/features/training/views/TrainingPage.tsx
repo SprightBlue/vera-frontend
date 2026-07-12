@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Sidebar from "@/presentation/components/Sidebar";
-import Header from "@/presentation/components/Header";
+import Sidebar from "@/features/shared/components/Sidebar.tsx";
+import Header from "@/features/shared/components/Header.tsx";
 import { useAuth } from "@/presentation/context/AuthContext";
 import { useTraining } from "../hooks/useTraining";
 import { TrainingStatsBar } from "../components/TrainingStatsBar";
@@ -10,7 +10,7 @@ import { AssignTrainingModal } from "../components/AssignTrainingModal";
 import { ScenarioCard } from "../components/ScenarioCard";
 import { Send, TrendingUp, Activity, BookOpen, Inbox } from "lucide-react";
 import toast from "react-hot-toast";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 import {ActionButton} from "@/features/shared/components/ActionButton.tsx";
 
 export default function TrainingPage() {

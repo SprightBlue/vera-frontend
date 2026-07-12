@@ -2,8 +2,8 @@ import { useAnalysis } from '@/features/analysis/hooks/useAnalysis.ts';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
 import AnalysisForm from '@/features/analysis/components/AnalysisForm';
 import AnalysisResult from '@/features/analysis/components/AnalysisResult';
-import Header from '@/presentation/components/Header';
-import Sidebar from '@/presentation/components/Sidebar';
+import Header from '@/features/shared/components/Header.tsx';
+import Sidebar from '@/features/shared/components/Sidebar.tsx';
 import { Loader2, RefreshCw } from 'lucide-react';
 
 function AnalysisPage() {

@@ -1,8 +1,8 @@
-import { useState, type ChangeEvent, useEffect, useCallback } from 'react';
+import { useState, type ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
-import Sidebar from '@/presentation/components/Sidebar';
-import Header from '@/presentation/components/Header';
+import Sidebar from '@/features/shared/components/Sidebar.tsx';
+import Header from '@/features/shared/components/Header.tsx';
 import { useAnalysisList } from '@/features/analysis/hooks/useAnalysisList.ts';
 import { type RiskLevel } from '@/features/analysis/api/analysisApi.ts';
 
@@ -10,11 +10,11 @@ import { getRiskVariant, RISK_LABELS_ES, RISK_FILTER_OPTIONS } from '@/features/
 
 import { LoadingScreen } from '@/features/shared/components/LoadingScreen';
 import { RetryScreen } from '@/features/shared/components/RetryScreen';
+import { EmptyScreen } from '@/features/shared/components/EmptyScreen';
 import { Pagination } from '@/features/shared/components/Pagination';
 import { SearchInput } from '@/features/shared/components/SearchInput';
 import { FilterToggleGroup } from '@/features/shared/components/FilterToggleGroup';
 import { ItemCard } from '@/features/shared/components/ItemCard';
-import { EmptyState } from '@/features/shared/components/EmptyState';
 
 type RiskFilterType = RiskLevel | 'NONE';
 
@@ -24,22 +24,21 @@ export function AnalysisList() {
 
     const [page, setPage] = useState<number>(0);
     const [inputValue, setInputValue] = useState<string>('');
-    const [debouncedSearch, setDebouncedSearch] = useState<string>('');
     const [activeRisk, setActiveRisk] = useState<RiskFilterType>('NONE');
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearch(inputValue);
-            setPage(0);
-        }, 350);
-
-        return () => clearTimeout(timer);
-    }, [inputValue]);
-
-    const { analyses, totalPages, totalElements, loading, error, retry, forceLoading } = useAnalysisList({
+    const {
+        analyses,
+        totalPages,
+        totalElements,
+        loading,
+        isBackgroundLoading,
+        error,
+        retry,
+        forceLoading
+    } = useAnalysisList({
         page,
         riskLevel: activeRisk === 'NONE' ? undefined : activeRisk,
-        searchTerm: debouncedSearch
+        searchTerm: inputValue
     });
 
     const handleRiskToggle = useCallback((risk: RiskLevel) => {
@@ -56,17 +55,21 @@ export function AnalysisList() {
         setPage(newPage);
     }, []);
 
+    const hasData = analyses.length > 0;
+
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-[#050816] text-slate-100 font-sans antialiased select-none">
+        <div className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
             <Sidebar />
 
             <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
                 <Header userName={user?.fullName ?? "Usuario"} title="Historial de Análisis" />
 
-                <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1rem,1.8vw,2.5rem)] flex flex-col justify-between">
-                    <div className="mx-auto max-w-480 w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
+                <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between">
+                    <div className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.5rem,2.5vw,3rem)] animate-fade-in">
 
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 w-full border-b border-[#182033]/60 pb-5">
+                        <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-5 w-full pb-6">
+                            <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+
                             <SearchInput
                                 value={inputValue}
                                 onChange={handleInputChange}
@@ -88,9 +91,9 @@ export function AnalysisList() {
                         ) : error ? (
                             <RetryScreen onRetry={retry} />
                         ) : (
-                            <div className="w-full flex-1">
-                                {analyses.length > 0 ? (
-                                    <div className="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-4 auto-rows-max animate-fade-in">
+                            <div className={`w-full flex-1 flex flex-col transition-opacity duration-200 ${isBackgroundLoading ? 'opacity-40 pointer-events-none' : ''}`}>
+                                {hasData ? (
+                                    <div className="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-4 auto-rows-max">
                                         {analyses.map((analysis) => {
                                             const level: RiskLevel = analysis.riskLevel || 'LOW';
                                             const riskVariant = getRiskVariant(level);
@@ -112,20 +115,23 @@ export function AnalysisList() {
                                         })}
                                     </div>
                                 ) : (
-                                    <EmptyState label="Tu historial de análisis se encuentra limpio." />
+                                    <EmptyScreen label="NO SE ENCONTRARON ANÁLISIS EN EL HISTORIAL" />
                                 )}
                             </div>
                         )}
 
-                        {!error && (
-                            <Pagination
-                                page={page}
-                                totalPages={totalPages}
-                                totalElements={totalElements}
-                                loading={loading}
-                                onPageChange={handlePageChange}
-                                onForceLoading={forceLoading}
-                            />
+                        {!error && hasData && (
+                            <div className="relative w-full mt-auto pt-6">
+                                <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+                                <Pagination
+                                    page={page}
+                                    totalPages={totalPages}
+                                    totalElements={totalElements}
+                                    loading={loading || isBackgroundLoading}
+                                    onPageChange={handlePageChange}
+                                    onForceLoading={forceLoading}
+                                />
+                            </div>
                         )}
 
                     </div>

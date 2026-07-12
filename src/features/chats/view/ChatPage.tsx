@@ -2,8 +2,8 @@ import { type SyntheticEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loader2, SidebarClose, SidebarOpen, Send } from "lucide-react";
 
-import Sidebar from "@/presentation/components/Sidebar.tsx";
-import Header from "@/presentation/components/Header.tsx";
+import Sidebar from "@/features/shared/components/Sidebar.tsx";
+import Header from "@/features/shared/components/Header.tsx";
 
 import ChatSidebar from "@/features/chats/components/ChatSidebar.tsx";
 import ChatRoom from "@/features/chats/components/ChatRoom.tsx";

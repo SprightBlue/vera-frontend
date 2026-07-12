@@ -19,8 +19,8 @@ import Incidents from "@/presentation/pages/incidents/IncidentsPage";
 import VerifyEmail from "@/presentation/pages/VerifyEmail";
 import TermsAndConditions from "@/presentation/pages/TermsAndConditions";
 import ChatPage from "@/features/chats/view/ChatPage";
-import { AICenterPage } from "@/features/AiCenterPage";
-import { MonitoringCenterPage } from "@/features/MonitoringCenterPage";
+import { AiCenterView } from "@/features/shared/views/AiCenterView.tsx";
+import { ListCenterView } from "@/features/shared/views/ListCenterView.tsx";
 import AcceptInvitePage from "@/presentation/pages/invite/AcceptInvitePage";
 import MyCarers from "@/presentation/pages/persons/My-Carers";
 import TrainingPage from "@/features/training/views/TrainingPage";
@@ -73,7 +73,7 @@ function App() {
 
                         {/* Rutas Compartidas */}
                         <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/ai-center" element={<AICenterPage />} />
+                        <Route path="/ai-center" element={<AiCenterView />} />
                         <Route path="/analysis" element={<AnalysisPage />} />
                         <Route path="/chat" element={<ChatPage />} />
                         <Route path="/persons" element={<Persons />} />
@@ -91,7 +91,7 @@ function App() {
                         <Route element={<RoleRoute allowedRoles={['CARER']} />}>
                             <Route path="/alerts" element={<AlertsList />} />
                             <Route path="/alerts/:alertId" element={<AlertDetail />} />
-                            <Route path="/monitoring-center" element={<MonitoringCenterPage />} />
+                            <Route path="/monitoring-center" element={<ListCenterView />} />
                         </Route>
 
                         {/* Filtro Exclusivo: PROTECTED ONLY */}

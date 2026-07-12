@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { analysisApi, type AnalysisResponse, type AnalysisFilters } from '@/features/analysis/api/analysisApi.ts';
 
 interface UseAnalysisListProps extends Omit<AnalysisFilters, 'search'> {
@@ -11,24 +11,33 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
     const [totalElements, setTotalElements] = useState<number>(0);
     const [pageNumber, setPageNumber] = useState<number>(0);
     const [isLastPage, setIsLastPage] = useState<boolean>(true);
+
     const [loading, setLoading] = useState<boolean>(true);
+    const [backgroundLoading, setBackgroundLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const [debouncedSearch, setDebouncedSearch] = useState<string>('');
 
-    const isDebouncing = searchTerm.trim() !== debouncedSearch;
-
-    const forceLoading = useCallback(() => {
-        setLoading(true);
-    }, []);
+    const analysesRef = useRef(analyses);
+    useEffect(() => {
+        analysesRef.current = analyses;
+    }, [analyses]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(searchTerm.trim());
-        }, 400);
+        }, 350);
 
         return () => clearTimeout(handler);
     }, [searchTerm]);
+
+    const forceLoading = useCallback(() => {
+        if (analysesRef.current.length === 0) {
+            setLoading(true);
+        } else {
+            setBackgroundLoading(true);
+        }
+    }, []);
 
     const { page, riskLevel } = otherFilters;
 
@@ -36,7 +45,12 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
         let isMounted = true;
 
         const fetchInitialData = async () => {
-            setLoading(true);
+            if (analysesRef.current.length === 0) {
+                setLoading(true);
+            } else {
+                setBackgroundLoading(true);
+            }
+
             try {
                 const activeFilters: AnalysisFilters = {
                     page,
@@ -56,12 +70,15 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
                 setError(null);
             } catch {
                 if (!isMounted) return;
-                setError('No se pudo establecer conexión con el módulo de auditoría de análisis.');
+                setError('No se pudo establecer conexión con el módulo de análisis.');
                 setAnalyses([]);
                 setTotalPages(0);
                 setTotalElements(0);
             } finally {
-                if (isMounted) setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                    setBackgroundLoading(false);
+                }
             }
         };
 
@@ -88,11 +105,15 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.last ?? true);
         } catch {
-            setError('No se pudo establecer conexión con el módulo de auditoría de análisis.');
+            setError('No se pudo establecer conexión con el módulo de análisis.');
         } finally {
             setLoading(false);
+            setBackgroundLoading(false);
         }
     }, [page, riskLevel, debouncedSearch]);
+
+    const isDebouncing = searchTerm.trim() !== debouncedSearch;
+    const isBackgroundLoading = backgroundLoading || isDebouncing;
 
     return {
         analyses,
@@ -100,7 +121,8 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
         totalElements,
         pageNumber,
         isLastPage,
-        loading: loading || isDebouncing,
+        loading,
+        isBackgroundLoading,
         error,
         retry: handleRetry,
         forceLoading

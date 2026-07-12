@@ -1,5 +1,5 @@
 import type { ProtectedPerson } from "@/domain/models/ProtectedPerson";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 
 interface Props {
     persons: ProtectedPerson[];

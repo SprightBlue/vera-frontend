@@ -1,14 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
 import { RetryScreen } from "@/features/shared/components/RetryScreen";
-import { EmptyState } from "@/features/shared/components/EmptyState";
 import { ItemCard } from "@/features/shared/components/ItemCard";
 import { type DashboardResponse } from "@/features/dashboard/api/dashboardApi";
 import { RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
 
 import { MetricsCard } from "@/features/dashboard/components/MetricsCard.tsx";
 import { DashboardCard } from "@/features/dashboard/components/DashboardCard.tsx";
-import { EmptyCard } from "@/features/shared/components/EmptyCard";
 
 interface DashboardStatsProps {
     loading: boolean;
@@ -105,10 +103,9 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                             onActionClick={() => navigate(latestUpdatedChat.id ? `/chat?currentChatId=${latestUpdatedChat.id}` : "/chat")}
                         />
                     ) : (
-                        <EmptyCard
-                            title="Sin charts iniciados"
-                            description="No registramos ninguna interacción en el chat IA."
-                        />
+                        <div className="text-center text-slate-400">
+                            <p>No hay chats nuevos.</p>
+                        </div>
                     )}
 
                     {latestTrustContact ? (
@@ -122,10 +119,9 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                             avatarNode={renderContactAvatar()}
                         />
                     ) : (
-                        <EmptyCard
-                            title="Sin contactos vinculados"
-                            description="No se encontraron registros de contactos asignados a tu cuenta."
-                        />
+                        <div className="text-center text-slate-400">
+                            <p>No hay contactos nuevos.</p>
+                        </div>
                     )}
                 </div>
 
@@ -161,7 +157,9 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                                 );
                             })
                         ) : (
-                            <EmptyState label="¡Todo está perfecto! No hay alertas urgentes en este momento." />
+                            <div className="text-center text-slate-400">
+                                <p>No hay análisis disponibles.</p>
+                            </div>
                         )
                     ) : (
                         data.top3Analysis && data.top3Analysis.length > 0 ? (
@@ -183,7 +181,9 @@ export function DashboardStats({ loading, error, data, refetch, role, hasProtect
                                 );
                             })
                         ) : (
-                            <EmptyState label="Tu historial de análisis se encuentra limpio." />
+                            <div className="text-center text-slate-400">
+                                <p>No hay análisis disponibles.</p>
+                            </div>
                         )
                     )}
                 </div>

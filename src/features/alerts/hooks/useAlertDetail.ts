@@ -11,6 +11,9 @@ export function useAlertDetail(alertId?: string) {
         let isMounted = true;
 
         const fetchDetailData = async () => {
+            setLoading(true);
+            setError(null);
+
             try {
                 const data = await alertsApi.getAlertDetail(alertId);
                 if (!isMounted) return;
@@ -19,7 +22,7 @@ export function useAlertDetail(alertId?: string) {
             } catch {
                 if (!isMounted) return;
                 setDetail(null);
-                setError("No se pudo recuperar el informe forense de la alerta.");
+                setError("No se pudo establecer conexión con el servidor.");
             } finally {
                 if (isMounted) setLoading(false);
             }
@@ -41,7 +44,7 @@ export function useAlertDetail(alertId?: string) {
             const data = await alertsApi.getAlertDetail(alertId);
             setDetail(data);
         } catch {
-            setError("No se pudo recuperar el informe forense de la alerta.");
+            setError("No se pudo establecer conexión con el servidor.");
         } finally {
             setLoading(false);
         }
@@ -56,7 +59,7 @@ export function useAlertDetail(alertId?: string) {
             setError(null);
             return true;
         } catch {
-            setError("No se pudo actualizar el vector a estado resuelto.");
+            setError("No se pudo procesar la solicitud de actualización.");
             return false;
         }
     };
@@ -69,7 +72,7 @@ export function useAlertDetail(alertId?: string) {
             setError(null);
             return true;
         } catch {
-            setError("No se pudo purgar la alerta seleccionada.");
+            setError("No se pudo completar la eliminación del registro.");
             return false;
         }
     };
