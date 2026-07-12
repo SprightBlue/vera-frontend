@@ -6,9 +6,10 @@ import {
     acceptInvitation,
     rejectInvitation,
     deleteNotification,
+    deleteAllNotifications,
     markAllRead,
     type AppNotification
-} from "@/features/notification/api/notificationsApi.ts";
+} from "@/features/notification/api/notificationsApi";
 import toast from "react-hot-toast";
 
 interface UseNotificationsProps {
@@ -29,7 +30,9 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [backgroundLoading, setBackgroundLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
+    const [isProcessingAll, setIsProcessingAll] = useState<boolean>(false);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -147,6 +150,13 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                         setUnreadCount(data.unreadCount ?? 0);
                         break;
 
+                    case "ALL_NOTIFICATIONS_DELETED":
+                        setNotifications([]);
+                        setUnreadCount(0);
+                        setTotalElements(0);
+                        setTotalPages(0);
+                        break;
+
                     case "UNREAD_COUNT_UPDATE":
                         setUnreadCount(data.unreadCount ?? 0);
                         break;
@@ -176,6 +186,25 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const toggleDropdown = () => {
         if (!isDropdownOpen) void handleMarkAllRead();
         setIsDropdownOpen((prev) => !prev);
+    };
+
+    const handleDeleteAllNotifications = async () => {
+        if (notifications.length === 0 || isProcessingAll) return;
+        setIsProcessingAll(true);
+
+        setNotifications([]);
+        setUnreadCount(0);
+        setTotalElements(0);
+        setTotalPages(0);
+
+        try {
+            await deleteAllNotifications();
+        } catch {
+            toast.error("No se pudieron eliminar todas las notificaciones");
+            void handleRetry();
+        } finally {
+            setIsProcessingAll(false);
+        }
     };
 
     const handleAction = async (notif: AppNotification, action: "ACCEPT" | "REJECT" | "DELETE") => {
@@ -244,11 +273,14 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         loading,
         isBackgroundLoading,
         error,
+        isProcessing,
+        isProcessingAll,
         isDropdownOpen,
         dropdownRef,
         toggleDropdown,
         forceLoading,
         handleAction,
+        handleDeleteAllNotifications,
         retry: handleRetry
     } as const;
 }

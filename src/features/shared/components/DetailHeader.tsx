@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { UI_VARIANTS_MAP, type UIVariant } from "@/features/shared/utils/styleConfig.ts";
+import { UI_VARIANTS_MAP, type UIVariant } from "@/features/shared/utils/styleConfig";
 
 interface DetailRiskHeaderProps {
     title: string;

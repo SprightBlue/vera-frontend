@@ -1,4 +1,4 @@
-import { type RiskLevel } from '@/features/alerts/api/alertsApi.ts';
+import { type RiskLevel } from '@/features/alerts/api/alertsApi';
 import { type ToggleOption } from '@/features/shared/components/FilterToggleGroup';
 import { type UIVariant } from '@/features/shared/utils/styleConfig';
 

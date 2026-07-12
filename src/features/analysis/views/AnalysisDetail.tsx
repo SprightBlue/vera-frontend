@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/presentation/context/AuthContext";
-import Sidebar from "@/features/shared/components/Sidebar.tsx";
-import Header from "@/features/shared/components/Header.tsx";
+import Sidebar from "@/features/shared/components/Sidebar";
+import Header from "@/features/shared/components/Header";
 import { useAnalysisDetail } from "@/features/analysis/hooks/useAnalysisDetail";
 import { getRiskVariant, RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
 import { type RiskLevel } from "@/features/alerts/api/alertsApi";
@@ -14,7 +14,7 @@ import { DetailHeader } from "@/features/shared/components/DetailHeader";
 import { DetailMetaRow } from "@/features/shared/components/DetailMetaRow";
 import { DetailContentBox } from "@/features/shared/components/DetailContentBox";
 import { ActionButton } from "@/features/shared/components/ActionButton";
-import { ListButton } from "@/features/shared/components/ListButton.tsx";
+import { ListButton } from "@/features/shared/components/ListButton";
 
 export function AnalysisDetail() {
     const { id } = useParams<{ id: string }>();
@@ -28,12 +28,6 @@ export function AnalysisDetail() {
     const variant = getRiskVariant(riskLevel);
     const percentage = detail?.riskPercentage ?? 0;
     const labelES = riskLevel ? RISK_LABELS_ES[riskLevel] : 'General';
-
-    const riskSubtitle = variant === 'danger'
-        ? 'Se detectó un peligro inminente bajo indicadores críticos de fraude. Te recomendamos de forma tajante cortar comunicación y resguardar tus credenciales.'
-        : variant === 'warning'
-            ? 'Se identificaron patrones irregulares o sospechosos en la estructura del mensaje. Procedé con precaución.'
-            : 'El contenido cumple con los parámetros básicos de seguridad analizados.';
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
@@ -58,7 +52,6 @@ export function AnalysisDetail() {
                                     riskLevel={labelES}
                                     percentage={percentage}
                                     variant={variant}
-                                    subtitle={riskSubtitle}
                                     actions={
                                         <ActionButton
                                             variant="danger"

@@ -1,10 +1,10 @@
 import { useState, type ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/presentation/context/AuthContext.tsx';
+import { useAuth } from '@/presentation/context/AuthContext';
 import Sidebar from '@/features/shared/components/Sidebar';
 import Header from '@/features/shared/components/Header';
 import { useAlertsList } from '@/features/alerts/hooks/useAlertsList';
-import { type RiskLevel } from '@/features/alerts/api/alertsApi.ts';
+import { type RiskLevel } from '@/features/alerts/api/alertsApi';
 
 import {
   getRiskVariant,
@@ -122,7 +122,7 @@ export function AlertsList() {
                           })}
                         </div>
                     ) : (
-                        <EmptyScreen label="NO SE ENCONTRARON ALERTAS REGISTRADAS" />
+                        <EmptyScreen label="NO SE ENCONTRARON ALERTAS DISPONIBLES" />
                     )}
                   </div>
               )}

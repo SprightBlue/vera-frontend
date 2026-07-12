@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import logoVera from "@/assets/Isologo_Vera.png";
 import logoVeraIcon from "@/assets/Isotipo_Vera.png";
-import { useAuth } from "@/presentation/context/AuthContext.tsx";
+import { useAuth } from "@/presentation/context/AuthContext";
 import { SidebarLink, type NavItem } from "@/features/shared/components/SidebarLink";
 
 export function Sidebar() {

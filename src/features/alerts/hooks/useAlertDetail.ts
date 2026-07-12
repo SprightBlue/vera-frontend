@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { alertsApi, type AlertsDetailResponse } from '@/features/alerts/api/alertsApi.ts';
+import { alertsApi, type AlertsDetailResponse } from '@/features/alerts/api/alertsApi';
 
 export function useAlertDetail(alertId?: string) {
     const [detail, setDetail] = useState<AlertsDetailResponse | null>(null);

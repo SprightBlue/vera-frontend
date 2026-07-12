@@ -3,10 +3,10 @@ import { useAuth } from "@/presentation/context/AuthContext";
 
 import Login from "@/presentation/pages/Login";
 import Register from "@/presentation/pages/Register";
-import { Dashboard } from "@/features/dashboard/views/Dashboard.tsx";
+import { Dashboard } from "@/features/dashboard/views/Dashboard";
 import Settings from "@/presentation/pages/settings/Settings";
-import { AlertsList } from "@/features/alerts/views/AlertsList.tsx";
-import AnalysisPage from "@/features/analysis/views/AnalysisPage";
+import { AlertsList } from "@/features/alerts/views/AlertsList";
+import { AnalysisView } from "@/features/analysis/views/AnalysisView.tsx";
 import Persons from "@/presentation/pages/persons/Persons";
 import PersonDetail from "@/presentation/pages/persons/PersonDetail";
 import PersonConfiguration from "@/presentation/pages/persons/PersonConfiguration";
@@ -19,15 +19,14 @@ import Incidents from "@/presentation/pages/incidents/IncidentsPage";
 import VerifyEmail from "@/presentation/pages/VerifyEmail";
 import TermsAndConditions from "@/presentation/pages/TermsAndConditions";
 import ChatPage from "@/features/chats/view/ChatPage";
-import { AiCenterView } from "@/features/shared/views/AiCenterView.tsx";
-import { ListCenterView } from "@/features/shared/views/ListCenterView.tsx";
+import { AiCenterView } from "@/features/shared/views/AiCenterView";
+import { HistoryCenterView } from "@/features/shared/views/HistoryCenterView";
 import AcceptInvitePage from "@/presentation/pages/invite/AcceptInvitePage";
 import MyCarers from "@/presentation/pages/persons/My-Carers";
 import TrainingPage from "@/features/training/views/TrainingPage";
 import { AnalysisList } from "@/features/analysis/views/AnalysisList";
-import { AnalysisDetail } from "@/features/analysis/views/AnalysisDetail.tsx";
-
-import { LocationProvider } from "@/features/location/hooks/LocationContext.tsx";
+import { AnalysisDetail } from "@/features/analysis/views/AnalysisDetail";
+import { LocationProvider } from "@/features/location/hooks/LocationContext";
 
 function PrivateRoute() {
     const { isAuthenticated, isLoading } = useAuth();
@@ -74,7 +73,7 @@ function App() {
                         {/* Rutas Compartidas */}
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/ai-center" element={<AiCenterView />} />
-                        <Route path="/analysis" element={<AnalysisPage />} />
+                        <Route path="/analysis" element={<AnalysisView />} />
                         <Route path="/chat" element={<ChatPage />} />
                         <Route path="/persons" element={<Persons />} />
                         <Route path="/persons/:id" element={<PersonDetail />} />
@@ -91,7 +90,7 @@ function App() {
                         <Route element={<RoleRoute allowedRoles={['CARER']} />}>
                             <Route path="/alerts" element={<AlertsList />} />
                             <Route path="/alerts/:alertId" element={<AlertDetail />} />
-                            <Route path="/monitoring-center" element={<ListCenterView />} />
+                            <Route path="/monitoring-center" element={<HistoryCenterView />} />
                         </Route>
 
                         {/* Filtro Exclusivo: PROTECTED ONLY */}

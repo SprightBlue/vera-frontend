@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { analysisApi, type AnalysisDetailResponse } from '@/features/analysis/api/analysisApi.ts';
+import { analysisApi, type AnalysisDetailResponse } from '@/features/analysis/api/analysisApi';
 
 export function useAnalysisDetail(analysisId?: string) {
     const [detail, setDetail] = useState<AnalysisDetailResponse | null>(null);

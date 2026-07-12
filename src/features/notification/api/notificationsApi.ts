@@ -48,3 +48,7 @@ export async function rejectInvitation(id: string | number): Promise<void> {
 export async function deleteNotification(id: string): Promise<void> {
     await apiClient.delete(`/api/v1/notifications/${id}`);
 }
+
+export async function deleteAllNotifications(): Promise<void> {
+    await apiClient.delete('/api/v1/notifications/delete-all');
+}

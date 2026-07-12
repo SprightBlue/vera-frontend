@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi.ts';
+import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi';
 
 interface UseAlertsProps extends Omit<AlertFilters, 'search'> {
     searchTerm: string;

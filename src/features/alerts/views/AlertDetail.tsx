@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/presentation/context/AuthContext";
-import Sidebar from "@/features/shared/components/Sidebar.tsx";
-import Header from "@/features/shared/components/Header.tsx";
+import Sidebar from "@/features/shared/components/Sidebar";
+import Header from "@/features/shared/components/Header";
 import { useAlertDetail } from "@/features/alerts/hooks/useAlertDetail";
 import { getRiskVariant, RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
 import { type RiskLevel } from "@/features/alerts/api/alertsApi";
@@ -14,7 +14,7 @@ import { DetailHeader } from "@/features/shared/components/DetailHeader";
 import { DetailMetaRow } from "@/features/shared/components/DetailMetaRow";
 import { DetailContentBox } from "@/features/shared/components/DetailContentBox";
 import { ActionButton } from "@/features/shared/components/ActionButton";
-import { ListButton } from "@/features/shared/components/ListButton.tsx";
+import { ListButton } from "@/features/shared/components/ListButton";
 
 export function AlertDetail() {
     const { alertId } = useParams<{ alertId: string }>();
@@ -55,8 +55,9 @@ export function AlertDetail() {
                                     actions={
                                         <>
                                             <ActionButton
-                                                variant="warning"
+                                                variant={detail.isResolved ? "success" : "warning"}
                                                 onClick={async () => {
+                                                    if (detail.isResolved) return;
                                                     setActionLoading(true);
                                                     await markAsResolved();
                                                     setActionLoading(false);
@@ -64,7 +65,6 @@ export function AlertDetail() {
                                                 isLoading={actionLoading}
                                                 disabled={detail.isResolved || deleteLoading}
                                                 icon={detail.isResolved ? CheckCircle : AlertCircle}
-                                                className={detail.isResolved ? "bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-not-allowed" : ""}
                                             >
                                                 {detail.isResolved ? "Resuelta" : "Pendiente"}
                                             </ActionButton>

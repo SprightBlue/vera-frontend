@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useNotifications } from "@/features/notification/hooks/useNotifications.ts";
-import { NotificationDropdown } from "@/features/notification/components/NotificationDropdown.tsx";
-import { useAuth } from "@/presentation/context/AuthContext.tsx";
-import { PersonAvatar } from "@/features/shared/components/PersonAvatar.tsx";
+import { useNotifications } from "@/features/notification/hooks/useNotifications";
+import { NotificationDropdown } from "@/features/notification/components/NotificationDropdown";
+import { useAuth } from "@/presentation/context/AuthContext";
+import { PersonAvatar } from "@/features/shared/components/PersonAvatar";
 
 interface HeaderProps {
     userName?: string;
@@ -40,7 +40,9 @@ export function Header({ userName, userRole, title }: HeaderProps) {
         dropdownRef,
         toggleDropdown,
         forceLoading,
-        handleAction
+        handleAction,
+        handleDeleteAllNotifications,
+        isProcessingAll
     } = useNotifications({
         userEmail: user?.email,
         page: notificationPage
@@ -73,6 +75,7 @@ export function Header({ userName, userRole, title }: HeaderProps) {
                     isRinging={isRinging}
                     loading={loading}
                     isBackgroundLoading={isBackgroundLoading}
+                    isProcessingAll={isProcessingAll}
                     error={error}
                     retry={retry}
                     isDropdownOpen={isDropdownOpen}
@@ -80,6 +83,7 @@ export function Header({ userName, userRole, title }: HeaderProps) {
                     toggleDropdown={toggleDropdown}
                     forceLoading={forceLoading}
                     handleAction={handleAction}
+                    onDeleteAllNotifications={handleDeleteAllNotifications}
                     onSelect={(n) => {
                         if (n.type === 'ALERT') {
                             const p = n.payload as { alertId?: string } | null;

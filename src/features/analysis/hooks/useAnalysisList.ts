@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { analysisApi, type AnalysisResponse, type AnalysisFilters } from '@/features/analysis/api/analysisApi.ts';
+import { analysisApi, type AnalysisResponse, type AnalysisFilters } from '@/features/analysis/api/analysisApi';
 
 interface UseAnalysisListProps extends Omit<AnalysisFilters, 'search'> {
     searchTerm: string;

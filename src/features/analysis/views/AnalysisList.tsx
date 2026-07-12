@@ -1,10 +1,10 @@
 import { useState, type ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/presentation/context/AuthContext.tsx';
-import Sidebar from '@/features/shared/components/Sidebar.tsx';
-import Header from '@/features/shared/components/Header.tsx';
-import { useAnalysisList } from '@/features/analysis/hooks/useAnalysisList.ts';
-import { type RiskLevel } from '@/features/analysis/api/analysisApi.ts';
+import { useAuth } from '@/presentation/context/AuthContext';
+import Sidebar from '@/features/shared/components/Sidebar';
+import Header from '@/features/shared/components/Header';
+import { useAnalysisList } from '@/features/analysis/hooks/useAnalysisList';
+import { type RiskLevel } from '@/features/analysis/api/analysisApi';
 
 import { getRiskVariant, RISK_LABELS_ES, RISK_FILTER_OPTIONS } from '@/features/shared/utils/typeConfig';
 
@@ -115,7 +115,7 @@ export function AnalysisList() {
                                         })}
                                     </div>
                                 ) : (
-                                    <EmptyScreen label="NO SE ENCONTRARON ANÁLISIS EN EL HISTORIAL" />
+                                    <EmptyScreen label="NO SE ENCONTRARON ANÁLISIS DISPONIBLES" />
                                 )}
                             </div>
                         )}
