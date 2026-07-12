@@ -1,7 +1,8 @@
 import type { RefObject } from "react";
-import { type AppNotification } from "@/features/notification/api/notificationsApi.ts";
+import { type AppNotification } from "@/features/notification/api/notificationsApi";
 import { NotificationItem } from "@/features/notification/components/NotificationItem";
 import { NotificationBell } from "@/features/notification/components/NotificationBell";
+import { DeleteButton } from "@/features/shared/components/DeleteButton";
 
 import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
 import { RetryScreen } from "@/features/shared/components/RetryScreen";
@@ -18,6 +19,7 @@ interface DropdownProps {
     isRinging: boolean;
     loading: boolean;
     isBackgroundLoading?: boolean;
+    isProcessingAll?: boolean;
     error: string | null;
     retry: () => void | Promise<void>;
     isDropdownOpen: boolean;
@@ -25,6 +27,7 @@ interface DropdownProps {
     toggleDropdown: () => void;
     forceLoading: () => void;
     handleAction: (notif: AppNotification, action: 'ACCEPT' | 'REJECT' | 'DELETE') => void | Promise<void>;
+    onDeleteAllNotifications: () => void | Promise<void>;
     onSelect: (notif: AppNotification) => void;
 }
 
@@ -38,6 +41,7 @@ export function NotificationDropdown({
                                          isRinging,
                                          loading,
                                          isBackgroundLoading = false,
+                                         isProcessingAll = false,
                                          error,
                                          retry,
                                          isDropdownOpen,
@@ -45,6 +49,7 @@ export function NotificationDropdown({
                                          toggleDropdown,
                                          forceLoading,
                                          handleAction,
+                                         onDeleteAllNotifications,
                                          onSelect
                                      }: DropdownProps) {
     return (
@@ -74,11 +79,23 @@ export function NotificationDropdown({
                     <span className="text-[clamp(10px,0.58vw,11px)] font-display font-black tracking-wider text-slate-400 uppercase">
                         Panel de Notificaciones
                     </span>
-                    {unreadCount > 0 && (
-                        <span className="px-2 py-0.5 rounded-md text-[9px] font-display font-black uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-400 animate-pulse">
-                            {unreadCount} Nuevas
-                        </span>
-                    )}
+
+                    <div className="flex items-center gap-2.5">
+                        {unreadCount > 0 && (
+                            <span className="px-2 py-0.5 rounded-md text-[9px] font-display font-black uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-400 animate-pulse">
+                                {unreadCount} Nuevas
+                            </span>
+                        )}
+
+                        {notifications.length > 0 && !loading && !error && (
+                            <DeleteButton
+                                onClick={onDeleteAllNotifications}
+                                isProcessing={isProcessingAll}
+                                title="Eliminar todas las notificaciones"
+                                className="border-[#161f37] bg-[#090c16]/60 text-slate-400"
+                            />
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex-1 p-[clamp(1rem,1.2vw,1.4rem)] min-h-[clamp(12rem,16vw,18rem)] flex flex-col justify-center relative z-10">

@@ -6,14 +6,21 @@ import {
     acceptInvitation,
     rejectInvitation,
     deleteNotification,
+    deleteAllNotifications,
     markAllRead,
     type AppNotification
-} from "@/features/notification/api/notificationsApi.ts";
+} from "@/features/notification/api/notificationsApi";
 import toast from "react-hot-toast";
 
 interface UseNotificationsProps {
     page: number;
     userEmail: string | undefined;
+}
+
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
 }
 
 export function useNotifications({ page, userEmail }: UseNotificationsProps) {
@@ -29,7 +36,9 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [backgroundLoading, setBackgroundLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
+    const [isProcessingAll, setIsProcessingAll] = useState<boolean>(false);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -56,6 +65,10 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
             setBackgroundLoading(true);
         }
     }, []);
+
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -87,9 +100,15 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 setPageNumber(data.pageNumber ?? 0);
                 setIsLastPage(data.isLast ?? true);
                 setError(null);
-            } catch {
+            } catch (requestError: unknown) {
                 if (!isMounted) return;
-                setError("No se pudo establecer conexión con el módulo de notificaciones.");
+
+                if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                    setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE NOTIFICACIONES. POR FAVOR, REINTENTÁ EL PROCESO.");
+                }
+
                 setNotifications([]);
             } finally {
                 if (isMounted) {
@@ -147,6 +166,13 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                         setUnreadCount(data.unreadCount ?? 0);
                         break;
 
+                    case "ALL_NOTIFICATIONS_DELETED":
+                        setNotifications([]);
+                        setUnreadCount(0);
+                        setTotalElements(0);
+                        setTotalPages(0);
+                        break;
+
                     case "UNREAD_COUNT_UPDATE":
                         setUnreadCount(data.unreadCount ?? 0);
                         break;
@@ -169,13 +195,32 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         try {
             await markAllRead();
         } catch {
-            toast.error("No se pudieron marcar como leídas");
+            toast.error("ERROR DE PROTOCOLO: NO SE PUDO SINCRONIZAR EL ESTADO DE LECTURA EN EL SERVIDOR.");
         }
     };
 
     const toggleDropdown = () => {
         if (!isDropdownOpen) void handleMarkAllRead();
         setIsDropdownOpen((prev) => !prev);
+    };
+
+    const handleDeleteAllNotifications = async () => {
+        if (notifications.length === 0 || isProcessingAll) return;
+        setIsProcessingAll(true);
+
+        setNotifications([]);
+        setUnreadCount(0);
+        setTotalElements(0);
+        setTotalPages(0);
+
+        try {
+            await deleteAllNotifications();
+        } catch {
+            toast.error("ERROR DE SISTEMA: FALLÓ EL VACIADO DEL HISTORIAL DE NOTIFICACIONES.");
+            void handleRetry();
+        } finally {
+            setIsProcessingAll(false);
+        }
     };
 
     const handleAction = async (notif: AppNotification, action: "ACCEPT" | "REJECT" | "DELETE") => {
@@ -192,7 +237,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                     : null;
 
                 if (!invitationId) {
-                    toast.error("Datos de invitación corruptos o faltantes");
+                    toast.error("ERROR DE DATOS: REGISTRO DE INVITACIÓN CORRUPTO O INCOMPLETO.");
                     return;
                 }
 
@@ -206,8 +251,12 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                     )
                 );
             }
-        } catch {
-            toast.error("No se pudo ejecutar la acción solicitada");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                toast.error("ACCESO DENEGADO: NO CONTÁS CON LOS PERMISOS PARA REQUERIR ESTA MUTACIÓN.");
+            } else {
+                toast.error("ERROR DE TRANSMISIÓN: NO SE PUDO EJECUTAR LA ACCIÓN SOBRE LA NOTIFICACIÓN.");
+            }
         } finally {
             setIsProcessing(false);
         }
@@ -223,8 +272,12 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
             setTotalElements(data.totalElements ?? 0);
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.isLast ?? true);
-        } catch {
-            setError("No se pudo establecer conexión con el módulo de notificaciones.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE NOTIFICACIONES. POR FAVOR, REINTENTÁ EL PROCESO.");
+            }
         } finally {
             setLoading(false);
             setBackgroundLoading(false);
@@ -244,11 +297,14 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         loading,
         isBackgroundLoading,
         error,
+        isProcessing,
+        isProcessingAll,
         isDropdownOpen,
         dropdownRef,
         toggleDropdown,
         forceLoading,
         handleAction,
+        handleDeleteAllNotifications,
         retry: handleRetry
     } as const;
 }

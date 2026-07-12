@@ -1,4 +1,4 @@
-import { UI_VARIANTS_MAP, type UIVariant } from "@/features/shared/utils/styleConfig.ts";
+import { UI_VARIANTS_MAP, type UIVariant } from "@/features/shared/utils/styleConfig";
 
 interface DetailContentBoxProps {
     title: string;

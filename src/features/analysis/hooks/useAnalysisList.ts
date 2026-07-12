@@ -1,8 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { analysisApi, type AnalysisResponse, type AnalysisFilters } from '@/features/analysis/api/analysisApi.ts';
+import { analysisApi, type AnalysisResponse, type AnalysisFilters } from '@/features/analysis/api/analysisApi';
 
 interface UseAnalysisListProps extends Omit<AnalysisFilters, 'search'> {
     searchTerm: string;
+}
+
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
 }
 
 export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisListProps) {
@@ -39,6 +45,10 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
         }
     }, []);
 
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
+
     const { page, riskLevel } = otherFilters;
 
     useEffect(() => {
@@ -68,9 +78,15 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
                 setPageNumber(data.pageNumber ?? 0);
                 setIsLastPage(data.last ?? true);
                 setError(null);
-            } catch {
+            } catch (requestError: unknown) {
                 if (!isMounted) return;
-                setError('No se pudo establecer conexión con el módulo de análisis.');
+
+                if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                    setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE ANÁLISIS. POR FAVOR, REINTENTÁ EL PROCESO.");
+                }
+
                 setAnalyses([]);
                 setTotalPages(0);
                 setTotalElements(0);
@@ -104,8 +120,12 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
             setTotalElements(data.totalElements ?? 0);
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.last ?? true);
-        } catch {
-            setError('No se pudo establecer conexión con el módulo de análisis.');
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE ANÁLISIS. POR FAVOR, REINTENTÁ EL PROCESO.");
+            }
         } finally {
             setLoading(false);
             setBackgroundLoading(false);

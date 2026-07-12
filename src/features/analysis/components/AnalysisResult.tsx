@@ -1,37 +1,42 @@
-import {
-    FileText,
-    Clock,
-    Globe,
-    MessageSquareShare,
-    Loader2,
-    Tag
-} from 'lucide-react';
+import { MessageSquareShare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { AnalysisDetailResponse } from '@/features/analysis/api/analysisApi.ts';
-import { getRiskConfig } from '@/features/analysis/utils/riskConfig';
+import type { AnalysisDetailResponse } from '@/features/analysis/api/analysisApi';
+
+import { getRiskVariant, RISK_LABELS_ES } from '@/features/shared/utils/typeConfig';
+import { type RiskLevel } from '@/features/alerts/api/alertsApi';
+
+import { DetailHeader } from '@/features/shared/components/DetailHeader';
+import { DetailMetaRow } from '@/features/shared/components/DetailMetaRow';
+import { DetailContentBox } from '@/features/shared/components/DetailContentBox';
+import { ActionButton } from '@/features/shared/components/ActionButton';
+import { LoadingScreen } from '@/features/shared/components/LoadingScreen';
+import { RetryScreen } from '@/features/shared/components/RetryScreen';
 
 type Props = {
     result: AnalysisDetailResponse | null;
+    loading: boolean;
+    error: string | null;
     isStartingChat: boolean;
     onStartChat: (id: string) => Promise<string | null>;
 };
 
-function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
+export function AnalysisResult({ result, loading, error, isStartingChat, onStartChat }: Props) {
     const navigate = useNavigate();
 
-    if (!result) {
-        return (
-            <div className="w-full flex items-center justify-center text-center select-none py-36 animate-fade-in">
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                    En esta sección se mostrarán los resultados del análisis.
-                </span>
-            </div>
-        );
+    if (loading) {
+        return <LoadingScreen label="ANALIZANDO CONTENIDO MEDIANTE IA..." />;
     }
 
-    const config = getRiskConfig(result.riskLevel);
+    if (error) {
+        return <RetryScreen onRetry={() => window.location.reload()} label="REINTENTAR ANÁLISIS" />;
+    }
+
+    if (!result) return null;
+
+    const riskLevel = (result.riskLevel?.toUpperCase()) as RiskLevel;
+    const uiVariant = getRiskVariant(riskLevel);
+    const labelES = riskLevel ? RISK_LABELS_ES[riskLevel] : 'General';
     const percentage = result.riskPercentage ?? 0;
-    const isHighRisk = result.riskLevel?.toUpperCase() === 'HIGH' || result.riskLevel?.toUpperCase() === 'ALTO';
 
     const handleStartAnalysisChat = async (): Promise<void> => {
         if (!result.id || isStartingChat) return;
@@ -41,126 +46,57 @@ function AnalysisResult({ result, isStartingChat, onStartChat }: Props) {
         }
     };
 
+    const actionButton = uiVariant === 'danger' ? (
+        <ActionButton
+            variant="info"
+            isLoading={isStartingChat}
+            icon={MessageSquareShare}
+            onClick={handleStartAnalysisChat}
+        >
+            Iniciar Chat
+        </ActionButton>
+    ) : undefined;
+
     return (
-        <section className="w-full space-y-[clamp(1rem,1.5vw,2rem)] pb-8 font-sans animate-fade-in">
+        <section className="w-full space-y-[clamp(1rem,1.5vw,1.8rem)] pt-[clamp(1.5rem,2vw,2.5rem)] pb-8 animate-fade-in relative">
 
-            <div className={`rounded-2xl border-y border-r border-[#182033] bg-linear-to-b from-[#0a0f24] to-[#070B1A] p-[clamp(0.9rem,1.3vw,1.5rem)] shadow-xl relative overflow-hidden ${config.borderColor} border-l-4`}>
-                <div className={`absolute top-0 right-0 w-[clamp(180px,18vw,320px)] h-[clamp(180px,18vw,320px)] rounded-full filter blur-[80px] opacity-10 pointer-events-none ${
-                    isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
-                }`} />
+            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
 
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10">
-                    <div className="flex items-start gap-3.5 min-w-0 flex-1">
-                        <div className="space-y-1 min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="text-[clamp(0.95rem,1.1vw,1.2rem)] font-bold tracking-tight text-white truncate max-w-sm sm:max-w-md select-text">
-                                    {result.title || 'Contenido Analizado'}
-                                </h3>
-                                <span className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider border shrink-0 ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
-                                    Riesgo {config.label} {percentage}%
-                                </span>
-                            </div>
+            <DetailHeader
+                title={result.title || 'Contenido Analizado'}
+                riskLevel={labelES}
+                percentage={percentage}
+                variant={uiVariant}
+                actions={actionButton}
+            />
 
-                            <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium select-text max-w-380">
-                                {isHighRisk
-                                    ? 'Se detectó un peligro inminente bajo indicadores críticos de fraude. Te recomendamos de forma tajante cortar comunicación y resguardar tus credenciales.'
-                                    : percentage >= 40
-                                        ? 'Se identificaron patrones irregulares o sospechosos en la estructura del mensaje. Procedé con precaución.'
-                                        : 'El contenido cumple con los parámetros básicos de seguridad analizados.'}
-                            </p>
-                        </div>
-                    </div>
-
-                    {isHighRisk && (
-                        <button
-                            onClick={handleStartAnalysisChat}
-                            disabled={isStartingChat}
-                            className="w-full md:w-36 h-9 shrink-0 flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800/10 disabled:text-blue-400/30 text-white font-bold text-[clamp(0.72rem,0.78vw,0.82rem)] tracking-tight transition-all duration-150 shadow-lg shadow-blue-600/10 active:scale-[0.97] cursor-pointer group/btn"
-                        >
-                            {isStartingChat ? (
-                                <>
-                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                    <span>Conectando</span>
-                                </>
-                            ) : (
-                                <>
-                                    <MessageSquareShare className="h-3.5 w-3.5 transition-transform group-hover/btn:scale-105" />
-                                    <span>Iniciar Chat</span>
-                                </>
-                            )}
-                        </button>
-                    )}
-                </div>
-
-                <div className="w-full h-1 bg-slate-800/40 rounded-full mt-4 overflow-hidden">
-                    <div
-                        className={`h-full rounded-full transition-all duration-1000 ${
-                            isHighRisk ? 'bg-red-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-green-500'
-                        }`}
-                        style={{ width: `${percentage}%` }}
-                    />
-                </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-[#070B1A]/40 border border-[#182033]/60 rounded-xl px-4 py-2.5 text-[clamp(0.7rem,0.75vw,0.8rem)] text-slate-400 select-none">
-                <div className="flex items-center gap-1.5">
-                    <Globe size={12} className="text-slate-500" />
-                    <span>Dónde: <strong className="text-slate-200 font-semibold select-text">{result.source || 'No especificado'}</strong></span>
-                </div>
-                <div className="w-1 h-1 bg-slate-700 rounded-full shrink-0" />
-                <div className="flex items-center gap-1.5">
-                    <Clock size={12} className="text-slate-500" />
-                    <span>Cuándo: <strong className="text-slate-200 font-semibold select-text">{result.createdAt}</strong></span>
-                </div>
-                <div className="w-1 h-1 bg-slate-700 rounded-full shrink-0" />
-                <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                    <Tag size={12} className="text-slate-500 shrink-0" />
-                    <span className="truncate">
-                        Categoría: <strong className="text-blue-400 font-bold ml-0.5 select-text">{result.riskType || 'General'}</strong>
-                    </span>
-                </div>
-            </div>
+            <DetailMetaRow
+                source={result.source || 'NO ESPECIFICADO'}
+                createdAt={result.createdAt}
+                riskType={result.riskType || 'GENERAL'}
+            />
 
             <div className="w-full space-y-[clamp(1rem,1.2vw,1.5rem)]">
-
-                <div className="bg-[#070B1A]/40 border border-[#182033]/60 rounded-2xl p-[clamp(0.9rem,1.3vw,1.5rem)] space-y-2">
-                    <div className="flex items-center gap-2 text-slate-400 font-bold text-[9px] uppercase tracking-widest select-none">
-                        <FileText className="h-3.5 w-3.5 text-blue-400" />
-                        <h4>Resumen analítico del Contenido</h4>
-                    </div>
-                    <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-400 leading-relaxed font-medium select-text">
-                        {result.contentSummary || 'No se pudo generar un resumen conceptual.'}
-                    </p>
-                </div>
+                <DetailContentBox
+                    title="RESUMEN ANALÍTICO DEL CONTENIDO"
+                    content={result.contentSummary || 'No se pudo generar un resumen conceptual por parte del motor de IA.'}
+                    variant="info"
+                />
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(1rem,1.2vw,1.5rem)] items-stretch">
+                    <DetailContentBox
+                        title="PATRONES SOSPECHOSOS DETECTADOS"
+                        content={result.suspiciousPatterns || 'Sin patrones de riesgo explícitos identificados en el cuerpo del mensaje.'}
+                        variant="danger"
+                    />
 
-                    <div className="space-y-2 flex flex-col">
-                        <h4 className="text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 text-red-400/90 select-none">
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> Patrones Sospechosos Detectados
-                        </h4>
-                        <div className="bg-[#070B1A]/20 border-l-2 border-red-500/50 p-[clamp(0.9rem,1.3vw,1.5rem)] flex-1">
-                            <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-300 leading-relaxed font-medium whitespace-pre-line select-text">
-                                {result.suspiciousPatterns || 'Sin patrones de riesgo explícitos identificados.'}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2 flex flex-col">
-                        <h4 className="text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 text-emerald-400/90 select-none">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Recomendación Sugerida
-                        </h4>
-                        <div className="bg-[#070B1A]/20 border-l-2 border-emerald-500/50 p-[clamp(0.9rem,1.3vw,1.5rem)] flex-1">
-                            <p className="text-[clamp(0.75rem,0.8vw,0.86rem)] text-slate-300 leading-relaxed font-medium whitespace-pre-line select-text">
-                                {result.recommendation || 'No se requieren acciones complejas.'}
-                            </p>
-                        </div>
-                    </div>
-
+                    <DetailContentBox
+                        title="RECOMENDACIÓN SUGERIDA"
+                        content={result.recommendation || 'No se requieren acciones complejas ni medidas de contingencia adicionales.'}
+                        variant="success"
+                    />
                 </div>
             </div>
         </section>
     );
 }
-
-export default AnalysisResult;

@@ -1,8 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi.ts';
+import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi';
 
 interface UseAlertsProps extends Omit<AlertFilters, 'search'> {
     searchTerm: string;
+}
+
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
 }
 
 export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
@@ -39,6 +45,10 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
         }
     }, []);
 
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
+
     const { page, resolved, riskLevel } = otherFilters;
 
     useEffect(() => {
@@ -69,9 +79,15 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
                 setPageNumber(data.pageNumber ?? 0);
                 setIsLastPage(data.last ?? true);
                 setError(null);
-            } catch {
+            } catch (requestError: unknown) {
                 if (!isMounted) return;
-                setError('No se pudo establecer conexión con el módulo de alertas.');
+
+                if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                    setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE ALERTAS. POR FAVOR, REINTENTÁ EL PROCESO.");
+                }
+
                 setAlerts([]);
                 setTotalPages(0);
                 setTotalElements(0);
@@ -106,8 +122,12 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
             setTotalElements(data.totalElements ?? 0);
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.last ?? true);
-        } catch {
-            setError('No se pudo establecer conexión con el módulo de alertas.');
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE ALERTAS. POR FAVOR, REINTENTÁ EL PROCESO.");
+            }
         } finally {
             setLoading(false);
             setBackgroundLoading(false);

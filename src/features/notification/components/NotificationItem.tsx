@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { type AppNotification } from "@/features/notification/api/notificationsApi.ts";
+import { type AppNotification } from "@/features/notification/api/notificationsApi";
 import { NOTIFICATION_MAP, type NotificationType } from "@/features/shared/utils/typeConfig";
 import { UI_VARIANTS_MAP } from "@/features/shared/utils/styleConfig";
 import { ActionButton } from "@/features/shared/components/ActionButton";
-import { CloseButton } from "@/features/shared/components/CloseButton";
+import { DeleteButton } from "@/features/shared/components/DeleteButton";
 
 interface ItemProps {
     notif: AppNotification;
@@ -33,8 +33,10 @@ export function NotificationItem({ notif, onAction, onSelect }: ItemProps) {
 
             <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-${theme.laserColor || 'blue-500'}/25 to-transparent pointer-events-none z-10`} />
 
-            <CloseButton
+            <DeleteButton
+                className="absolute top-2.5 right-2.5"
                 isProcessing={isDeleting}
+                title="Eliminar notificación"
                 onClick={async (e) => {
                     e.stopPropagation();
                     setIsDeleting(true);
@@ -47,11 +49,11 @@ export function NotificationItem({ notif, onAction, onSelect }: ItemProps) {
             />
 
             <div className="relative z-10 w-full flex flex-col pr-7">
-                <span className="text-[clamp(10px,0.6vw,11px)] font-sans font-bold text-slate-500 tracking-wider select-text uppercase">
+                <span className="text-[clamp(10px,0.58vw,11.5px)] font-display font-bold text-slate-500 leading-none tracking-wider select-text uppercase">
                     {notif.createdAt}
                 </span>
 
-                <h3 className="text-[clamp(13px,0.8vw,14px)] font-display font-black text-white uppercase tracking-wide pt-0.5 select-text line-clamp-1">
+                <h3 className="text-[clamp(13px,0.8vw,14px)] font-display font-black text-white uppercase tracking-wide pt-1.5 select-text line-clamp-1">
                     {notif.title}
                 </h3>
 

@@ -1,9 +1,9 @@
-import Sidebar from "@/features/shared/components/Sidebar.tsx";
-import Header from "@/features/shared/components/Header.tsx";
-import { useAuth } from "@/presentation/context/AuthContext.tsx";
-import { OptionCard } from "@/features/shared/components/OptionCard.tsx";
+import Sidebar from "@/features/shared/components/Sidebar";
+import Header from "@/features/shared/components/Header";
+import { useAuth } from "@/presentation/context/AuthContext";
+import { OptionCard } from "@/features/shared/components/OptionCard";
 
-export function ListCenterView() {
+export function HistoryCenterView() {
     const { user } = useAuth();
 
     return (
