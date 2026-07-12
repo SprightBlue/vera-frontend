@@ -1,10 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { analysisApi, type AnalysisDetailResponse } from '@/features/analysis/api/analysisApi';
 
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
+}
+
 export function useAnalysisDetail(analysisId?: string) {
     const [detail, setDetail] = useState<AnalysisDetailResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(!!analysisId);
     const [error, setError] = useState<string | null>(null);
+
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
 
     useEffect(() => {
         if (!analysisId) return;
@@ -19,10 +29,15 @@ export function useAnalysisDetail(analysisId?: string) {
                 if (!isMounted) return;
                 setDetail(data);
                 setError(null);
-            } catch {
+            } catch (requestError: unknown) {
                 if (!isMounted) return;
                 setDetail(null);
-                setError("No se pudo establecer conexión con el servidor.");
+
+                if (isAxiosError(requestError) && requestError.response?.status === 404) {
+                    setError("ERROR DE SISTEMA: NO SE ENCONTRÓ EL REGISTRO DE ANÁLISIS SOLICITADO EN LA BASE DE DATOS LOCAL.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MOTOR DE SEGURIDAD. POR FAVOR, REINTENTÁ EL PROCESO.");
+                }
             } finally {
                 if (isMounted) setLoading(false);
             }
@@ -43,8 +58,12 @@ export function useAnalysisDetail(analysisId?: string) {
         try {
             const data = await analysisApi.getAnalysisDetail(analysisId);
             setDetail(data);
-        } catch {
-            setError("No se pudo establecer conexión con el servidor.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 404) {
+                setError("ERROR DE SISTEMA: NO SE ENCONTRÓ EL REGISTRO DE ANÁLISIS SOLICITADO EN LA BASE DE DATOS LOCAL.");
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MOTOR DE SEGURIDAD. POR FAVOR, REINTENTÁ EL PROCESO.");
+            }
         } finally {
             setLoading(false);
         }
@@ -57,8 +76,12 @@ export function useAnalysisDetail(analysisId?: string) {
             setDetail(null);
             setError(null);
             return true;
-        } catch {
-            setError("No se pudo completar la eliminación del registro.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: NO CONTÁS CON LOS PERMISOS REQUERIDOS PARA ELIMINAR ESTE REGISTRO.");
+            } else {
+                setError("ERROR DE PROTOCOLO: NO SE PUDO COMPLETAR LA ELIMINACIÓN DEL REGISTRO EN EL SERVIDOR CENTRAL.");
+            }
             return false;
         }
     };

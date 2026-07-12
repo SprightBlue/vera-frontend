@@ -17,6 +17,12 @@ interface UseNotificationsProps {
     userEmail: string | undefined;
 }
 
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
+}
+
 export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [totalPages, setTotalPages] = useState<number>(0);
@@ -60,6 +66,10 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         }
     }, []);
 
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
+
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -90,9 +100,15 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 setPageNumber(data.pageNumber ?? 0);
                 setIsLastPage(data.isLast ?? true);
                 setError(null);
-            } catch {
+            } catch (requestError: unknown) {
                 if (!isMounted) return;
-                setError("No se pudo establecer conexión con el módulo de notificaciones.");
+
+                if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                    setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE NOTIFICACIONES. POR FAVOR, REINTENTÁ EL PROCESO.");
+                }
+
                 setNotifications([]);
             } finally {
                 if (isMounted) {
@@ -179,7 +195,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         try {
             await markAllRead();
         } catch {
-            toast.error("No se pudieron marcar como leídas");
+            toast.error("ERROR DE PROTOCOLO: NO SE PUDO SINCRONIZAR EL ESTADO DE LECTURA EN EL SERVIDOR.");
         }
     };
 
@@ -200,7 +216,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         try {
             await deleteAllNotifications();
         } catch {
-            toast.error("No se pudieron eliminar todas las notificaciones");
+            toast.error("ERROR DE SISTEMA: FALLÓ EL VACIADO DEL HISTORIAL DE NOTIFICACIONES.");
             void handleRetry();
         } finally {
             setIsProcessingAll(false);
@@ -221,7 +237,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                     : null;
 
                 if (!invitationId) {
-                    toast.error("Datos de invitación corruptos o faltantes");
+                    toast.error("ERROR DE DATOS: REGISTRO DE INVITACIÓN CORRUPTO O INCOMPLETO.");
                     return;
                 }
 
@@ -235,8 +251,12 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                     )
                 );
             }
-        } catch {
-            toast.error("No se pudo ejecutar la acción solicitada");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                toast.error("ACCESO DENEGADO: NO CONTÁS CON LOS PERMISOS PARA REQUERIR ESTA MUTACIÓN.");
+            } else {
+                toast.error("ERROR DE TRANSMISIÓN: NO SE PUDO EJECUTAR LA ACCIÓN SOBRE LA NOTIFICACIÓN.");
+            }
         } finally {
             setIsProcessing(false);
         }
@@ -252,8 +272,12 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
             setTotalElements(data.totalElements ?? 0);
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.isLast ?? true);
-        } catch {
-            setError("No se pudo establecer conexión con el módulo de notificaciones.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MÓDULO DE NOTIFICACIONES. POR FAVOR, REINTENTÁ EL PROCESO.");
+            }
         } finally {
             setLoading(false);
             setBackgroundLoading(false);

@@ -1,10 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { alertsApi, type AlertsDetailResponse } from '@/features/alerts/api/alertsApi';
 
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
+}
+
 export function useAlertDetail(alertId?: string) {
     const [detail, setDetail] = useState<AlertsDetailResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(!!alertId);
     const [error, setError] = useState<string | null>(null);
+
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
 
     useEffect(() => {
         if (!alertId) return;
@@ -19,10 +29,15 @@ export function useAlertDetail(alertId?: string) {
                 if (!isMounted) return;
                 setDetail(data);
                 setError(null);
-            } catch {
+            } catch (requestError: unknown) {
                 if (!isMounted) return;
                 setDetail(null);
-                setError("No se pudo establecer conexión con el servidor.");
+
+                if (isAxiosError(requestError) && requestError.response?.status === 404) {
+                    setError("ERROR DE SISTEMA: NO SE ENCONTRÓ EL REGISTRO DE ALERTA SOLICITADO EN LA BASE DE DATOS LOCAL.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL SERVIDOR CENTRAL.");
+                }
             } finally {
                 if (isMounted) setLoading(false);
             }
@@ -43,8 +58,12 @@ export function useAlertDetail(alertId?: string) {
         try {
             const data = await alertsApi.getAlertDetail(alertId);
             setDetail(data);
-        } catch {
-            setError("No se pudo establecer conexión con el servidor.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 404) {
+                setError("ERROR DE SISTEMA: NO SE ENCONTRÓ EL REGISTRO DE ALERTA SOLICITADO EN LA BASE DE DATOS LOCAL.");
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL SERVIDOR CENTRAL.");
+            }
         } finally {
             setLoading(false);
         }
@@ -58,8 +77,12 @@ export function useAlertDetail(alertId?: string) {
             setDetail(data);
             setError(null);
             return true;
-        } catch {
-            setError("No se pudo procesar la solicitud de actualización.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: NO POSEÉS CREDENCIALES VÁLIDAS PARA MARCAR ESTA ALERTA COMO RESUELTA.");
+            } else {
+                setError("ERROR DE PROTOCOLO: NO SE PUDO PROCESAR LA SOLICITUD DE ACTUALIZACIÓN EN EL NÚCLEO DE SEGURIDAD.");
+            }
             return false;
         }
     };
@@ -71,8 +94,12 @@ export function useAlertDetail(alertId?: string) {
             setDetail(null);
             setError(null);
             return true;
-        } catch {
-            setError("No se pudo completar la eliminación del registro.");
+        } catch (requestError: unknown) {
+            if (isAxiosError(requestError) && requestError.response?.status === 403) {
+                setError("ACCESO DENEGADO: NO CONTÁS CON LOS PERMISOS REQUERIDOS PARA ELIMINAR ESTE REGISTRO.");
+            } else {
+                setError("ERROR DE PROTOCOLO: NO SE PUDO COMPLETAR LA ELIMINACIÓN DEL REGISTRO EN EL SERVIDOR CENTRAL.");
+            }
             return false;
         }
     };

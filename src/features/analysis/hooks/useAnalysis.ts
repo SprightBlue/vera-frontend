@@ -1,6 +1,12 @@
-import {useState, useRef, type ChangeEvent, type SyntheticEvent, type MouseEvent, type RefObject} from 'react';
-import type { AnalysisDetailResponse, AnalyzeRequestDto } from '@/features/analysis/api/analysisApi.ts';
-import { analysisApi } from '@/features/analysis/api/analysisApi.ts';
+import { useState, useRef, type ChangeEvent, type SyntheticEvent, type MouseEvent, type RefObject } from 'react';
+import type { AnalysisDetailResponse, AnalyzeRequestDto } from '@/features/analysis/api/analysisApi';
+import { analysisApi } from '@/features/analysis/api/analysisApi';
+
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
+}
 
 interface UseAnalysisReturn {
     isLoading: boolean;
@@ -19,13 +25,13 @@ interface UseAnalysisReturn {
 }
 
 export function useAnalysis(): UseAnalysisReturn {
-    const [isLoading, setIsLoading] = useState(false);
-    const [isStartingChat, setIsStartingChat] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isStartingChat, setIsStartingChat] = useState<boolean>(false);
     const [result, setResult] = useState<AnalysisDetailResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [hasInteracted, setHasInteracted] = useState(false);
+    const [hasInteracted, setHasInteracted] = useState<boolean>(false);
 
-    const [text, setText] = useState('');
+    const [text, setText] = useState<string>('');
     const [file, setFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,6 +49,10 @@ export function useAnalysis(): UseAnalysisReturn {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
+
     const executeAnalysis = async (request: AnalyzeRequestDto) => {
         setHasInteracted(true);
         setIsLoading(true);
@@ -52,14 +62,22 @@ export function useAnalysis(): UseAnalysisReturn {
         try {
             const response = await analysisApi.analyzeContent(request);
             setResult(response);
+
             setText('');
             removeFile();
         } catch (requestError: unknown) {
-            setError(
-                requestError instanceof Error
-                    ? requestError.message
-                    : 'Error inesperado al analizar el contenido'
-            );
+            if (isAxiosError(requestError) && requestError.response) {
+                const status = requestError.response.status;
+                if (status === 413) {
+                    setError("ERROR DE PROTOCOLO: EL ARCHIVO ADJUNTO EXCEDE EL LÍMITE PERMITIDO O EL FORMATO NO ES COMPATIBLE CON EL ESCANEO.");
+                } else if (status === 422) {
+                    setError("FALLO EN EL MOTOR ANALÍTICO: LA INTELIGENCIA ARTIFICIAL NO PUDO PROCESAR EL CONTENIDO INGRESADO. INTENTÁ CON OTRO TEXTO.");
+                } else {
+                    setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MOTOR DE SEGURIDAD. POR FAVOR, REINTENTÁ EL PROCESO.");
+                }
+            } else {
+                setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL MOTOR DE SEGURIDAD. POR FAVOR, REINTENTÁ EL PROCESO.");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -75,7 +93,7 @@ export function useAnalysis(): UseAnalysisReturn {
                 file: file,
                 source: 'WEB',
             });
-        } catch (submitError) {
+        } catch (submitError: unknown) {
             console.error("Error durante el procesamiento del formulario:", submitError);
         }
     };
@@ -87,11 +105,7 @@ export function useAnalysis(): UseAnalysisReturn {
             return await analysisApi.initializeChatFromAnalysis(analysisId);
         } catch (chatError: unknown) {
             console.error("Error al iniciar el chat del análisis:", chatError);
-            setError(
-                chatError instanceof Error
-                    ? chatError.message
-                    : 'No se pudo iniciar el asistente de consulta para este análisis.'
-            );
+            setError("FALLO EN EL SERVICIO: NO SE PUDO INICIAR EL ASISTENTE DE CONSULTA COMPARTIDO PARA ESTE ANÁLISIS.");
             return null;
         } finally {
             setIsStartingChat(false);
