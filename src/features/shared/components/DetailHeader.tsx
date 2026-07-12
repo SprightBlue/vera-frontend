@@ -37,41 +37,31 @@ export function DetailHeader({
         purple: { bg: 'bg-purple-500', shadow: 'shadow-purple-500/40' }
     };
 
-    const activeBar = barColors[variant];
+    const activeBar = barColors[variant] || barColors.neutral;
 
     return (
-        <div className={`group rounded-r-xl rounded-l-none border-2 border-transparent border-l-4 ${config.borderLeft} 
-        bg-linear-to-b from-[#0a0f24] to-[#060a17] p-[clamp(1.1rem,1.5vw,1.8rem)] shadow-2xl relative overflow-hidden transition-all duration-300
-        ring-1 ring-inset ring-[#161f35]/50 hover:ring-[#222f50]/70`}>
+        <div className={`group rounded-xl border border-[#161f37] border-l-4 ${config.borderLeft} 
+        bg-linear-to-b from-[#080d20] to-[#040714] p-[clamp(1.2rem,2vw,2rem)] shadow-2xl relative overflow-hidden transition-all duration-200
+        ring-1 ring-inset ring-[#161f35]/20 w-full`}>
 
-            <style>{`
-                @keyframes breatheGlow {
-                    0%, 100% { opacity: 0.10; transform: scale(1); filter: blur(80px); }
-                    50% { opacity: 0.25; transform: scale(1.15); filter: blur(65px); }
-                }
-                .animate-breathe {
-                    animation: breatheGlow 5s ease-in-out infinite;
-                }
-            `}</style>
+            <div className={`absolute -top-20 -right-20 w-[clamp(200px,20vw,350px)] h-[clamp(200px,20vw,350px)] rounded-full filter blur-3xl opacity-15 pointer-events-none ${config.glowColor}`} />
 
-            <div className={`absolute -top-12 -right-12 w-[clamp(220px,22vw,380px)] h-[clamp(220px,22vw,380px)] rounded-full pointer-events-none transform origin-top-right animate-breathe ${config.glowColor}`} />
+            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
 
-            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/15 to-transparent pointer-events-none" />
-
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10">
-                <div className="space-y-1.5 min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2.5">
-                        <h3 className="text-[clamp(1.1rem,1.3vw,1.5rem)] font-display font-black tracking-wide text-white select-text">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10 w-full">
+                <div className="space-y-2.5 min-w-0 flex-1 w-full">
+                    <div className="flex flex-wrap items-center gap-3 w-full">
+                        <h3 className="text-[clamp(1.15rem,1.35vw,1.55rem)] font-display font-extrabold uppercase tracking-wide text-white select-text truncate">
                             {title || 'Contenido Analizado'}
                         </h3>
 
-                        <span className={`px-2.5 py-0.5 rounded-sm text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider uppercase border shrink-0 shadow-xs ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
+                        <span className={`px-2.5 h-5 flex items-center rounded-md text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider uppercase border shrink-0 shadow-xs ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
                             Riesgo {riskLevel} {percentage}%
                         </span>
                     </div>
 
                     {subtitle && (
-                        <p className="text-[clamp(0.78rem,0.82vw,0.88rem)] text-slate-400 leading-relaxed font-sans font-medium select-text capitalize tracking-wider">
+                        <p className="text-[clamp(13px,0.8vw,14px)] text-slate-400 leading-relaxed font-sans font-medium select-text tracking-wide">
                             {subtitle}
                         </p>
                     )}
@@ -84,7 +74,7 @@ export function DetailHeader({
                 )}
             </div>
 
-            <div className="w-full h-1.5 bg-slate-950/60 rounded-full mt-5 overflow-hidden ring-1 ring-white/5 relative">
+            <div className="w-full h-1.5 bg-slate-950/60 rounded-full mt-6 overflow-hidden ring-1 ring-white/5 relative">
                 <div
                     className={`h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px] ${activeBar.bg} ${activeBar.shadow}`}
                     style={{ width: `${currentPercent}%` }}

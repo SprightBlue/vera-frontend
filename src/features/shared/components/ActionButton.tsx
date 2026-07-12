@@ -14,8 +14,8 @@ export function ActionButton({
                                  isLoading = false,
                                  icon: Icon,
                                  children,
-                                 className = "",
                                  disabled,
+                                 className = "",
                                  ...props
                              }: DetailButtonProps) {
 
@@ -24,7 +24,7 @@ export function ActionButton({
     return (
         <button
             disabled={disabled || isLoading}
-            className={`inline-flex items-center justify-center gap-2 px-5 h-[clamp(2.2rem,2.6vw,2.8rem)] rounded-lg font-sans font-black uppercase tracking-widest text-[clamp(0.7rem,0.75vw,0.85rem)] transition-all duration-200 active:scale-[0.97] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${variantStyle} ${className}`}
+            className={`inline-flex items-center justify-center gap-2 px-5 w-full sm:w-40 h-9 rounded-lg font-sans font-bold uppercase tracking-wider text-[clamp(0.7rem,0.75vw,0.85rem)] transition-all duration-200 active:scale-[0.97] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${variantStyle} ${className}`}
             {...props}
         >
             {isLoading ? (

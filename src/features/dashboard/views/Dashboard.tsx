@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
 import { useDashboard } from '@/features/dashboard/hooks/useDashboard.ts';
-import Sidebar from '@/presentation/components/Sidebar';
-import Header from '@/presentation/components/Header';
+import Sidebar from '@/features/shared/components/Sidebar.tsx';
+import Header from '@/features/shared/components/Header.tsx';
 import CreateProtectedPersonModal from '@/presentation/components/protected-persons/CreateProtectedPersonModal';
 import { DashboardBanner } from '@/features/dashboard/components/DashboardBanner';
 import { DashboardStats } from '@/features/dashboard/components/DashboardStats';

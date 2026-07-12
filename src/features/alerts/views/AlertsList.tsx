@@ -1,8 +1,8 @@
-import { useState, type ChangeEvent, useEffect, useCallback } from 'react';
+import { useState, type ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/presentation/context/AuthContext.tsx';
-import Sidebar from '@/presentation/components/Sidebar';
-import Header from '@/presentation/components/Header';
+import Sidebar from '@/features/shared/components/Sidebar';
+import Header from '@/features/shared/components/Header';
 import { useAlertsList } from '@/features/alerts/hooks/useAlertsList';
 import { type RiskLevel } from '@/features/alerts/api/alertsApi.ts';
 
@@ -15,11 +15,11 @@ import {
 
 import { LoadingScreen } from '@/features/shared/components/LoadingScreen';
 import { RetryScreen } from '@/features/shared/components/RetryScreen';
+import { EmptyScreen } from '@/features/shared/components/EmptyScreen';
 import { Pagination } from '@/features/shared/components/Pagination';
 import { SearchInput } from '@/features/shared/components/SearchInput';
 import { FilterToggleGroup } from '@/features/shared/components/FilterToggleGroup';
 import { ItemCard } from '@/features/shared/components/ItemCard';
-import { EmptyState } from '@/features/shared/components/EmptyState';
 
 type RiskFilterType = RiskLevel | 'NONE';
 type StatusFilterType = 'PENDING' | 'RESOLVED' | 'NONE';
@@ -30,25 +30,23 @@ export function AlertsList() {
 
   const [page, setPage] = useState<number>(0);
   const [inputValue, setInputValue] = useState<string>('');
-  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
-
   const [activeRisk, setActiveRisk] = useState<RiskFilterType>('NONE');
   const [activeStatus, setActiveStatus] = useState<StatusFilterType>('NONE');
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(inputValue);
-      setPage(0);
-    }, 350);
-
-    return () => clearTimeout(timer);
-  }, [inputValue]);
-
-  const { alerts, totalPages, totalElements, loading, error, retry, forceLoading } = useAlertsList({
+  const {
+    alerts,
+    totalPages,
+    totalElements,
+    loading,
+    isBackgroundLoading,
+    error,
+    retry,
+    forceLoading
+  } = useAlertsList({
     page,
     resolved: activeStatus === 'NONE' ? undefined : activeStatus === 'RESOLVED',
     riskLevel: activeRisk === 'NONE' ? undefined : activeRisk,
-    searchTerm: debouncedSearch
+    searchTerm: inputValue
   });
 
   const handleRiskToggle = useCallback((risk: RiskLevel) => {
@@ -71,17 +69,21 @@ export function AlertsList() {
     setPage(newPage);
   }, []);
 
+  const hasData = alerts.length > 0;
+
   return (
-      <div className="flex h-screen w-screen overflow-hidden bg-[#050816] text-slate-100 font-sans antialiased select-none">
+      <div className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
         <Sidebar />
 
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
           <Header userName={user?.fullName ?? "Usuario"} title="Historial de Alertas" />
 
-          <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2vw,3rem)] py-[clamp(1rem,1.8vw,2.5rem)] flex flex-col justify-between">
-            <div className="mx-auto max-w-480 w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
+          <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between">
+            <div className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.5rem,2.5vw,3rem)] animate-fade-in">
 
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 w-full border-b border-[#182033]/60 pb-5">
+              <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-5 w-full pb-6">
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+
                 <SearchInput value={inputValue} onChange={handleInputChange} placeholder="Buscar por título o resumen..." />
 
                 <div className="flex flex-wrap items-center gap-[clamp(1rem,1.5vw,2rem)]">
@@ -95,9 +97,9 @@ export function AlertsList() {
               ) : error ? (
                   <RetryScreen onRetry={retry} />
               ) : (
-                  <div className="w-full flex-1">
-                    {alerts.length > 0 ? (
-                        <div className="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-4 auto-rows-max animate-fade-in">
+                  <div className={`w-full flex-1 flex flex-col transition-opacity duration-200 ${isBackgroundLoading ? 'opacity-40 pointer-events-none' : ''}`}>
+                    {hasData ? (
+                        <div className="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-4 auto-rows-max">
                           {alerts.map((alert) => {
                             const level: RiskLevel = alert.riskLevel || 'LOW';
                             const riskVariant = getRiskVariant(level);
@@ -120,20 +122,23 @@ export function AlertsList() {
                           })}
                         </div>
                     ) : (
-                        <EmptyState label="¡Todo está perfecto! No hay alertas urgentes en este momento." />
+                        <EmptyScreen label="NO SE ENCONTRARON ALERTAS REGISTRADAS" />
                     )}
                   </div>
               )}
 
-              {!error && (
-                  <Pagination
-                      page={page}
-                      totalPages={totalPages}
-                      totalElements={totalElements}
-                      loading={loading}
-                      onPageChange={handlePageChange}
-                      onForceLoading={forceLoading}
-                  />
+              {!error && hasData && (
+                  <div className="relative w-full mt-auto pt-6">
+                    <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+                    <Pagination
+                        page={page}
+                        totalPages={totalPages}
+                        totalElements={totalElements}
+                        loading={loading || isBackgroundLoading}
+                        onPageChange={handlePageChange}
+                        onForceLoading={forceLoading}
+                    />
+                  </div>
               )}
 
             </div>

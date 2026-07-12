@@ -5,14 +5,14 @@ import { ActionButton } from "@/features/shared/components/ActionButton";
 
 import toast from "react-hot-toast";
 
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "../../../features/shared/components/Sidebar.tsx";
+import Header from "../../../features/shared/components/Header.tsx";
 
 import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons, deleteProtectedPerson } from "../../../infrastructure/api/protected-person-api";
 import CreateProtectedPersonModal from "../../components/protected-persons/CreateProtectedPersonModal";
 import type { ProtectedPerson } from "../../../domain/models/ProtectedPerson";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 
 function Persons() {
 

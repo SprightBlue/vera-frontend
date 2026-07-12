@@ -11,6 +11,9 @@ export function useAnalysisDetail(analysisId?: string) {
         let isMounted = true;
 
         const fetchDetailData = async () => {
+            setLoading(true);
+            setError(null);
+
             try {
                 const data = await analysisApi.getAnalysisDetail(analysisId);
                 if (!isMounted) return;
@@ -19,7 +22,7 @@ export function useAnalysisDetail(analysisId?: string) {
             } catch {
                 if (!isMounted) return;
                 setDetail(null);
-                setError("No se pudo recuperar el informe forense del análisis.");
+                setError("No se pudo establecer conexión con el servidor.");
             } finally {
                 if (isMounted) setLoading(false);
             }
@@ -41,7 +44,7 @@ export function useAnalysisDetail(analysisId?: string) {
             const data = await analysisApi.getAnalysisDetail(analysisId);
             setDetail(data);
         } catch {
-            setError("No se pudo recuperar el informe forense del análisis.");
+            setError("No se pudo establecer conexión con el servidor.");
         } finally {
             setLoading(false);
         }
@@ -55,7 +58,7 @@ export function useAnalysisDetail(analysisId?: string) {
             setError(null);
             return true;
         } catch {
-            setError("No se pudo purgar el reporte de análisis seleccionado.");
+            setError("No se pudo completar la eliminación del registro.");
             return false;
         }
     };

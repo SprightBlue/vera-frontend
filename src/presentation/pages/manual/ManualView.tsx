@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Sidebar from '../../components/Sidebar';
-import Header from '../../components/Header';
+import Sidebar from '../../../features/shared/components/Sidebar.tsx';
+import Header from '../../../features/shared/components/Header.tsx';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import { 

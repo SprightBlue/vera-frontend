@@ -38,7 +38,7 @@ export function DashboardCard({
                 <div className="flex items-center gap-3 w-full">
                     {avatarNode && <div className="shrink-0">{avatarNode}</div>}
 
-                    <h3 className="text-[clamp(0.95rem,1.1vw,1.25rem)] font-display font-black text-white line-clamp-2 tracking-wide flex-1">
+                    <h3 className="text-[clamp(0.95rem,1.1vw,1.25rem)] font-display font-bold text-white line-clamp-2 tracking-wider flex-1">
                         {title}
                     </h3>
                 </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Bell, ShieldAlert, ShieldCheck, Mail } from "lucide-react";
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "../../../features/shared/components/Sidebar.tsx";
+import Header from "../../../features/shared/components/Header.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getProtectedPersons, updateProtectedPerson } from "../../../infrastructure/api/protected-person-api";

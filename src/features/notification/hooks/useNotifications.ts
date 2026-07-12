@@ -25,7 +25,9 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
 
     const [unreadCount, setUnreadCount] = useState<number>(0);
     const [isRinging, setIsRinging] = useState<boolean>(false);
+
     const [loading, setLoading] = useState<boolean>(true);
+    const [backgroundLoading, setBackgroundLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -33,13 +35,26 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const stompClientRef = useRef<Client | null>(null);
 
+    const notificationsRef = useRef(notifications);
+    const pageNumberRef = useRef(pageNumber);
+
+    useEffect(() => {
+        notificationsRef.current = notifications;
+        pageNumberRef.current = pageNumber;
+    }, [notifications, pageNumber]);
+
     const triggerBell = useCallback(() => {
         setIsRinging(true);
-        setTimeout(() => setIsRinging(false), 2000);
+        const timer = setTimeout(() => setIsRinging(false), 2000);
+        return () => clearTimeout(timer);
     }, []);
 
     const forceLoading = useCallback(() => {
-        setLoading(true);
+        if (notificationsRef.current.length === 0) {
+            setLoading(true);
+        } else {
+            setBackgroundLoading(true);
+        }
     }, []);
 
     useEffect(() => {
@@ -56,7 +71,12 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         let isMounted = true;
 
         const fetchInitialData = async () => {
-            setLoading(true);
+            if (notificationsRef.current.length === 0) {
+                setLoading(true);
+            } else {
+                setBackgroundLoading(true);
+            }
+
             try {
                 const data = await fetchAllNotifications(page);
                 if (!isMounted) return;
@@ -69,10 +89,13 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 setError(null);
             } catch {
                 if (!isMounted) return;
-                setError("No se pudo establecer conexión con el servicio de notificaciones.");
+                setError("No se pudo establecer conexión con el módulo de notificaciones.");
                 setNotifications([]);
             } finally {
-                if (isMounted) setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                    setBackgroundLoading(false);
+                }
             }
         };
 
@@ -105,7 +128,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 switch (data.event) {
                     case "NEW_NOTIFICATION":
                         if (data.notification) {
-                            if (pageNumber === 0) {
+                            if (pageNumberRef.current === 0) {
                                 setNotifications((prev) => [
                                     {
                                         ...data.notification,
@@ -137,7 +160,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         return () => {
             if (stompClientRef.current) void stompClientRef.current.deactivate();
         };
-    }, [userEmail, triggerBell, pageNumber]);
+    }, [userEmail, triggerBell]);
 
     const handleMarkAllRead = async () => {
         if (unreadCount === 0) return;
@@ -201,11 +224,14 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
             setPageNumber(data.pageNumber ?? 0);
             setIsLastPage(data.isLast ?? true);
         } catch {
-            setError("No se pudo establecer conexión con el servicio de notificaciones.");
+            setError("No se pudo establecer conexión con el módulo de notificaciones.");
         } finally {
             setLoading(false);
+            setBackgroundLoading(false);
         }
     }, [page]);
+
+    const isBackgroundLoading = backgroundLoading;
 
     return {
         notifications,
@@ -216,6 +242,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         unreadCount,
         isRinging,
         loading,
+        isBackgroundLoading,
         error,
         isDropdownOpen,
         dropdownRef,

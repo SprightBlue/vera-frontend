@@ -1,8 +1,8 @@
 import { ArrowLeft, Heart, Link, Clock3, Settings, Activity, ShieldCheck, Phone, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "../../../features/shared/components/Sidebar.tsx";
+import Header from "../../../features/shared/components/Header.tsx";
 
 import { useAuth } from "../../context/AuthContext";
 import type { ProtectedPerson, UpdateProtectedInfo } from "../../../domain/models/ProtectedPerson.ts";
@@ -10,7 +10,7 @@ import { getProtectedPersonById, updateProtectedPersonInfo } from "../../../infr
 import EditPersonModal from "../../components/persons/EditPersonModal";
 import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 import toast from "react-hot-toast";
-import {PersonAvatar} from "@/presentation/components/common/PersonAvatar.tsx";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 
 function PersonDetail() {
