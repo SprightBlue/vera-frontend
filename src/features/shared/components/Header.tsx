@@ -33,6 +33,9 @@ export function Header({ userName, userRole, title }: HeaderProps) {
         unreadCount,
         isRinging,
         loading,
+        isBackgroundLoading,
+        error,
+        retry,
         isDropdownOpen,
         dropdownRef,
         toggleDropdown,
@@ -65,10 +68,13 @@ export function Header({ userName, userRole, title }: HeaderProps) {
                     totalPages={totalPages}
                     totalElements={totalElements}
                     page={notificationPage}
-                    setPage={setNotificationPage}
+                    setPage={(newPageFn) => setNotificationPage(newPageFn)}
                     unreadCount={unreadCount}
                     isRinging={isRinging}
                     loading={loading}
+                    isBackgroundLoading={isBackgroundLoading}
+                    error={error}
+                    retry={retry}
                     isDropdownOpen={isDropdownOpen}
                     dropdownRef={dropdownRef}
                     toggleDropdown={toggleDropdown}
