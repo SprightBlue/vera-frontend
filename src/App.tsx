@@ -18,7 +18,7 @@ import ResetPassword from "@/presentation/pages/ResetPassword";
 import Incidents from "@/presentation/pages/incidents/IncidentsPage";
 import VerifyEmail from "@/presentation/pages/VerifyEmail";
 import TermsAndConditions from "@/presentation/pages/TermsAndConditions";
-import ChatPage from "@/features/chats/view/ChatPage";
+import { ChatView } from "@/features/chats/view/ChatView.tsx";
 import { AiCenterView } from "@/features/shared/views/AiCenterView";
 import { HistoryCenterView } from "@/features/shared/views/HistoryCenterView";
 import AcceptInvitePage from "@/presentation/pages/invite/AcceptInvitePage";
@@ -74,7 +74,7 @@ function App() {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/ai-center" element={<AiCenterView />} />
                         <Route path="/analysis" element={<AnalysisView />} />
-                        <Route path="/chat" element={<ChatPage />} />
+                        <Route path="/chat" element={<ChatView />} />
                         <Route path="/persons" element={<Persons />} />
                         <Route path="/persons/:id" element={<PersonDetail />} />
                         <Route path="/persons/personConfig" element={<PersonConfiguration />} />

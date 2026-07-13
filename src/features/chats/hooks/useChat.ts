@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { chatApi, type ChatMessage } from "@/features/chats/api/chatApi.ts";
-import { useAuth } from "@/presentation/context/AuthContext.tsx";
-import type { ChatSession } from "@/features/chats/api/chatApi.ts";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { chatApi, type ChatMessage, type ChatSession } from "@/features/chats/api/chatApi";
+import { useAuth } from "@/presentation/context/AuthContext";
 
 interface UseChatReturn {
     messages: ChatMessage[];
@@ -11,12 +10,23 @@ interface UseChatReturn {
     isSending: boolean;
     error: string | null;
     isSidebarOpen: boolean;
+    chatInputValue: string;
     welcomeInputValue: string;
+    deletingSessionIds: string[];
+    setChatInputValue: (value: string) => void;
     setWelcomeInputValue: (value: string) => void;
     toggleSidebar: () => void;
-    sendMessage: (text: string) => Promise<void>;
+    sendMessage: (text: string) => Promise<string | null>;
+    retryLastMessage: () => Promise<void>;
     deleteChatSession: (id: string) => Promise<void>;
     refreshSessions: () => Promise<void>;
+    resetInputs: () => void;
+}
+
+interface AxiosErrorLike {
+    response?: {
+        status: number;
+    };
 }
 
 export function useChat(currentChatId: string | null): UseChatReturn {
@@ -30,7 +40,11 @@ export function useChat(currentChatId: string | null): UseChatReturn {
     const [isSending, setIsSending] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [chatInputValue, setChatInputValue] = useState<string>("");
     const [welcomeInputValue, setWelcomeInputValue] = useState<string>("");
+
+    const [deletingSessionIds, setDeletingSessionIds] = useState<string[]>([]);
+    const lastPendingMessageRef = useRef<string | null>(null);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
         try {
@@ -49,15 +63,32 @@ export function useChat(currentChatId: string | null): UseChatReturn {
         setIsSidebarOpen(prev => !prev);
     }, []);
 
+    const isAxiosError = (err: unknown): err is AxiosErrorLike => {
+        return typeof err === 'object' && err !== null && 'response' in err;
+    };
+
+    const handleHookError = useCallback((requestError: unknown) => {
+        if (isAxiosError(requestError) && requestError.response?.status === 403) {
+            setError("ACCESO DENEGADO: SESIÓN INSUFICIENTE O EXPIRADA. VOLVÉ A INICIAR SESIÓN PARA REINTENTAR LA ACCIÓN.");
+        } else {
+            setError("ERROR DE CONEXIÓN: NO SE PUDO ESTABLECER COMUNICACIÓN CON EL ASISTENTE VERA. POR FAVOR, REINTENTÁ EL PROCESO.");
+        }
+    }, []);
+
+    const resetInputs = useCallback(() => {
+        setChatInputValue("");
+        setWelcomeInputValue("");
+    }, []);
+
     const fetchSessions = useCallback(async () => {
         if (!user?.email) return;
         try {
             const data = await chatApi.getUserChats();
             setSessions(data);
         } catch (err) {
-            console.error("Error cargando historial de salas:", err);
+            handleHookError(err);
         }
-    }, [user?.email]);
+    }, [user?.email, handleHookError]);
 
     useEffect(() => {
         if (!user?.email) return;
@@ -69,7 +100,7 @@ export function useChat(currentChatId: string | null): UseChatReturn {
                 const data = await chatApi.getUserChats();
                 if (isMounted) setSessions(data);
             } catch (err) {
-                console.error("Error en carga inicial:", err);
+                if (isMounted) handleHookError(err);
             } finally {
                 if (isMounted) setIsLoadingSessions(false);
             }
@@ -77,7 +108,7 @@ export function useChat(currentChatId: string | null): UseChatReturn {
 
         void loadInitialSessions();
         return () => { isMounted = false; };
-    }, [user?.email]);
+    }, [user?.email, handleHookError]);
 
     useEffect(() => {
         if (!user?.email) return;
@@ -89,6 +120,7 @@ export function useChat(currentChatId: string | null): UseChatReturn {
                     setChatId(null);
                     setMessages([]);
                     setIsLoadingChat(false);
+                    setError(null);
                 }
                 return;
             }
@@ -101,10 +133,7 @@ export function useChat(currentChatId: string | null): UseChatReturn {
                 const history = await chatApi.getChatHistory(currentChatId);
                 if (isMounted) setMessages(history);
             } catch (err) {
-                console.error("Error setting up chat room:", err);
-                if (isMounted) {
-                    setError("No se pudo establecer conexión segura con Vera. Por favor reintente.");
-                }
+                if (isMounted) handleHookError(err);
             } finally {
                 if (isMounted) setIsLoadingChat(false);
             }
@@ -112,13 +141,16 @@ export function useChat(currentChatId: string | null): UseChatReturn {
 
         void setupChat();
         return () => { isMounted = false; };
-    }, [currentChatId, user?.email]);
+    }, [currentChatId, user?.email, handleHookError]);
 
-    const sendMessage = useCallback(async (text: string): Promise<void> => {
+    const sendMessage = useCallback(async (text: string): Promise<string | null> => {
         const cleanMessage = text.trim();
-        if (!cleanMessage) return;
+        if (!cleanMessage || isSending) return null;
 
         setIsSending(true);
+        setError(null);
+        lastPendingMessageRef.current = cleanMessage;
+
         const userMsg: ChatMessage = { role: "USER", content: cleanMessage };
         setMessages(prev => [...prev, userMsg]);
 
@@ -131,32 +163,42 @@ export function useChat(currentChatId: string | null): UseChatReturn {
 
             const aiResponse = await chatApi.sendMessage(activeId, cleanMessage);
             const modelMsg: ChatMessage = { role: "MODEL", content: aiResponse };
+
             setMessages(prev => [...prev, modelMsg]);
+            lastPendingMessageRef.current = null;
 
             const updatedSessions = await chatApi.getUserChats();
             setSessions(updatedSessions);
+
+            return activeId;
         } catch (err) {
-            console.error("Error dispatching message:", err);
-            const errorMsg: ChatMessage = {
-                role: "MODEL",
-                content: "Hubo una interrupción de red al procesar tu consulta con Vera. ¿Podrías volver a intentarlo?"
-            };
-            setMessages(prev => [...prev, errorMsg]);
+            handleHookError(err);
+            return null;
         } finally {
             setIsSending(false);
         }
-    }, [chatId]);
+    }, [chatId, isSending, handleHookError]);
+
+    const retryLastMessage = useCallback(async (): Promise<void> => {
+        if (!lastPendingMessageRef.current) return;
+        const textToRetry = lastPendingMessageRef.current;
+
+        setMessages(prev => prev.slice(0, -1));
+        await sendMessage(textToRetry);
+    }, [sendMessage]);
 
     const deleteChatSession = useCallback(async (id: string): Promise<void> => {
+        setDeletingSessionIds(prev => [...prev, id]);
         try {
-            setSessions(prev => prev.filter(s => s.id !== id));
             await chatApi.deleteChat(id);
             const updatedSessions = await chatApi.getUserChats();
             setSessions(updatedSessions);
         } catch (err) {
-            console.error("Error al remover la sesión:", err);
+            handleHookError(err);
+        } finally {
+            setDeletingSessionIds(prev => prev.filter(sessionId => sessionId !== id));
         }
-    }, []);
+    }, [handleHookError]);
 
     return {
         messages,
@@ -166,11 +208,16 @@ export function useChat(currentChatId: string | null): UseChatReturn {
         isSending,
         error,
         isSidebarOpen,
+        chatInputValue,
         welcomeInputValue,
+        deletingSessionIds,
+        setChatInputValue,
         setWelcomeInputValue,
         toggleSidebar,
         sendMessage,
+        retryLastMessage,
         deleteChatSession,
-        refreshSessions: fetchSessions
-    };
+        refreshSessions: fetchSessions,
+        resetInputs
+    } as const;
 }

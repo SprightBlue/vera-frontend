@@ -1,89 +1,97 @@
-import { useState, type MouseEvent } from "react";
-import { Plus, Trash2, Loader2 } from "lucide-react";
-import type { ChatSession } from "@/features/chats/api/chatApi.ts";
+import { type MouseEvent } from "react";
+import { Plus, History } from "lucide-react";
+import type { ChatSession } from "@/features/chats/api/chatApi";
+import { ActionButton } from "@/features/shared/components/ActionButton";
+import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
+import { RetryScreen } from "@/features/shared/components/RetryScreen";
+import { EmptyScreen } from "@/features/shared/components/EmptyScreen";
+import { ChatItem } from "@/features/chats/components/ChatItem";
 
 interface ChatSidebarProps {
     sessions: ChatSession[];
     activeChatId: string | null;
+    isLoading: boolean;
+    error: unknown;
+    deletingSessionIds: string[];
+    onRetry: () => void;
     onSelectChat: (id: string) => void;
     onNewChat: () => void;
     onDeleteChat: (id: string) => Promise<void>;
 }
 
-function ChatSidebar({ sessions, activeChatId, onSelectChat, onNewChat, onDeleteChat }: ChatSidebarProps) {
-    const [deletingId, setDeletingId] = useState<string | null>(null);
+export function ChatSidebar({
+                                sessions,
+                                activeChatId,
+                                isLoading,
+                                error,
+                                deletingSessionIds,
+                                onRetry,
+                                onSelectChat,
+                                onNewChat,
+                                onDeleteChat
+                            }: ChatSidebarProps) {
 
-    const handleDirectDelete = async (e: MouseEvent<HTMLButtonElement | SVGElement>, id: string) => {
+    const handleDirectDelete = async (e: MouseEvent<HTMLButtonElement>, id: string) => {
         e.stopPropagation();
-        if (deletingId) return;
-
-        setDeletingId(id);
+        if (deletingSessionIds.includes(id)) return;
         await onDeleteChat(id);
-        setDeletingId(null);
     };
 
     return (
-        <aside className="w-full bg-[#050816] flex flex-col h-full shrink-0 select-none overflow-hidden font-sans border-r border-[#182033]/20">
-            <div className="p-4 border-b border-[#182033]/40 flex-none">
-                <button
+        <aside className="w-full bg-linear-to-b from-[#050814] via-[#03050f] to-[#010206] border-r border-[#161f37]/90 flex flex-col h-full shrink-0 select-none overflow-hidden relative shadow-2xl">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-blue-500/2 rounded-full filter blur-[80px] pointer-events-none z-0" />
+
+            <div className="p-[clamp(0.8rem,1vw,1.2rem)] flex-none relative z-10">
+                <ActionButton
+                    variant="info"
                     onClick={onNewChat}
-                    className="w-full flex items-center justify-center gap-1.5 h-10 rounded-xl bg-blue-600/10 hover:bg-blue-600/15 border border-blue-500/20 text-blue-400 text-[clamp(10px,0.65vw,12px)] font-bold tracking-wider uppercase transition-all duration-150 active:scale-[0.98] cursor-pointer"
+                    icon={Plus}
+                    disabled={isLoading}
+                    className="w-full sm:w-full"
                 >
-                    <Plus size={12} className="stroke-[2.5]" />
-                    <span>Nueva consulta</span>
-                </button>
+                    Nueva Chat IA
+                </ActionButton>
             </div>
 
-            <div className="flex-1 min-h-0 overflow-y-auto p-3 no-scrollbar">
-                <div className="px-3 mb-2.5 text-[clamp(9px,0.55vw,11px)] uppercase tracking-widest text-slate-600 font-bold">
-                    Historial de Consultas
+            <div className="px-[clamp(0.8rem,1vw,1.2rem)] flex-none relative z-10">
+                <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
+            </div>
+
+            <div className="flex-1 min-h-0 overflow-y-auto p-[clamp(0.4rem,0.6vw,1rem)] no-scrollbar flex flex-col relative z-10">
+                <div className="px-3 mt-3 mb-2.5 flex items-center gap-2 text-[clamp(9px,0.55vw,11px)] uppercase tracking-widest text-slate-500 font-display font-extrabold">
+                    <History size={11} className="text-slate-600 stroke-[2.5]" />
+                    <span>Historial de Chats</span>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                    {sessions.map((session) => {
-                        const isActive = activeChatId === session.id;
-                        const isThisDeleting = deletingId === session.id;
-
-                        return (
-                            <button
-                                key={session.id}
-                                onClick={() => !isThisDeleting && onSelectChat(session.id)}
-                                disabled={isThisDeleting}
-                                className={`w-full flex items-center justify-between px-4 h-11 rounded-xl text-[clamp(0.78rem,0.82vw,0.92rem)] font-medium transition-all duration-200 group relative cursor-pointer border ${
-                                    isActive
-                                        ? "bg-linear-to-r from-[#131b35] to-[#070B1A] text-white border-[#182033] shadow-md"
-                                        : "text-slate-500 border-transparent hover:bg-[#131b35]/40 hover:text-slate-300"
-                                } ${isThisDeleting ? "opacity-40 cursor-not-allowed" : ""}`}
-                                title={session.title}
-                            >
-                                {isActive && (
-                                    <span className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-blue-500 rounded-r-md" />
-                                )}
-
-                                <span className="truncate flex-1 text-left pr-2">
-                                    {session.title}
-                                </span>
-
-                                <div className="shrink-0 w-4 h-4 flex items-center justify-center relative z-10">
-                                    {isThisDeleting ? (
-                                        <Loader2 size={11} className="text-red-400 animate-spin" />
-                                    ) : (
-                                        <span title="Eliminar Chat" className="flex items-center justify-center">
-                                            <Trash2
-                                                size={12}
-                                                onClick={(e) => handleDirectDelete(e, session.id)}
-                                                className="opacity-0 group-hover:opacity-100 xl:opacity-0 text-slate-500 hover:text-red-400/80 transition-all cursor-pointer transform hover:scale-105"
-                                            />
-                                        </span>
-                                    )}
-                                </div>
-                            </button>
-                        );
-                    })}
+                <div className="flex-1 flex flex-col min-h-0 relative">
+                    {isLoading ? (
+                        <div className="flex-1 flex items-center justify-center py-12">
+                            <LoadingScreen />
+                        </div>
+                    ) : error ? (
+                        <div className="flex-1 flex items-center justify-center py-12">
+                            <RetryScreen onRetry={onRetry} />
+                        </div>
+                    ) : sessions.length === 0 ? (
+                        <div className="flex-1 flex items-center justify-center">
+                            <EmptyScreen label="NO SE ENCONTRARON CHATS DISPONIBLES" />
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-1">
+                            {sessions.map((session) => (
+                                <ChatItem
+                                    key={session.id}
+                                    session={session}
+                                    isActive={activeChatId === session.id}
+                                    isDeleting={deletingSessionIds.includes(session.id)}
+                                    onSelectChat={onSelectChat}
+                                    onDeleteChat={handleDirectDelete}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </aside>
     );
 }
-
-export default ChatSidebar;

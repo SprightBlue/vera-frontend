@@ -48,12 +48,12 @@ export function AnalysisResult({ result, loading, error, isStartingChat, onStart
 
     const actionButton = uiVariant === 'danger' ? (
         <ActionButton
-            variant="info"
+            variant="purple"
             isLoading={isStartingChat}
             icon={MessageSquareShare}
             onClick={handleStartAnalysisChat}
         >
-            Iniciar Chat
+            Iniciar Chat IA
         </ActionButton>
     ) : undefined;
 
