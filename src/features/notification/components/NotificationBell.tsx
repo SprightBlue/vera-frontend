@@ -48,7 +48,7 @@ export function NotificationBell({ isOpen, isRinging, unreadCount, onClick }: No
             {unreadCount > 0 && (
                 <span className="absolute top-2 right-2 flex h-2 w-2 z-20">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500 shadow-[0_0_6px_#3b82f6]" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
                 </span>
             )}
         </button>

@@ -94,12 +94,17 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 const data = await fetchAllNotifications(page);
                 if (!isMounted) return;
 
-                setNotifications(data.content ?? []);
+                const fetchedContent = data.content ?? [];
+                setNotifications(fetchedContent);
                 setTotalPages(data.totalPages ?? 0);
                 setTotalElements(data.totalElements ?? 0);
                 setPageNumber(data.pageNumber ?? 0);
                 setIsLastPage(data.isLast ?? true);
                 setError(null);
+
+                const initialUnread = fetchedContent.filter((n: AppNotification) => !n.isRead).length;
+                setUnreadCount(initialUnread);
+
             } catch (requestError: unknown) {
                 if (!isMounted) return;
 
@@ -171,6 +176,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                         setUnreadCount(0);
                         setTotalElements(0);
                         setTotalPages(0);
+                        setIsProcessingAll(false);
                         break;
 
                     case "UNREAD_COUNT_UPDATE":
@@ -191,7 +197,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     const handleMarkAllRead = async () => {
         if (unreadCount === 0) return;
         setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-        setUnreadCount(0);
+
         try {
             await markAllRead();
         } catch {
@@ -200,7 +206,11 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
     };
 
     const toggleDropdown = () => {
-        if (!isDropdownOpen) void handleMarkAllRead();
+        if (!isDropdownOpen) {
+            void handleMarkAllRead();
+        } else {
+            setUnreadCount(0);
+        }
         setIsDropdownOpen((prev) => !prev);
     };
 
@@ -208,18 +218,12 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         if (notifications.length === 0 || isProcessingAll) return;
         setIsProcessingAll(true);
 
-        setNotifications([]);
-        setUnreadCount(0);
-        setTotalElements(0);
-        setTotalPages(0);
-
         try {
             await deleteAllNotifications();
         } catch {
             toast.error("ERROR DE SISTEMA: FALLÓ EL VACIADO DEL HISTORIAL DE NOTIFICACIONES.");
-            void handleRetry();
-        } finally {
             setIsProcessingAll(false);
+            void handleRetry();
         }
     };
 

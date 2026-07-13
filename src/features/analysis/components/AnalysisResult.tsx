@@ -48,7 +48,7 @@ export function AnalysisResult({ result, loading, error, isStartingChat, onStart
 
     const actionButton = uiVariant === 'danger' ? (
         <ActionButton
-            variant="purple"
+            variant="info"
             isLoading={isStartingChat}
             icon={MessageSquareShare}
             onClick={handleStartAnalysisChat}
