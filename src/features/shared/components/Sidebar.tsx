@@ -50,7 +50,7 @@ export function Sidebar() {
 
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-blue-500/2 rounded-full filter blur-[80px] pointer-events-none z-0" />
 
-            <div className="shrink-0 h-[clamp(4.5rem,5vw,5.6rem)] flex items-center justify-center lg:justify-start px-[clamp(0.6rem,1vw,1.5rem)] border-b border-[#161f37]/40 relative overflow-hidden z-10">
+            <div className="shrink-0 h-[clamp(4.5rem,5vw,5.6rem)] flex items-center justify-center lg:justify-start px-[clamp(0.6rem,1vw,1.5rem)] relative overflow-hidden z-10">
                 <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/5 to-transparent pointer-events-none" />
 
                 <Link
@@ -71,13 +71,21 @@ export function Sidebar() {
                 </Link>
             </div>
 
+            <div className="px-[clamp(0.4rem,0.6vw,1rem)] flex-none relative z-10">
+                <div className="h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
+            </div>
+
             <nav className="flex-1 flex flex-col gap-2 p-[clamp(0.4rem,0.6vw,1rem)] overflow-y-auto no-scrollbar relative z-10">
                 {menuItems.map((item) => (
                     <SidebarLink key={item.path} item={item} />
                 ))}
             </nav>
 
-            <div className="shrink-0 flex flex-col gap-2 p-[clamp(0.4rem,0.6vw,1rem)] border-t border-[#161f37]/40 relative z-10">
+            <div className="px-[clamp(0.4rem,0.6vw,1rem)] flex-none relative z-10">
+                <div className="h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
+            </div>
+
+            <div className="shrink-0 flex flex-col gap-2 p-[clamp(0.4rem,0.6vw,1rem)] relative z-10">
                 {bottomItems.map((item) => (
                     <SidebarLink key={item.path} item={item} />
                 ))}

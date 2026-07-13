@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { type AppNotification } from "@/features/notification/api/notificationsApi";
-import { NOTIFICATION_MAP, type NotificationType } from "@/features/shared/utils/typeConfig";
-import { UI_VARIANTS_MAP } from "@/features/shared/utils/styleConfig";
+import { type NotificationType } from "@/features/shared/utils/typeConfig";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 import { DeleteButton } from "@/features/shared/components/DeleteButton";
 
@@ -13,10 +12,6 @@ interface ItemProps {
 
 export function NotificationItem({ notif, onAction, onSelect }: ItemProps) {
     const notifType = notif.type as NotificationType;
-    const notifConfig = NOTIFICATION_MAP[notifType] || { variant: 'neutral' as const };
-
-    const theme = UI_VARIANTS_MAP[notifConfig.variant];
-    const infoTheme = UI_VARIANTS_MAP['info'];
 
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -27,73 +22,77 @@ export function NotificationItem({ notif, onAction, onSelect }: ItemProps) {
     const hasActions = notifType === 'ALERT' || (notifType === 'INVITATION' && invitationId);
 
     return (
-        <div className="group rounded-xl border border-[#161f37]/80 bg-linear-to-b from-[#090c16] to-[#030409] p-[clamp(0.8rem,1vw,1.1rem)] shadow-lg relative overflow-hidden flex flex-col gap-2.5 transition-all duration-300 ring-1 ring-inset ring-[#161f35]/10 w-full">
+        <div className="w-full flex flex-col gap-2.5 rounded-xl border border-slate-800/80 bg-linear-to-b from-[#0f172a] to-[#020617] p-[clamp(0.85rem,1.2vw,1.2rem)] shadow-2xl relative overflow-hidden ring-1 ring-inset ring-slate-700/10">
 
-            <div className={`absolute -top-12 -right-12 w-[clamp(120px,12vw,180px)] h-[clamp(120px,12vw,180px)] rounded-full ${infoTheme.glowColor} filter blur-[45px] opacity-15 pointer-events-none`} />
+            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-slate-500 filter blur-3xl opacity-5 pointer-events-none" />
 
-            <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-${theme.laserColor || 'blue-500'}/25 to-transparent pointer-events-none z-10`} />
-
-            <DeleteButton
-                className="absolute top-2.5 right-2.5"
-                isProcessing={isDeleting}
-                title="Eliminar notificación"
-                onClick={async (e) => {
-                    e.stopPropagation();
-                    setIsDeleting(true);
-                    try {
-                        await onAction(notif, 'DELETE');
-                    } catch {
-                        setIsDeleting(false);
-                    }
-                }}
-            />
-
-            <div className="relative z-10 w-full flex flex-col pr-7">
-                <span className="text-[clamp(10px,0.58vw,11.5px)] font-display font-bold text-slate-500 leading-none tracking-wider select-text uppercase">
+            <div className="w-full flex items-center justify-between pr-8 select-none relative z-10">
+                <span className="text-[clamp(10px,0.58vw,11px)] font-display font-extrabold text-slate-500 tracking-widest uppercase">
                     {notif.createdAt}
                 </span>
+            </div>
 
-                <h3 className="text-[clamp(13px,0.8vw,14px)] font-display font-black text-white uppercase tracking-wide pt-1.5 select-text line-clamp-1">
+            <div className="absolute top-2.5 right-2.5 z-20">
+                <DeleteButton
+                    isProcessing={isDeleting}
+                    title="Eliminar notificación"
+                    onClick={async (e) => {
+                        e.stopPropagation();
+                        setIsDeleting(true);
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        try {
+                            await onAction(notif, 'DELETE');
+                        } catch {
+                            setIsDeleting(false);
+                        }
+                    }}
+                />
+            </div>
+
+            <div className="w-full flex flex-col pr-2 relative z-10">
+                <h3 className="text-[clamp(13.5px,0.85vw,14.5px)] font-display font-black text-slate-100 uppercase tracking-wide select-text line-clamp-1">
                     {notif.title}
                 </h3>
 
-                <p className="text-[clamp(12px,0.72vw,13px)] text-slate-400 leading-relaxed font-sans font-medium select-text line-clamp-2 mt-0.5">
+                <p className="text-[clamp(12px,0.74vw,13px)] text-slate-400 leading-relaxed font-sans font-medium select-text line-clamp-2 mt-1">
                     {notif.message}
                 </p>
             </div>
 
             {hasActions && (
-                <div className="relative mt-1 w-full z-10 flex items-center justify-end gap-2 pt-2.5">
-                    <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+                <div className="mt-1 w-full flex flex-col gap-2.5 relative z-10">
+                    <div className="h-px w-full bg-slate-800/60 pointer-events-none" />
 
-                    {notifType === 'INVITATION' && invitationId && (
-                        <>
-                            <ActionButton
-                                variant="success"
-                                onClick={() => onAction(notif, 'ACCEPT')}
-                                className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-bold tracking-wider uppercase rounded-md"
-                            >
-                                Aceptar
-                            </ActionButton>
-                            <ActionButton
-                                variant="danger"
-                                onClick={() => onAction(notif, 'REJECT')}
-                                className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-bold tracking-wider uppercase rounded-md"
-                            >
-                                Rechazar
-                            </ActionButton>
-                        </>
-                    )}
+                    <div className="w-full flex items-center justify-end gap-2">
+                        {notifType === 'INVITATION' && invitationId && (
+                            <>
+                                <ActionButton
+                                    variant="success"
+                                    onClick={() => onAction(notif, 'ACCEPT')}
+                                    className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                                >
+                                    Aceptar
+                                </ActionButton>
+                                <ActionButton
+                                    variant="danger"
+                                    onClick={() => onAction(notif, 'REJECT')}
+                                    className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                                >
+                                    Rechazar
+                                </ActionButton>
+                            </>
+                        )}
 
-                    {notifType === 'ALERT' && (
-                        <ActionButton
-                            variant="info"
-                            onClick={() => onSelect(notif)}
-                            className="px-4 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-bold tracking-wider uppercase rounded-md transition-all duration-150 active:scale-[0.96]"
-                        >
-                            Ver Detalles
-                        </ActionButton>
-                    )}
+                        {notifType === 'ALERT' && (
+                            <ActionButton
+                                variant="info"
+                                onClick={() => onSelect(notif)}
+                                className="px-4 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                            >
+                                Ver Detalles
+                            </ActionButton>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

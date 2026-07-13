@@ -53,7 +53,7 @@ export function AnalysisResult({ result, loading, error, isStartingChat, onStart
             icon={MessageSquareShare}
             onClick={handleStartAnalysisChat}
         >
-            Iniciar Chat
+            Iniciar Chat IA
         </ActionButton>
     ) : undefined;
 

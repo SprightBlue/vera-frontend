@@ -1,8 +1,9 @@
 import type { RefObject } from "react";
+import { Trash2 } from "lucide-react";
 import { type AppNotification } from "@/features/notification/api/notificationsApi";
 import { NotificationItem } from "@/features/notification/components/NotificationItem";
 import { NotificationBell } from "@/features/notification/components/NotificationBell";
-import { DeleteButton } from "@/features/shared/components/DeleteButton";
+import { ActionButton } from "@/features/shared/components/ActionButton";
 
 import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
 import { RetryScreen } from "@/features/shared/components/RetryScreen";
@@ -76,7 +77,7 @@ export function NotificationDropdown({
                 <div className="px-[clamp(1rem,1.2vw,1.4rem)] py-[clamp(0.8rem,1vw,1.2rem)] flex items-center justify-between select-none relative z-10">
                     <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
 
-                    <span className="text-[clamp(10px,0.58vw,11px)] font-display font-black tracking-wider text-slate-400 uppercase">
+                    <span className="text-[clamp(10px,0.58vw,11px)] font-display font-extrabold tracking-wider text-slate-400 uppercase">
                         Panel de Notificaciones
                     </span>
 
@@ -88,12 +89,18 @@ export function NotificationDropdown({
                         )}
 
                         {notifications.length > 0 && !loading && !error && (
-                            <DeleteButton
-                                onClick={onDeleteAllNotifications}
-                                isProcessing={isProcessingAll}
-                                title="Eliminar todas las notificaciones"
-                                className="border-[#161f37] bg-[#090c16]/60 text-slate-400"
-                            />
+                            <ActionButton
+                                variant="danger"
+                                icon={Trash2}
+                                isLoading={isProcessingAll}
+                                onClick={async () => {
+                                    await new Promise(resolve => setTimeout(resolve, 350));
+                                    void onDeleteAllNotifications();
+                                }}
+                                className="w-auto sm:w-auto px-3 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                            >
+                                Vaciar
+                            </ActionButton>
                         )}
                     </div>
                 </div>
