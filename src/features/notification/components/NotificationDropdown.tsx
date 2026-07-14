@@ -1,14 +1,14 @@
-import type { RefObject } from "react";
-import { Trash2 } from "lucide-react";
-import { type AppNotification } from "@/features/notification/api/notificationsApi";
-import { NotificationItem } from "@/features/notification/components/NotificationItem";
-import { NotificationBell } from "@/features/notification/components/NotificationBell";
-import { ActionButton } from "@/features/shared/components/ActionButton";
+import type {RefObject} from "react";
+import {Trash2} from "lucide-react";
+import {type AppNotification} from "@/features/notification/api/notificationsApi";
+import {NotificationItem} from "@/features/notification/components/NotificationItem";
+import {NotificationBell} from "@/features/notification/components/NotificationBell";
+import {ActionButton} from "@/features/shared/components/ActionButton";
 
-import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
-import { RetryScreen } from "@/features/shared/components/RetryScreen";
-import { EmptyScreen } from "@/features/shared/components/EmptyScreen";
-import { Pagination } from "@/features/shared/components/Pagination";
+import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
+import {RetryScreen} from "@/features/shared/components/RetryScreen";
+import {EmptyScreen} from "@/features/shared/components/EmptyScreen";
+import {Pagination} from "@/features/shared/components/Pagination";
 
 interface DropdownProps {
     notifications: AppNotification[];
@@ -72,18 +72,23 @@ export function NotificationDropdown({
                 : "opacity-0 scale-95 pointer-events-none invisible"
             }`}
             >
-                <div className="absolute top-0 right-0 w-72 h-36 bg-blue-500/2 rounded-full filter blur-3xl pointer-events-none" />
+                <div
+                    className="absolute top-0 right-0 w-72 h-36 bg-blue-500/2 rounded-full filter blur-3xl pointer-events-none"/>
 
-                <div className="px-[clamp(1rem,1.2vw,1.4rem)] py-[clamp(0.8rem,1vw,1.2rem)] flex items-center justify-between select-none relative z-10">
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+                <div
+                    className="px-[clamp(1rem,1.2vw,1.4rem)] py-[clamp(0.8rem,1vw,1.2rem)] flex items-center justify-between select-none relative z-10">
+                    <div
+                        className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none"/>
 
-                    <span className="text-[clamp(10px,0.58vw,11px)] font-display font-extrabold tracking-wider text-slate-400 uppercase">
+                    <span
+                        className="text-[clamp(10px,0.58vw,11px)] font-display font-extrabold tracking-wider text-slate-400 uppercase">
                         Panel de Notificaciones
                     </span>
 
                     <div className="flex items-center gap-2.5">
                         {unreadCount > 0 && (
-                            <span className="px-2 py-0.5 rounded-md text-[9px] font-display font-black uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-400 animate-pulse">
+                            <span
+                                className="px-2 py-0.5 rounded-md text-[9px] font-display font-black uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-400 animate-pulse">
                                 {unreadCount} Nuevas
                             </span>
                         )}
@@ -105,17 +110,19 @@ export function NotificationDropdown({
                     </div>
                 </div>
 
-                <div className="flex-1 p-[clamp(1rem,1.2vw,1.4rem)] min-h-[clamp(12rem,16vw,18rem)] flex flex-col justify-center relative z-10">
+                <div
+                    className="flex-1 p-[clamp(1rem,1.2vw,1.4rem)] min-h-[clamp(12rem,16vw,18rem)] flex flex-col justify-center relative z-10">
                     {loading && notifications.length === 0 ? (
-                        <LoadingScreen />
+                        <LoadingScreen/>
                     ) : error ? (
-                        <RetryScreen onRetry={retry} />
+                        <RetryScreen onRetry={retry}/>
                     ) : notifications.length === 0 ? (
-                        <EmptyScreen label="No se encontraron notificaciones disponibles." />
+                        <EmptyScreen label="No se encontraron notificaciones disponibles."/>
                     ) : (
-                        <div className={`w-full space-y-2.5 max-h-[clamp(16rem,24vw,30rem)] overflow-y-auto no-scrollbar pr-0.5 flex-1 transition-opacity duration-200 ${
-                            isBackgroundLoading ? "opacity-50 pointer-events-none" : "opacity-100"
-                        }`}>
+                        <div
+                            className={`w-full space-y-3.5 max-h-[clamp(16rem,24vw,30rem)] overflow-y-auto no-scrollbar px-1.5 py-1.5 flex-1 transition-opacity duration-200 ${
+                                isBackgroundLoading ? "opacity-50 pointer-events-none" : "opacity-100"
+                            }`}>
                             {notifications.map((n) => (
                                 <NotificationItem
                                     key={n.id}
@@ -129,8 +136,10 @@ export function NotificationDropdown({
                 </div>
 
                 {(!loading || notifications.length > 0) && !error && notifications.length > 0 && (
-                    <div className="px-[clamp(1rem,1.2vw,1.4rem)] py-[clamp(0.8rem,1vw,1.2rem)] select-none w-full relative z-10">
-                        <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+                    <div
+                        className="px-[clamp(1rem,1.2vw,1.4rem)] py-[clamp(0.8rem,1vw,1.2rem)] select-none w-full relative z-10">
+                        <div
+                            className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none"/>
 
                         <Pagination
                             page={page}

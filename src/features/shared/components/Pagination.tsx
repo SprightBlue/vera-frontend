@@ -1,5 +1,5 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { UI_TOGGLE_STYLES, UI_TOGGLE_INACTIVE, UI_VARIANTS_MAP } from '@/features/shared/utils/styleConfig';
+import {ChevronLeft, ChevronRight} from 'lucide-react';
+import {UI_TOGGLE_STYLES, UI_TOGGLE_INACTIVE, UI_VARIANTS_MAP} from '@/features/shared/utils/styleConfig';
 
 interface PaginationProps {
     page: number;
@@ -10,7 +10,7 @@ interface PaginationProps {
     onForceLoading: () => void;
 }
 
-export function Pagination({ page, totalPages, loading, onPageChange, onForceLoading }: PaginationProps) {
+export function Pagination({page, totalPages, loading, onPageChange, onForceLoading}: PaginationProps) {
     const handlePageClick = (targetPage: number) => {
         if (targetPage !== page && !loading) {
             onForceLoading();
@@ -42,8 +42,10 @@ export function Pagination({ page, totalPages, loading, onPageChange, onForceLoa
 
     return (
         <div className="flex items-center justify-between mt-auto select-none w-full mx-auto">
-            <span className="text-[clamp(10px,0.55vw,11px)] text-slate-500 font-sans font-bold tracking-wider uppercase">
-                Página <span className="font-display font-extrabold text-slate-400">{page + 1}</span> de <span className="font-display font-extrabold text-slate-400">{Math.max(1, totalPages)}</span>
+            <span
+                className="text-[clamp(10px,0.55vw,11px)] text-slate-500 font-sans font-bold tracking-wider uppercase">
+                Página <span className="font-display font-extrabold text-slate-400">{page + 1}</span> de <span
+                className="font-display font-extrabold text-slate-400">{Math.max(1, totalPages)}</span>
             </span>
 
             <div className="flex items-center gap-1.5">
@@ -52,9 +54,11 @@ export function Pagination({ page, totalPages, loading, onPageChange, onForceLoa
                     onClick={() => handlePageClick(page - 1)}
                     className={`p-2 border rounded-lg transition-all duration-200 active:scale-[0.95] disabled:scale-100 disabled:opacity-10 disabled:cursor-not-allowed h-8 min-w-8 flex items-center justify-center shadow-md relative group overflow-hidden text-slate-400 hover:text-white ${UI_TOGGLE_INACTIVE}`}
                 >
-                    <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig.laserColor}/20`} />
-                    <div className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-75 ${neutralConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`} />
-                    <ChevronLeft className="text-current relative z-10 w-3.5 h-3.5 transition-colors duration-200" />
+                    <div
+                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig.laserColor}/20`}/>
+                    <div
+                        className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-75 ${neutralConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`}/>
+                    <ChevronLeft className="text-current relative z-10 w-3.5 h-3.5 transition-colors duration-200"/>
                 </button>
 
                 {visiblePages.map((item, idx) => {
@@ -84,15 +88,17 @@ export function Pagination({ page, totalPages, loading, onPageChange, onForceLoa
                                 : `${currentStyle} cursor-pointer active:scale-[0.95] text-slate-400 hover:text-white`
                             }`}
                         >
-                            <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 ${
-                                isCurrent ? `${currentConfig.laserColor}/30` : `via-transparent group-hover:${currentConfig.laserColor}/20`
-                            }`} />
+                            <div
+                                className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 ${
+                                    isCurrent ? `${currentConfig.laserColor}/30` : `via-transparent group-hover:${currentConfig.laserColor}/20`
+                                }`}/>
 
-                            <div className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out z-0 ${
-                                isCurrent
-                                    ? `opacity-20 scale-110 ${currentConfig.glowColor}`
-                                    : `opacity-0 scale-75 ${currentConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`
-                            }`} />
+                            <div
+                                className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out z-0 ${
+                                    isCurrent
+                                        ? `opacity-20 scale-110 ${currentConfig.glowColor}`
+                                        : `opacity-0 scale-75 ${currentConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`
+                                }`}/>
 
                             <span className="relative z-10 transition-colors duration-200">
                                 {(item as number) + 1}
@@ -106,9 +112,11 @@ export function Pagination({ page, totalPages, loading, onPageChange, onForceLoa
                     onClick={() => handlePageClick(page + 1)}
                     className={`p-2 border rounded-lg transition-all duration-200 active:scale-[0.95] disabled:scale-100 disabled:opacity-10 disabled:cursor-not-allowed h-8 min-w-8 flex items-center justify-center shadow-md relative group overflow-hidden text-slate-400 hover:text-white ${UI_TOGGLE_INACTIVE}`}
                 >
-                    <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig.laserColor}/20`} />
-                    <div className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-75 ${neutralConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`} />
-                    <ChevronRight className="text-current relative z-10 w-3.5 h-3.5 transition-colors duration-200" />
+                    <div
+                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig.laserColor}/20`}/>
+                    <div
+                        className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-75 ${neutralConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`}/>
+                    <ChevronRight className="text-current relative z-10 w-3.5 h-3.5 transition-colors duration-200"/>
                 </button>
             </div>
         </div>

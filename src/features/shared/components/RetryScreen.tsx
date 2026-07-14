@@ -1,18 +1,19 @@
-import { RefreshCw } from 'lucide-react';
-import { UI_VARIANTS_MAP } from "@/features/shared/utils/styleConfig";
+import {RefreshCw} from 'lucide-react';
+import {UI_VARIANTS_MAP} from "@/features/shared/utils/styleConfig";
 
 interface RetryScreenProps {
     onRetry: () => void;
     label?: string;
 }
 
-export function RetryScreen({ onRetry, label = "REINTENTAR CONEXIÓN" }: RetryScreenProps) {
+export function RetryScreen({onRetry, label = "REINTENTAR CONEXIÓN"}: RetryScreenProps) {
     const styleConfig = UI_VARIANTS_MAP.neutral;
 
     return (
-        <div className="w-full flex-1 flex items-center justify-center py-[clamp(3rem,6vw,9rem)] select-none animate-fade-in mx-auto max-w-7xl relative overflow-hidden">
+        <div
+            className="w-full flex-1 flex items-center justify-center py-[clamp(3rem,6vw,9rem)] select-none animate-fade-in mx-auto max-w-7xl relative overflow-hidden">
 
-            <div className="absolute w-32 h-32 bg-slate-500/5 rounded-full filter blur-2xl pointer-events-none" />
+            <div className="absolute w-32 h-32 bg-slate-500/5 rounded-full filter blur-2xl pointer-events-none"/>
 
             <button
                 onClick={onRetry}

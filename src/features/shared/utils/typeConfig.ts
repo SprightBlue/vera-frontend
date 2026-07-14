@@ -1,6 +1,6 @@
-import { type RiskLevel } from '@/features/alerts/api/alertsApi';
-import { type ToggleOption } from '@/features/shared/components/FilterToggleGroup';
-import { type UIVariant } from '@/features/shared/utils/styleConfig';
+import {type RiskLevel} from '@/features/alerts/api/alertsApi';
+import {type ToggleOption} from '@/features/shared/components/FilterToggleGroup';
+import {type UIVariant} from '@/features/shared/utils/styleConfig';
 
 export type UIVariantType = UIVariant;
 
@@ -24,12 +24,12 @@ export const getRiskVariant = (level?: RiskLevel): UIVariantType => {
 };
 
 export const STATUS_FILTER_OPTIONS: ToggleOption<'PENDING' | 'RESOLVED'>[] = [
-    { value: 'PENDING', label: 'Pendientes', variant: 'warning' },
-    { value: 'RESOLVED', label: 'Resueltas', variant: 'success' }
+    {value: 'PENDING', label: 'Pendientes', variant: 'warning'},
+    {value: 'RESOLVED', label: 'Resueltas', variant: 'success'}
 ];
 
 export const RISK_FILTER_OPTIONS: ToggleOption<RiskLevel>[] = [
-    { value: 'LOW', label: 'Bajo', variant: 'success' },
-    { value: 'MEDIUM', label: 'Medio', variant: 'warning' },
-    { value: 'HIGH', label: 'Alto', variant: 'danger' }
+    {value: 'LOW', label: 'Bajo', variant: 'success'},
+    {value: 'MEDIUM', label: 'Medio', variant: 'warning'},
+    {value: 'HIGH', label: 'Alto', variant: 'danger'}
 ];

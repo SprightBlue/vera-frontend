@@ -1,16 +1,16 @@
-import { useSearchParams } from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 
 import Sidebar from "@/features/shared/components/Sidebar";
 import Header from "@/features/shared/components/Header";
-import { ChatSidebar } from "@/features/chats/components/ChatSidebar";
-import { ChatRoom } from "@/features/chats/components/ChatRoom";
-import { SidebarToggleButton } from "@/features/chats/components/SidebarToggleButton";
+import {ChatSidebar} from "@/features/chats/components/ChatSidebar";
+import {ChatRoom} from "@/features/chats/components/ChatRoom";
+import {SidebarToggleButton} from "@/features/chats/components/SidebarToggleButton";
 
-import { useChat } from "@/features/chats/hooks/useChat";
-import { useAuth } from "@/presentation/context/AuthContext";
+import {useChat} from "@/features/chats/hooks/useChat";
+import {useAuth} from "@/presentation/context/AuthContext";
 
 export function ChatView() {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const currentChatId = searchParams.get("currentChatId");
 
@@ -36,7 +36,7 @@ export function ChatView() {
 
     const handleSelectChat = (id: string): void => {
         resetInputs();
-        setSearchParams({ currentChatId: id });
+        setSearchParams({currentChatId: id});
     };
 
     const handleNewChat = (): void => {
@@ -47,7 +47,7 @@ export function ChatView() {
     const handleDeleteChat = async (id: string): Promise<void> => {
         if (currentChatId === id || !currentChatId) {
             resetInputs();
-            setSearchParams(new URLSearchParams(), { replace: true });
+            setSearchParams(new URLSearchParams(), {replace: true});
         }
         await deleteChatSession(id);
     };
@@ -60,7 +60,7 @@ export function ChatView() {
         const assignedChatId = await sendMessage(inputToSubmit);
 
         if (assignedChatId && !currentChatId) {
-            setSearchParams({ currentChatId: assignedChatId }, { replace: true });
+            setSearchParams({currentChatId: assignedChatId}, {replace: true});
         }
     };
 
@@ -68,22 +68,24 @@ export function ChatView() {
         const assignedChatId = await sendMessage(text);
 
         if (assignedChatId && !currentChatId) {
-            setSearchParams({ currentChatId: assignedChatId }, { replace: true });
+            setSearchParams({currentChatId: assignedChatId}, {replace: true});
         }
     };
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-[#050814] font-sans antialiased select-none text-slate-100 relative">
-            <Sidebar />
+        <div
+            className="flex h-screen w-screen overflow-hidden bg-[#050814] font-sans antialiased select-none text-slate-100 relative">
+            <Sidebar/>
 
-            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 lg:ml-56 transition-all duration-300">
-                <Header userName={user?.fullName} title="Asistente Virtual" />
+            <div
+                className="flex-1 flex flex-col min-w-0 h-full overflow-hidden ml-20 lg:ml-56 transition-all duration-300">
+                <Header userName={user?.fullName} title="Asistente Virtual"/>
 
                 <div className="flex-1 flex overflow-hidden min-h-0 w-full relative">
                     <div className="flex-1 flex flex-col bg-[#050814] overflow-hidden relative min-w-0">
 
                         <div className="absolute right-[clamp(1rem,2vw,2rem)] top-[clamp(1rem,1.5vw,1.5rem)] z-40">
-                            <SidebarToggleButton isOpen={isSidebarOpen} onClick={toggleSidebar} />
+                            <SidebarToggleButton isOpen={isSidebarOpen} onClick={toggleSidebar}/>
                         </div>
 
                         <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">

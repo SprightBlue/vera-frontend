@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { Client } from "@stomp/stompjs";
+import {useState, useEffect, useCallback, useRef} from "react";
+import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {
     fetchAllNotifications,
@@ -23,7 +23,7 @@ interface AxiosErrorLike {
     };
 }
 
-export function useNotifications({ page, userEmail }: UseNotificationsProps) {
+export function useNotifications({page, userEmail}: UseNotificationsProps) {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [totalElements, setTotalElements] = useState<number>(0);
@@ -76,6 +76,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
                 setIsDropdownOpen(false);
             }
         }
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
@@ -124,7 +125,9 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
         };
 
         void fetchInitialData();
-        return () => { isMounted = false; };
+        return () => {
+            isMounted = false;
+        };
     }, [page]);
 
     useEffect(() => {
@@ -137,7 +140,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
 
         const client = new Client({
             webSocketFactory: () => new SockJS(socketUrl),
-            connectHeaders: { Authorization: `Bearer ${token}` },
+            connectHeaders: {Authorization: `Bearer ${token}`},
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
@@ -196,7 +199,7 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
 
     const handleMarkAllRead = async () => {
         if (unreadCount === 0) return;
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+        setNotifications((prev) => prev.map((n) => ({...n, isRead: true})));
 
         try {
             await markAllRead();
@@ -250,7 +253,11 @@ export function useNotifications({ page, userEmail }: UseNotificationsProps) {
 
                 setNotifications((prev) =>
                     prev.map((n) => n.id === notif.id
-                        ? { ...n, type: action === "ACCEPT" ? "INVITATION_ACCEPTED" : "INVITATION_REJECTED", isRead: true }
+                        ? {
+                            ...n,
+                            type: action === "ACCEPT" ? "INVITATION_ACCEPTED" : "INVITATION_REJECTED",
+                            isRead: true
+                        }
                         : n
                     )
                 );

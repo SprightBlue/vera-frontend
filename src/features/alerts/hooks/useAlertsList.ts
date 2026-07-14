@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { alertsApi, type AlertsResponse, type AlertFilters } from '@/features/alerts/api/alertsApi';
+import {useState, useEffect, useCallback, useRef} from 'react';
+import {alertsApi, type AlertsResponse, type AlertFilters} from '@/features/alerts/api/alertsApi';
 
 interface UseAlertsProps extends Omit<AlertFilters, 'search'> {
     searchTerm: string;
@@ -11,7 +11,7 @@ interface AxiosErrorLike {
     };
 }
 
-export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
+export function useAlertsList({searchTerm, ...otherFilters}: UseAlertsProps) {
     const [alerts, setAlerts] = useState<AlertsResponse[]>([]);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [totalElements, setTotalElements] = useState<number>(0);
@@ -49,7 +49,7 @@ export function useAlertsList({ searchTerm, ...otherFilters }: UseAlertsProps) {
         return typeof err === 'object' && err !== null && 'response' in err;
     };
 
-    const { page, resolved, riskLevel } = otherFilters;
+    const {page, resolved, riskLevel} = otherFilters;
 
     useEffect(() => {
         let isMounted = true;

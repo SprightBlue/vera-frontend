@@ -1,3 +1,0 @@
-//proximamente
-export class EmptyCard {
-}

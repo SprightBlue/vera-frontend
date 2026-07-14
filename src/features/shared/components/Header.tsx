@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useNotifications } from "@/features/notification/hooks/useNotifications";
-import { NotificationDropdown } from "@/features/notification/components/NotificationDropdown";
-import { useAuth } from "@/presentation/context/AuthContext";
-import { PersonAvatar } from "@/features/shared/components/PersonAvatar";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useNotifications} from "@/features/notification/hooks/useNotifications";
+import {NotificationDropdown} from "@/features/notification/components/NotificationDropdown";
+import {useAuth} from "@/presentation/context/AuthContext";
+import {PersonAvatar} from "@/features/shared/components/PersonAvatar";
 
 interface HeaderProps {
     userName?: string;
@@ -12,9 +12,9 @@ interface HeaderProps {
     subtitle?: string;
 }
 
-export function Header({ userName, userRole, title }: HeaderProps) {
+export function Header({userName, userRole, title}: HeaderProps) {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const {user} = useAuth();
 
     const finalUserName = user?.fullName || userName || "Usuario";
     let finalUserRole = "Protector";
@@ -53,13 +53,14 @@ export function Header({ userName, userRole, title }: HeaderProps) {
         bg-[#050814]/90 backdrop-blur-md transition-all duration-300 select-none
         pl-[clamp(5.8rem,8vw,6.5rem)] lg:pl-[clamp(1.5rem,2vw,2.5rem)] pr-4 sm:pr-6 lg:pr-8">
 
-            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none" />
+            <div
+                className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
 
             <div className="absolute bottom-0 left-4 sm:left-6 lg:left-8 right-4 sm:right-6 lg:right-8 h-px
-            bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none" />
+            bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none"/>
 
             <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left">
-                <h2 className="text-[clamp(1rem,1.15vw,1.3rem)] font-display font-black tracking-wide uppercase text-white truncate leading-normal">
+                <h2 className="text-[clamp(0.95rem,1.1vw,1.25rem)] font-display font-extrabold tracking-wide uppercase text-white truncate leading-normal">
                     {displayTitle}
                 </h2>
             </div>
@@ -93,11 +94,13 @@ export function Header({ userName, userRole, title }: HeaderProps) {
                 />
 
                 <div className="flex items-center gap-3 border-l border-[#161f37] pl-[clamp(0.8rem,1.2vw,1.5rem)]">
-                    <div className="hidden sm:flex flex-col items-end leading-tight">
-                        <span className="text-[clamp(0.8rem,0.85vw,0.9rem)] font-display font-black text-slate-200 mb-0.5 whitespace-nowrap">
+                    <div className="hidden sm:flex flex-col items-end leading-none gap-1.5">
+                        <span
+                            className="text-[clamp(0.78rem,0.82vw,0.88rem)] font-display font-extrabold text-slate-200 uppercase tracking-wide whitespace-nowrap">
                             {finalUserName}
                         </span>
-                        <span className="text-[10px] font-display font-black uppercase tracking-wider text-slate-500 whitespace-nowrap">
+                        <span
+                            className="text-[9px] font-display font-bold uppercase tracking-widest text-slate-500 whitespace-nowrap">
                             {finalUserRole}
                         </span>
                     </div>
