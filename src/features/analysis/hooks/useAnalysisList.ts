@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { analysisApi, type AnalysisResponse, type AnalysisFilters } from '@/features/analysis/api/analysisApi';
+import {useState, useEffect, useCallback, useRef} from 'react';
+import {analysisApi, type AnalysisResponse, type AnalysisFilters} from '@/features/analysis/api/analysisApi';
 
 interface UseAnalysisListProps extends Omit<AnalysisFilters, 'search'> {
     searchTerm: string;
@@ -11,7 +11,7 @@ interface AxiosErrorLike {
     };
 }
 
-export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisListProps) {
+export function useAnalysisList({searchTerm, ...otherFilters}: UseAnalysisListProps) {
     const [analyses, setAnalyses] = useState<AnalysisResponse[]>([]);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [totalElements, setTotalElements] = useState<number>(0);
@@ -49,7 +49,7 @@ export function useAnalysisList({ searchTerm, ...otherFilters }: UseAnalysisList
         return typeof err === 'object' && err !== null && 'response' in err;
     };
 
-    const { page, riskLevel } = otherFilters;
+    const {page, riskLevel} = otherFilters;
 
     useEffect(() => {
         let isMounted = true;

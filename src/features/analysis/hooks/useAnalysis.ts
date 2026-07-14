@@ -1,6 +1,6 @@
-import { useState, useRef, type ChangeEvent, type SyntheticEvent, type MouseEvent, type RefObject } from 'react';
-import type { AnalysisDetailResponse, AnalyzeRequestDto } from '@/features/analysis/api/analysisApi';
-import { analysisApi } from '@/features/analysis/api/analysisApi';
+import {useState, useRef, type ChangeEvent, type SyntheticEvent, type MouseEvent, type RefObject} from 'react';
+import type {AnalysisDetailResponse, AnalyzeRequestDto} from '@/features/analysis/api/analysisApi';
+import {analysisApi} from '@/features/analysis/api/analysisApi';
 
 interface AxiosErrorLike {
     response?: {

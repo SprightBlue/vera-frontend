@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { alertsApi, type AlertsDetailResponse } from '@/features/alerts/api/alertsApi';
+import {useState, useEffect, useCallback} from 'react';
+import {alertsApi, type AlertsDetailResponse} from '@/features/alerts/api/alertsApi';
 
 interface AxiosErrorLike {
     response?: {

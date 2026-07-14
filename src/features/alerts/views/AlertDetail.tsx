@@ -1,26 +1,26 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "@/presentation/context/AuthContext";
+import {useState} from "react";
+import {useParams, useNavigate} from "react-router-dom";
+import {useAuth} from "@/presentation/context/AuthContext";
 import Sidebar from "@/features/shared/components/Sidebar";
 import Header from "@/features/shared/components/Header";
-import { useAlertDetail } from "@/features/alerts/hooks/useAlertDetail";
-import { getRiskVariant, RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
-import { type RiskLevel } from "@/features/alerts/api/alertsApi";
-import { AlertCircle, CheckCircle, Trash2 } from "lucide-react";
+import {useAlertDetail} from "@/features/alerts/hooks/useAlertDetail";
+import {getRiskVariant, RISK_LABELS_ES} from "@/features/shared/utils/typeConfig";
+import {type RiskLevel} from "@/features/alerts/api/alertsApi";
+import {AlertCircle, CheckCircle, Trash2} from "lucide-react";
 
-import { LoadingScreen } from "@/features/shared/components/LoadingScreen";
-import { RetryScreen } from "@/features/shared/components/RetryScreen";
-import { DetailHeader } from "@/features/shared/components/DetailHeader";
-import { DetailMetaRow } from "@/features/shared/components/DetailMetaRow";
-import { DetailContentBox } from "@/features/shared/components/DetailContentBox";
-import { ActionButton } from "@/features/shared/components/ActionButton";
-import { ListButton } from "@/features/shared/components/ListButton";
+import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
+import {RetryScreen} from "@/features/shared/components/RetryScreen";
+import {DetailHeader} from "@/features/shared/components/DetailHeader";
+import {DetailMetaRow} from "@/features/shared/components/DetailMetaRow";
+import {DetailContentBox} from "@/features/shared/components/DetailContentBox";
+import {ActionButton} from "@/features/shared/components/ActionButton";
+import {ListButton} from "@/features/shared/components/ListButton";
 
 export function AlertDetail() {
-    const { alertId } = useParams<{ alertId: string }>();
+    const {alertId} = useParams<{ alertId: string }>();
     const navigate = useNavigate();
-    const { user } = useAuth();
-    const { detail, loading, error, retry, markAsResolved, removeAlert } = useAlertDetail(alertId!);
+    const {user} = useAuth();
+    const {detail, loading, error, retry, markAsResolved, removeAlert} = useAlertDetail(alertId!);
     const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
     const [actionLoading, setActionLoading] = useState<boolean>(false);
 
@@ -30,21 +30,25 @@ export function AlertDetail() {
     const labelES = riskLevel ? RISK_LABELS_ES[riskLevel] : 'General';
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
-            <Sidebar />
+        <div
+            className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
+            <Sidebar/>
 
-            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
-                <Header userName={user?.fullName ?? "Usuario"} title="Detalle de la Alerta" />
+            <div
+                className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
+                <Header userName={user?.fullName ?? "Usuario"} title="Detalle de la Alerta"/>
 
-                <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between">
-                    <div className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
+                <main
+                    className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between">
+                    <div
+                        className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
 
-                        <ListButton to="/alerts" />
+                        <ListButton to="/alerts"/>
 
                         {loading ? (
-                            <LoadingScreen />
+                            <LoadingScreen/>
                         ) : error ? (
-                            <RetryScreen onRetry={retry} />
+                            <RetryScreen onRetry={retry}/>
                         ) : detail ? (
                             <>
                                 <DetailHeader

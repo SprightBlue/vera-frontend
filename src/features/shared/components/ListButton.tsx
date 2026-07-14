@@ -1,13 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { List } from "lucide-react";
-import { UI_VARIANTS_MAP } from "@/features/shared/utils/styleConfig";
+import {useNavigate} from "react-router-dom";
+import {List} from "lucide-react";
+import {UI_VARIANTS_MAP} from "@/features/shared/utils/styleConfig";
 
 interface BackButtonProps {
     to: string;
     label?: string;
 }
 
-export function ListButton({ to, label = "Ir al Historial" }: BackButtonProps) {
+export function ListButton({to, label = "Ir al Historial"}: BackButtonProps) {
     const navigate = useNavigate();
     const styleConfig = UI_VARIANTS_MAP.neutral;
 

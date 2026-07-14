@@ -3,7 +3,7 @@ import { useAuth } from "@/presentation/context/AuthContext";
 
 import Login from "@/presentation/pages/Login";
 import Register from "@/presentation/pages/Register";
-import { Dashboard } from "@/features/dashboard/views/Dashboard";
+import { DashboardView } from "@/features/dashboard/views/DashboardView";
 import Settings from "@/presentation/pages/settings/Settings";
 import { AlertsList } from "@/features/alerts/views/AlertsList";
 import { AnalysisView } from "@/features/analysis/views/AnalysisView.tsx";
@@ -71,7 +71,7 @@ function App() {
                     <Route element={<PrivateRoute />}>
 
                         {/* Rutas Compartidas */}
-                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<DashboardView />} />
                         <Route path="/ai-center" element={<AiCenterView />} />
                         <Route path="/analysis" element={<AnalysisView />} />
                         <Route path="/chat" element={<ChatView />} />

@@ -1,6 +1,6 @@
-import { type MouseEvent } from "react";
-import { DeleteButton } from "@/features/shared/components/DeleteButton";
-import type { ChatSession } from "@/features/chats/api/chatApi";
+import {type MouseEvent} from "react";
+import {DeleteButton} from "@/features/shared/components/DeleteButton";
+import type {ChatSession} from "@/features/chats/api/chatApi";
 
 interface ChatSidebarItemProps {
     session: ChatSession;
@@ -32,21 +32,24 @@ export function ChatItem({
             }`}
             title={session.title}
         >
-            <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${
-                isActive ? "via-blue-400/40" : "via-transparent group-hover:via-slate-500/20"
-            }`} />
+            <div
+                className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${
+                    isActive ? "via-blue-400/40" : "via-transparent group-hover:via-slate-500/20"
+                }`}/>
 
-            <div className={`absolute -top-6 -right-6 w-16 h-16 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 ${
-                isActive
-                    ? "opacity-20 scale-125 bg-blue-500"
-                    : "opacity-0 scale-75 bg-slate-500 group-hover:opacity-10 group-hover:scale-110"
-            }`} />
+            <div
+                className={`absolute -top-6 -right-6 w-16 h-16 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 ${
+                    isActive
+                        ? "opacity-20 scale-125 bg-blue-500"
+                        : "opacity-0 scale-75 bg-slate-500 group-hover:opacity-10 group-hover:scale-110"
+                }`}/>
 
             <span className={`absolute left-0 top-1 bottom-1 w-0.75 rounded-r transition-all duration-300 z-20 ${
                 isActive ? "bg-blue-500 shadow-[0_0_12px_#3b82f6]" : "bg-transparent group-hover:bg-slate-700"
-            }`} />
+            }`}/>
 
-            <span className="truncate flex-1 text-left relative z-10 font-sans font-medium text-[clamp(12px,0.78vw,13px)] tracking-wide transition-colors duration-300">
+            <span
+                className="truncate flex-1 text-left relative z-10 font-sans font-medium text-[clamp(12px,0.78vw,13px)] tracking-wide transition-colors duration-300">
                 {session.title}
             </span>
 

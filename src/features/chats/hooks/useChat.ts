@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { chatApi, type ChatMessage, type ChatSession } from "@/features/chats/api/chatApi";
-import { useAuth } from "@/presentation/context/AuthContext";
+import {useState, useEffect, useCallback, useRef} from "react";
+import {chatApi, type ChatMessage, type ChatSession} from "@/features/chats/api/chatApi";
+import {useAuth} from "@/presentation/context/AuthContext";
 
 interface UseChatReturn {
     messages: ChatMessage[];
@@ -30,7 +30,7 @@ interface AxiosErrorLike {
 }
 
 export function useChat(currentChatId: string | null): UseChatReturn {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const [chatId, setChatId] = useState<string | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -107,7 +107,9 @@ export function useChat(currentChatId: string | null): UseChatReturn {
         }
 
         void loadInitialSessions();
-        return () => { isMounted = false; };
+        return () => {
+            isMounted = false;
+        };
     }, [user?.email, handleHookError]);
 
     useEffect(() => {
@@ -140,7 +142,9 @@ export function useChat(currentChatId: string | null): UseChatReturn {
         }
 
         void setupChat();
-        return () => { isMounted = false; };
+        return () => {
+            isMounted = false;
+        };
     }, [currentChatId, user?.email, handleHookError]);
 
     const sendMessage = useCallback(async (text: string): Promise<string | null> => {
@@ -151,7 +155,7 @@ export function useChat(currentChatId: string | null): UseChatReturn {
         setError(null);
         lastPendingMessageRef.current = cleanMessage;
 
-        const userMsg: ChatMessage = { role: "USER", content: cleanMessage };
+        const userMsg: ChatMessage = {role: "USER", content: cleanMessage};
         setMessages(prev => [...prev, userMsg]);
 
         try {
@@ -162,7 +166,7 @@ export function useChat(currentChatId: string | null): UseChatReturn {
             }
 
             const aiResponse = await chatApi.sendMessage(activeId, cleanMessage);
-            const modelMsg: ChatMessage = { role: "MODEL", content: aiResponse };
+            const modelMsg: ChatMessage = {role: "MODEL", content: aiResponse};
 
             setMessages(prev => [...prev, modelMsg]);
             lastPendingMessageRef.current = null;

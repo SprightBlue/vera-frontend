@@ -1,6 +1,6 @@
-import { type ButtonHTMLAttributes, type ComponentType, type ReactNode } from "react";
-import { Loader2 } from "lucide-react";
-import { UI_BUTTON_STYLES, type UIVariant } from "@/features/shared/utils/styleConfig";
+import {type ButtonHTMLAttributes, type ComponentType, type ReactNode} from "react";
+import {Loader2} from "lucide-react";
+import {UI_BUTTON_STYLES, type UIVariant} from "@/features/shared/utils/styleConfig";
 
 interface DetailButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant: UIVariant;
@@ -28,9 +28,9 @@ export function ActionButton({
             {...props}
         >
             {isLoading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0"/>
             ) : (
-                Icon && <Icon className="h-3.5 w-3.5 shrink-0 stroke-[2.5]" />
+                Icon && <Icon className="h-3.5 w-3.5 shrink-0 stroke-[2.5]"/>
             )}
             <span className="leading-none">{children}</span>
         </button>

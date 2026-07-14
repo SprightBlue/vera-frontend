@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import {Bell} from "lucide-react";
 
 interface NotificationBellProps {
     isOpen: boolean;
@@ -7,7 +7,7 @@ interface NotificationBellProps {
     onClick: () => void;
 }
 
-export function NotificationBell({ isOpen, isRinging, unreadCount, onClick }: NotificationBellProps) {
+export function NotificationBell({isOpen, isRinging, unreadCount, onClick}: NotificationBellProps) {
     return (
         <button
             type="button"
@@ -22,18 +22,21 @@ export function NotificationBell({ isOpen, isRinging, unreadCount, onClick }: No
                     : ''
             }`}
         >
-            <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${
-                isOpen ? "via-blue-400/40" : "via-transparent group-hover:via-slate-500/20"
-            }`} />
+            <div
+                className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${
+                    isOpen ? "via-blue-400/40" : "via-transparent group-hover:via-slate-500/20"
+                }`}/>
 
-            <div className={`absolute -top-5 -right-5 w-12 h-12 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 ${
-                isOpen
-                    ? "opacity-20 scale-125 bg-blue-500"
-                    : "opacity-0 scale-75 bg-slate-500 group-hover:opacity-10 group-hover:scale-110"
-            }`} />
+            <div
+                className={`absolute -top-5 -right-5 w-12 h-12 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 ${
+                    isOpen
+                        ? "opacity-20 scale-125 bg-blue-500"
+                        : "opacity-0 scale-75 bg-slate-500 group-hover:opacity-10 group-hover:scale-110"
+                }`}/>
 
             {isRinging && (
-                <span className="absolute inset-0 rounded-lg bg-blue-500/20 animate-ping duration-1000 pointer-events-none" />
+                <span
+                    className="absolute inset-0 rounded-lg bg-blue-500/20 animate-ping duration-1000 pointer-events-none"/>
             )}
 
             <Bell
@@ -47,8 +50,9 @@ export function NotificationBell({ isOpen, isRinging, unreadCount, onClick }: No
 
             {unreadCount > 0 && (
                 <span className="absolute top-2 right-2 flex h-2 w-2 z-20">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
+                    <span
+                        className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"/>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"/>
                 </span>
             )}
         </button>

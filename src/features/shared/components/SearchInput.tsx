@@ -1,5 +1,5 @@
-import { type ChangeEvent, type SyntheticEvent } from 'react';
-import { Search } from 'lucide-react';
+import {type ChangeEvent, type SyntheticEvent} from 'react';
+import {Search} from 'lucide-react';
 
 interface SearchInputProps {
     value: string;
@@ -16,11 +16,13 @@ export function SearchInput({
                             }: SearchInputProps) {
     return (
         <form onSubmit={(e: SyntheticEvent) => e.preventDefault()} className="flex flex-col gap-2 md:w-1/2 w-full">
-            <span className="text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider text-slate-500 uppercase select-none">
+            <span
+                className="text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider text-slate-500 uppercase select-none">
                 {label}
             </span>
             <div className="relative flex items-center w-full group">
-                <Search className="absolute left-4 text-slate-500 group-focus-within:text-slate-200 transition-colors duration-200 w-[clamp(13px,0.65vw,16px)] h-[clamp(13px,0.65vw,16px)] z-10 stroke-2" />
+                <Search
+                    className="absolute left-4 text-slate-500 group-focus-within:text-slate-200 transition-colors duration-200 w-[clamp(13px,0.65vw,16px)] h-[clamp(13px,0.65vw,16px)] z-10 stroke-2"/>
 
                 <input
                     type="text"

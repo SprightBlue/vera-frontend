@@ -1,5 +1,5 @@
-import { type ChangeEvent, type KeyboardEvent } from 'react';
-import { Send } from 'lucide-react';
+import {type ChangeEvent, type KeyboardEvent} from 'react';
+import {Send} from 'lucide-react';
 
 interface ChatInputProps {
     value: string;
@@ -47,7 +47,7 @@ export function ChatInput({
                 onClick={() => {
                     if (!isButtonDisabled) onSubmit();
                 }}
-                style={{ WebkitTapHighlightColor: 'transparent' }}
+                style={{WebkitTapHighlightColor: 'transparent'}}
                 className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 select-none outline-none focus:outline-none focus:ring-0 active:ring-0 border-0 ${
                     isButtonDisabled
                         ? "text-slate-600 bg-transparent cursor-not-allowed opacity-50"
@@ -55,7 +55,8 @@ export function ChatInput({
                 }`}
                 title="Enviar mensaje"
             >
-                <Send className={`w-[clamp(14px,0.9vw,16px)] h-[clamp(14px,0.9vw,16px)] stroke-[2.5] transition-transform duration-200 ${!isButtonDisabled && "translate-x-[0.5px]"}`} />
+                <Send
+                    className={`w-[clamp(14px,0.9vw,16px)] h-[clamp(14px,0.9vw,16px)] stroke-[2.5] transition-transform duration-200 ${!isButtonDisabled && "translate-x-[0.5px]"}`}/>
             </button>
         </div>
     );
