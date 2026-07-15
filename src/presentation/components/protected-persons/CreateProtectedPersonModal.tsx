@@ -1,9 +1,9 @@
 import { useState } from "react";
-import ProtectedPersonForm from "./ProtectedPersonForm";
-import { createProtectedPerson, type CreateProtectedPersonRequest } from "../../../infrastructure/api/protected-person-api";
+import ProtectedPersonForm from "./ProtectedPersonForm.tsx";
+import { createProtectedPerson, type CreateProtectedPersonRequest } from "../../../infrastructure/api/protected-person-api.ts";
 import { CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { ActionButton } from "@/features/shared/components/ActionButton";
+import { ActionButton } from "@/features/shared/components/ActionButton.tsx";
 
 interface Props {
     onClose: () => void;
@@ -51,9 +51,9 @@ function CreateProtectedPersonModal({ onClose, onSuccess }: Props) {
                     </div>
                 ) : (
                     <div className={`mt-4 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}>
-                        <ProtectedPersonForm 
+                        <ProtectedPersonForm
                             onClose={onClose}
-                            onSubmit={handleCreate} 
+                            onSubmit={handleCreate}
                         />
 
                         {isLoading && (

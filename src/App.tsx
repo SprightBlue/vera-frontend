@@ -4,7 +4,7 @@ import { useAuth } from "@/presentation/context/AuthContext";
 import Login from "@/presentation/pages/Login";
 import Register from "@/presentation/pages/Register";
 import { DashboardView } from "@/features/dashboard/views/DashboardView";
-import Settings from "@/presentation/pages/settings/Settings";
+import {SettingsView} from "@/features/settings/views/SettingsView";
 import { AlertsList } from "@/features/alerts/views/AlertsList";
 import { AnalysisView } from "@/features/analysis/views/AnalysisView.tsx";
 import Persons from "@/presentation/pages/persons/Persons";
@@ -81,7 +81,7 @@ function App() {
                         <Route path="/analysis-list" element={<AnalysisList />} />
                         <Route path="/analysis/:id" element={<AnalysisDetail />} />
                         <Route path="/contacts" element={<Contacts />} />
-                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/settings" element={<SettingsView />} />
                         <Route path="/manual" element={<ManualView />} />
                         <Route path="/incidents" element={<Incidents />} />
                         <Route path="/training" element={<TrainingPage />} />

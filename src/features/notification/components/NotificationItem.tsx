@@ -1,16 +1,17 @@
-import {useState} from "react";
-import {type AppNotification} from "@/features/notification/api/notificationsApi";
-import {type NotificationType} from "@/features/shared/utils/typeConfig";
-import {ActionButton} from "@/features/shared/components/ActionButton";
-import {DeleteButton} from "@/features/shared/components/DeleteButton";
+import { useState } from "react";
+import { type AppNotification } from "@/features/notification/api/notificationsApi";
+import { type NotificationType } from "@/features/shared/utils/typeConfig";
+import { ActionButton } from "@/features/shared/components/ActionButton";
+import { DeleteButton } from "@/features/shared/components/DeleteButton";
 
 interface ItemProps {
     notif: AppNotification;
     onAction: (notif: AppNotification, action: 'ACCEPT' | 'REJECT' | 'DELETE') => void | Promise<void>;
     onSelect: (notif: AppNotification) => void;
+    isDisabled?: boolean; // Prop para bloquear acciones si la app está procesando globalmente
 }
 
-export function NotificationItem({notif, onAction, onSelect}: ItemProps) {
+export function NotificationItem({ notif, onAction, onSelect, isDisabled = false }: ItemProps) {
     const notifType = notif.type as NotificationType;
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -20,23 +21,35 @@ export function NotificationItem({notif, onAction, onSelect}: ItemProps) {
 
     const hasActions = notifType === 'ALERT' || (notifType === 'INVITATION' && invitationId);
 
+    // Bloquear si se está borrando este item ESPECÍFICO o si hay un bloqueo externo
+    const preventActions = isDeleting || isDisabled;
+
     return (
         <div
-            className="group rounded-xl border border-slate-800/80 bg-linear-to-b from-[#0f172a] to-[#020617] p-[clamp(0.9rem,1.2vw,1.3rem)] shadow-2xl relative overflow-hidden flex flex-col gap-3 transition-all duration-300 ring-1 ring-inset ring-slate-700/10 w-full">
+            className={`group rounded-xl border border-slate-800/80 bg-linear-to-b from-[#0f172a] to-[#020617] p-[clamp(0.9rem,1.2vw,1.3rem)] shadow-2xl relative overflow-hidden flex flex-col gap-3 transition-all duration-300 ring-1 ring-inset ring-slate-700/10 w-full ${
+                preventActions ? "opacity-60 pointer-events-none" : ""
+            }`}
+        >
+            <div
+                className="absolute -top-16 -right-16 w-36 h-36 rounded-full bg-slate-500 filter blur-3xl opacity-10 pointer-events-none"
+            />
 
             <div
-                className="absolute -top-16 -right-16 w-36 h-36 rounded-full bg-slate-500 filter blur-3xl opacity-10 pointer-events-none"/>
+                className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"
+            />
 
-            <div
-                className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
-
+            {/* Botón de borrado individual */}
             <div className="absolute top-2.5 right-2.5 z-20">
                 <DeleteButton
                     isProcessing={isDeleting}
                     title="Eliminar notificación"
+                    disabled={preventActions}
                     onClick={async (e) => {
                         e.stopPropagation();
+                        if (preventActions) return;
                         setIsDeleting(true);
+
+                        // Pequeña pausa para animación de salida de la UI
                         await new Promise(resolve => setTimeout(resolve, 300));
                         try {
                             await onAction(notif, 'DELETE');
@@ -49,7 +62,8 @@ export function NotificationItem({notif, onAction, onSelect}: ItemProps) {
 
             <div className="flex flex-col justify-between min-w-0 flex-1 relative z-10 gap-2 items-start pr-6">
                 <span
-                    className="text-[clamp(9px,0.52vw,10px)] font-display font-extrabold text-slate-500 tracking-widest uppercase select-text leading-none">
+                    className="text-[clamp(9px,0.52vw,10px)] font-display font-extrabold text-slate-500 tracking-widest uppercase select-text leading-none"
+                >
                     {notif.createdAt}
                 </span>
 
@@ -70,15 +84,17 @@ export function NotificationItem({notif, onAction, onSelect}: ItemProps) {
                             <>
                                 <ActionButton
                                     variant="success"
-                                    onClick={() => onAction(notif, 'ACCEPT')}
-                                    className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                                    onClick={() => !preventActions && onAction(notif, 'ACCEPT')}
+                                    disabled={preventActions}
+                                    className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     Aceptar
                                 </ActionButton>
                                 <ActionButton
                                     variant="danger"
-                                    onClick={() => onAction(notif, 'REJECT')}
-                                    className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                                    onClick={() => !preventActions && onAction(notif, 'REJECT')}
+                                    disabled={preventActions}
+                                    className="px-3.5 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     Rechazar
                                 </ActionButton>
@@ -88,8 +104,9 @@ export function NotificationItem({notif, onAction, onSelect}: ItemProps) {
                         {notifType === 'ALERT' && (
                             <ActionButton
                                 variant="info"
-                                onClick={() => onSelect(notif)}
-                                className="px-4 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md"
+                                onClick={() => !preventActions && onSelect(notif)}
+                                disabled={preventActions}
+                                className="px-4 h-[clamp(1.75rem,1.9vw,2rem)] text-[9px] font-sans font-black tracking-wider uppercase rounded-md shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Ver Detalles
                             </ActionButton>

@@ -13,7 +13,7 @@ export function AiCenterView() {
 
             <div
                 className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56 relative">
-                <Header userName={user?.fullName} title="Funciones IA"/>
+                <Header userName={user?.fullName} title="Funciones de Inteligencia Artificial"/>
 
                 <main
                     className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between relative z-10">
