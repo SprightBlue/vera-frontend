@@ -3,7 +3,7 @@ import {useAuth} from '@/presentation/context/AuthContext';
 import {useDashboard} from '@/features/dashboard/hooks/useDashboard';
 import Sidebar from '@/features/shared/components/Sidebar';
 import Header from '@/features/shared/components/Header';
-import CreateProtectedPersonModal from '@/presentation/components/protected-persons/CreateProtectedPersonModal';
+import CreateProtectedPersonModal from '@/presentation/components/protected-persons/CreateProtectedPersonModal.tsx';
 import {DashboardBanner} from '@/features/dashboard/components/DashboardBanner';
 import {DashboardStats} from '@/features/dashboard/components/DashboardStats';
 import {DashboardHero} from '@/features/dashboard/components/DashboardHero';

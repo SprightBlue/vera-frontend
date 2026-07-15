@@ -1,5 +1,5 @@
 import {type MouseEvent} from "react";
-import {Plus, History} from "lucide-react";
+import {History, MessagesSquare} from "lucide-react";
 import type {ChatSession} from "@/features/chats/api/chatApi";
 import {ActionButton} from "@/features/shared/components/ActionButton";
 import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
@@ -47,7 +47,7 @@ export function ChatSidebar({
                 <ActionButton
                     variant="info"
                     onClick={onNewChat}
-                    icon={Plus}
+                    icon={MessagesSquare}
                     disabled={isLoading}
                     className="w-full sm:w-full"
                 >

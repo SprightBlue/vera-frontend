@@ -1,12 +1,15 @@
-type Size = "xs" | "sm" | "md" | "lg" | "xl" | "header";
+type Size = "xs" | "sm" | "md" | "lg" | "xl" | "header" | "full";
 
 const sizeMap: Record<Size, { container: string; text: string }> = {
     xs: {container: "w-7 h-7", text: "text-[9px]"},
     sm: {container: "w-11 h-11", text: "text-sm"},
     md: {container: "w-20 h-20", text: "text-2xl"},
-    lg: {container: "w-28 h-28", text: "text-4xl"},
-    xl: {container: "w-36 h-36", text: "text-5xl"},
+    // Aumentamos considerablemente lg y xl para tu layout de dos columnas
+    lg: {container: "w-40 h-40 md:w-44 md:h-44", text: "text-5xl"},
+    xl: {container: "w-48 h-48 md:w-56 md:h-56", text: "text-6xl"},
     header: {container: "w-8 h-8 sm:w-9 sm:h-9", text: "text-[10px] sm:text-xs"},
+    // Variante comodín: ocupa el 100% del contenedor padre que definas afuera
+    full: {container: "w-full h-full", text: "text-[clamp(2.5rem,5vw,4.5rem)]"}
 };
 
 function getInitials(fullName: string): string {

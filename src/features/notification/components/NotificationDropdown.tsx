@@ -20,6 +20,7 @@ interface DropdownProps {
     isRinging: boolean;
     loading: boolean;
     isBackgroundLoading?: boolean;
+    isProcessing?: boolean;
     isProcessingAll?: boolean;
     error: string | null;
     retry: () => void | Promise<void>;
@@ -42,6 +43,7 @@ export function NotificationDropdown({
                                          isRinging,
                                          loading,
                                          isBackgroundLoading = false,
+                                         isProcessing = false,
                                          isProcessingAll = false,
                                          error,
                                          retry,
@@ -129,6 +131,7 @@ export function NotificationDropdown({
                                     notif={n}
                                     onAction={handleAction}
                                     onSelect={onSelect}
+                                    isDisabled={isProcessing || isProcessingAll}
                                 />
                             ))}
                         </div>

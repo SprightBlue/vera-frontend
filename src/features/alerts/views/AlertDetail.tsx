@@ -6,7 +6,8 @@ import Header from "@/features/shared/components/Header";
 import {useAlertDetail} from "@/features/alerts/hooks/useAlertDetail";
 import {getRiskVariant, RISK_LABELS_ES} from "@/features/shared/utils/typeConfig";
 import {type RiskLevel} from "@/features/alerts/api/alertsApi";
-import {AlertCircle, CheckCircle, Trash2} from "lucide-react";
+
+import {Trash2, Clock, Check} from "lucide-react";
 
 import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
 import {RetryScreen} from "@/features/shared/components/RetryScreen";
@@ -68,7 +69,7 @@ export function AlertDetail() {
                                                 }}
                                                 isLoading={actionLoading}
                                                 disabled={detail.isResolved || deleteLoading}
-                                                icon={detail.isResolved ? CheckCircle : AlertCircle}
+                                                icon={detail.isResolved ? Check : Clock}
                                             >
                                                 {detail.isResolved ? "Resuelta" : "Pendiente"}
                                             </ActionButton>

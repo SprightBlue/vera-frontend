@@ -21,6 +21,14 @@ export function DetailContentBox({title, content, variant = 'info'}: DetailConte
             rounded-xl rounded-l-none p-[clamp(1.2rem,1.8vw,2rem)] flex-1 ring-1 ring-inset ring-[#161f35]/20 shadow-2xl relative overflow-hidden`}>
 
                 <div
+                    className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-size-[3.5rem_3.5rem] opacity-45 pointer-events-none z-0"
+                />
+
+                <div
+                    className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_50%,#080d20_95%)] pointer-events-none z-0"
+                />
+
+                <div
                     className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
 
                 <p className="text-[clamp(13px,0.82vw,15px)] font-sans leading-relaxed font-medium select-text whitespace-pre-line text-slate-300 tracking-wide relative z-10">
