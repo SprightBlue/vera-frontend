@@ -65,9 +65,12 @@ export function NotificationDropdown({
                 onClick={toggleDropdown}
             />
 
+            {/* - bg-linear-to-b: Cambiado al gradiente unificado del Sidebar (from-[#0f172a] via-[#050814] to-[#010204])
+               - border-slate-800/80 para alinearlo estéticamente.
+            */}
             <div className={`absolute right-0 mt-3 w-[clamp(19rem,40vw,42rem)] 
-                bg-linear-to-b from-[#04060f] via-[#020308] to-[#010103] 
-                border border-[#161f37]/90 shadow-[0_10px_40px_rgba(0,0,0,0.65)] rounded-xl z-100 
+                bg-linear-to-b from-[#0f172a] via-[#050814] to-[#010204] 
+                border border-slate-800/80 shadow-[0_10px_40px_rgba(0,0,0,0.65)] rounded-xl z-100 
                 flex flex-col overflow-hidden transition-all duration-200 ease-out origin-top-right backdrop-blur-md
                 ${isDropdownOpen
                 ? "opacity-100 scale-100 pointer-events-auto visible"
@@ -83,7 +86,7 @@ export function NotificationDropdown({
                         className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none"/>
 
                     <span
-                        className="text-[clamp(10px,0.58vw,11px)] font-display font-extrabold tracking-wider text-slate-400 uppercase">
+                        className="text-[clamp(10px,0.58vw,11px)] font-display font-black tracking-widest text-slate-500 uppercase">
                         Panel de Notificaciones
                     </span>
 

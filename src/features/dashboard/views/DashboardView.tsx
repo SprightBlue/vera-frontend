@@ -30,7 +30,7 @@ export function DashboardView() {
                 className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
                 <Header
                     userName={user?.fullName ?? "Usuario"}
-                    title="Panel de Control Principal"
+                    title="Panel Principal"
                 />
 
                 <main

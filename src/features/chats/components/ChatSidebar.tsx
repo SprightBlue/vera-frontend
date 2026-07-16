@@ -1,5 +1,5 @@
 import {type MouseEvent} from "react";
-import {History, MessagesSquare} from "lucide-react";
+import {History, MessageSquare} from "lucide-react";
 import type {ChatSession} from "@/features/chats/api/chatApi";
 import {ActionButton} from "@/features/shared/components/ActionButton";
 import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
@@ -39,15 +39,16 @@ export function ChatSidebar({
 
     return (
         <aside
-            className="w-full bg-linear-to-b from-[#050814] via-[#03050f] to-[#010206] border-r border-[#161f37]/90 flex flex-col h-full shrink-0 select-none overflow-hidden relative shadow-2xl">
+            className="w-full bg-linear-to-b from-[#0f172a] via-[#050814] to-[#010204] border-r border-slate-800/80 flex flex-col h-full shrink-0 select-none overflow-hidden relative shadow-2xl">
+
             <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-blue-500/2 rounded-full filter blur-[80px] pointer-events-none z-0"/>
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-blue-500/5 rounded-full filter blur-[80px] pointer-events-none z-0"/>
 
             <div className="p-[clamp(0.8rem,1vw,1.2rem)] flex-none relative z-10">
                 <ActionButton
                     variant="info"
                     onClick={onNewChat}
-                    icon={MessagesSquare}
+                    icon={MessageSquare}
                     disabled={isLoading}
                     className="w-full sm:w-full"
                 >

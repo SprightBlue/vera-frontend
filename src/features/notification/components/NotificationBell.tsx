@@ -1,4 +1,4 @@
-import {Bell} from "lucide-react";
+import { Bell } from "lucide-react";
 
 interface NotificationBellProps {
     isOpen: boolean;
@@ -7,16 +7,12 @@ interface NotificationBellProps {
     onClick: () => void;
 }
 
-export function NotificationBell({isOpen, isRinging, unreadCount, onClick}: NotificationBellProps) {
+export function NotificationBell({ isOpen, isRinging, unreadCount, onClick }: NotificationBellProps) {
     return (
         <button
             type="button"
             onClick={onClick}
-            className={`relative p-2.5 transition-all duration-300 rounded-lg cursor-pointer border group overflow-hidden select-none active:scale-[0.96] ${
-                isOpen
-                    ? 'bg-linear-to-b from-[#0e1630] to-[#060a18] border-[#22356b] text-white shadow-[0_4px_15px_rgba(0,0,0,0.4)] ring-1 ring-inset ring-blue-500/20'
-                    : 'text-slate-400 border-transparent hover:border-[#161f37] hover:bg-linear-to-b hover:from-[#080d20]/50 hover:to-[#040714]/30 hover:text-slate-200'
-            } ${
+            className={`relative p-2.5 transition-all duration-300 rounded-full cursor-pointer border group overflow-hidden select-none active:scale-[0.96] ${                 isOpen                     ? 'bg-linear-to-b from-[#0e1630] to-[#060a18] border-[#22356b] text-white shadow-[0_4px_15px_rgba(0,0,0,0.4)] ring-1 ring-inset ring-blue-500/20'                     : 'text-slate-400 border-transparent hover:border-[#161f37] hover:bg-linear-to-b hover:from-[#080d20]/50 hover:to-[#040714]/30 hover:text-slate-200'             } ${
                 isRinging
                     ? 'animate-pulse text-blue-400 bg-blue-500/10 border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]'
                     : ''
@@ -36,7 +32,7 @@ export function NotificationBell({isOpen, isRinging, unreadCount, onClick}: Noti
 
             {isRinging && (
                 <span
-                    className="absolute inset-0 rounded-lg bg-blue-500/20 animate-ping duration-1000 pointer-events-none"/>
+                    className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping duration-1000 pointer-events-none"/>
             )}
 
             <Bell

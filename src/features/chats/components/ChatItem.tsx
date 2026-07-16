@@ -1,6 +1,8 @@
-import {type MouseEvent} from "react";
-import {DeleteButton} from "@/features/shared/components/DeleteButton";
-import type {ChatSession} from "@/features/chats/api/chatApi";
+import { type MouseEvent } from "react";
+import { Trash2 } from "lucide-react";
+import type { ChatSession } from "@/features/chats/api/chatApi";
+
+import { UI_BUTTON_STYLES } from '@/features/shared/utils/styleConfig';
 
 interface ChatSidebarItemProps {
     session: ChatSession;
@@ -17,6 +19,9 @@ export function ChatItem({
                              onSelectChat,
                              onDeleteChat
                          }: ChatSidebarItemProps) {
+
+    const dangerButtonStyle = UI_BUTTON_STYLES['danger'];
+
     return (
         <button
             onClick={() => !isDeleting && onSelectChat(session.id)}
@@ -27,7 +32,7 @@ export function ChatItem({
                     : "text-slate-400 border-transparent hover:border-[#161f37] hover:bg-linear-to-b hover:from-[#080d20]/50 hover:to-[#040714]/30 hover:text-slate-200"
             } ${
                 isDeleting
-                    ? "cursor-wait bg-[#131b35]/20 text-slate-500 border-[#161f37]/30 pointer-events-none opacity-40"
+                    ? "cursor-wait bg-[#0d1326]/20 text-slate-500 border-slate-800/30 pointer-events-none opacity-40"
                     : "cursor-pointer"
             }`}
             title={session.title}
@@ -53,18 +58,30 @@ export function ChatItem({
                 {session.title}
             </span>
 
-            <div className="shrink-0 w-6 h-6 flex items-center justify-center relative z-30">
-                <DeleteButton
-                    onClick={(e) => onDeleteChat(e, session.id)}
-                    isProcessing={isDeleting}
+            <div className="shrink-0 w-8 h-8 flex items-center justify-center relative z-30">
+                <button
+                    type="button"
                     disabled={isDeleting}
-                    title="Eliminar Chat"
-                    className={`transition-all duration-200 ${
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (!isDeleting) onDeleteChat(e, session.id);
+                    }}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 select-none outline-none focus:outline-none focus:ring-0 active:ring-0 border-0 shadow-md ${
                         isDeleting
-                            ? "opacity-100 scale-100"
-                            : "opacity-0 group-hover:opacity-100 xl:opacity-0"
+                            ? "bg-red-600 text-white shadow-[0_0_12px_rgba(220,38,38,0.4)] cursor-not-allowed opacity-100 scale-100"
+                            : `${dangerButtonStyle} text-white shadow-[0_0_12px_rgba(220,38,38,0.4)] hover:shadow-[0_0_16px_rgba(220,38,38,0.6)] active:shadow-none active:scale-90 cursor-pointer opacity-0 group-hover:opacity-100 xl:opacity-0`
                     }`}
-                />
+                    title="Eliminar Chat"
+                >
+                    {isDeleting ? (
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                        <Trash2
+                            className="w-3.5 h-3.5 stroke-[2.5]"
+                        />
+                    )}
+                </button>
             </div>
         </button>
     );

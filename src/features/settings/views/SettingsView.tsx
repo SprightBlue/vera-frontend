@@ -4,9 +4,7 @@ import Header from "@/features/shared/components/Header";
 import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
 import {RetryScreen} from "@/features/shared/components/RetryScreen";
 import {useSettings} from "@/features/settings/hooks/useSettings";
-
 import {User, ContactRound, Mail, KeyRound, Trash2} from "lucide-react";
-
 import {ProfileImageSection} from "@/features/settings/components/ProfileImageSection";
 import {ProfileDataSection} from "@/features/settings/components/ProfileDataSection";
 import {ProfileEmailSection} from "@/features/settings/components/ProfileEmailSection";
