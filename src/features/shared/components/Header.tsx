@@ -53,14 +53,22 @@ export function Header({userName, userRole, title}: HeaderProps) {
         bg-[#050814]/90 backdrop-blur-md transition-all duration-300 select-none
         pl-[clamp(5.8rem,8vw,6.5rem)] lg:pl-[clamp(1.5rem,2vw,2.5rem)] pr-4 sm:pr-6 lg:pr-8">
 
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                <div
+                    className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]
+                    bg-size-[2rem_2rem] mask-[radial-gradient(circle_at_0%_center,white_40%,transparent_85%)]
+                    opacity-30"
+                />
+            </div>
+
             <div
-                className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
+                className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none z-10"/>
 
             <div className="absolute bottom-0 left-4 sm:left-6 lg:left-8 right-4 sm:right-6 lg:right-8 h-px
-            bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none"/>
+            bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none z-10"/>
 
-            <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left">
-                <h2 className="text-[clamp(0.95rem,1.1vw,1.25rem)] font-display font-extrabold tracking-wide uppercase text-white truncate leading-normal">
+            <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left relative z-10">
+                <h2 className="text-[clamp(11px,0.78vw,13px)] font-display font-black tracking-widest uppercase text-slate-400 truncate leading-none">
                     {displayTitle}
                 </h2>
             </div>
@@ -96,11 +104,11 @@ export function Header({userName, userRole, title}: HeaderProps) {
                 <div className="flex items-center gap-3 border-l border-[#161f37] pl-[clamp(0.8rem,1.2vw,1.5rem)]">
                     <div className="hidden sm:flex flex-col items-end leading-none gap-1.5">
                         <span
-                            className="text-[clamp(0.78rem,0.82vw,0.88rem)] font-display font-extrabold text-slate-200 uppercase tracking-wide whitespace-nowrap">
+                            className="text-[clamp(10px,0.58vw,11px)] font-display font-black text-slate-400 uppercase tracking-wider">
                             {finalUserName}
                         </span>
                         <span
-                            className="text-[9px] font-display font-bold uppercase tracking-widest text-slate-500 whitespace-nowrap">
+                            className="text-[9px] font-display font-bold uppercase tracking-widest text-slate-500">
                             {finalUserRole}
                         </span>
                     </div>

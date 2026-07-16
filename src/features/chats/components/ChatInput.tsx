@@ -1,5 +1,7 @@
-import {type ChangeEvent, type KeyboardEvent} from 'react';
-import {Send} from 'lucide-react';
+import { type ChangeEvent, type KeyboardEvent } from 'react';
+import { Send } from 'lucide-react';
+
+import { UI_BUTTON_STYLES } from '@/features/shared/utils/styleConfig';
 
 interface ChatInputProps {
     value: string;
@@ -26,6 +28,8 @@ export function ChatInput({
         }
     };
 
+    const infoButtonStyle = UI_BUTTON_STYLES['info'];
+
     return (
         <div
             className={`w-full flex items-center gap-3 bg-linear-to-b from-[#080d20] to-[#040714] border border-[#161f37] rounded-2xl px-4 py-3 shadow-xl ring-1 ring-inset ring-[#161f35]/20 transition-all duration-200 hover:border-[#222f50] focus-within:ring-1 focus-within:ring-blue-500/10 focus-within:border-[#222f50] ${className}`}
@@ -48,15 +52,18 @@ export function ChatInput({
                     if (!isButtonDisabled) onSubmit();
                 }}
                 style={{WebkitTapHighlightColor: 'transparent'}}
-                className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 select-none outline-none focus:outline-none focus:ring-0 active:ring-0 border-0 ${
+                className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 select-none outline-none focus:outline-none focus:ring-0 active:ring-0 border-0 shadow-md ${
                     isButtonDisabled
                         ? "text-slate-600 bg-transparent cursor-not-allowed opacity-50"
-                        : "bg-blue-500 hover:bg-blue-400 text-white shadow-[0_0_12px_rgba(59,130,246,0.4)] hover:shadow-[0_0_16px_rgba(59,130,246,0.6)] active:shadow-none active:scale-90 cursor-pointer"
+                        : `${infoButtonStyle} text-white shadow-[0_0_12px_rgba(37,99,235,0.4)] hover:shadow-[0_0_16px_rgba(37,99,235,0.6)] active:shadow-none active:scale-90 cursor-pointer`
                 }`}
                 title="Enviar mensaje"
             >
                 <Send
-                    className={`w-[clamp(14px,0.9vw,16px)] h-[clamp(14px,0.9vw,16px)] stroke-[2.5] transition-transform duration-200 ${!isButtonDisabled && "translate-x-[0.5px]"}`}/>
+                    className={`w-[clamp(14px,0.9vw,16px)] h-[clamp(14px,0.9vw,16px)] stroke-[2.5] transition-transform duration-200 ${
+                        !isButtonDisabled && "translate-x-[0.5px]"
+                    }`}
+                />
             </button>
         </div>
     );

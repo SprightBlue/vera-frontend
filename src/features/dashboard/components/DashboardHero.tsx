@@ -19,15 +19,6 @@ export function DashboardHero({onAddProtectedClick}: DashboardHeroProps) {
 
             <div className="max-w-xl w-full flex flex-col items-center relative z-10">
 
-                <div
-                    className="mb-[clamp(1rem,1.5vw,1.8rem)] flex items-center gap-2 px-3 py-1 rounded-full border border-slate-800/60 bg-[#0b122c]/40">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"/>
-                    <span
-                        className="text-[clamp(9px,0.52vw,10px)] font-display font-black tracking-widest uppercase text-slate-500">
-                        Primer paso
-                    </span>
-                </div>
-
                 <div className="relative mb-[clamp(1.2rem,1.8vw,2.2rem)] flex items-center justify-center">
                     <div
                         className="absolute w-[clamp(10rem,14vw,16rem)] h-[clamp(10rem,14vw,16rem)] bg-blue-500/5 rounded-full filter blur-2xl pointer-events-none"/>

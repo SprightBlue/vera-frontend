@@ -44,17 +44,22 @@ export function Sidebar() {
     ];
 
     return (
-        <aside className="fixed left-0 top-0 h-screen bg-linear-to-b from-[#03050a] via-[#010205] to-[#000001]
-        border-r border-[#161f37]/90 flex flex-col z-50 transition-all duration-300
+        <aside className="fixed left-0 top-0 h-screen bg-linear-to-b from-[#0f172a] via-[#050814] to-[#010204]
+        border-r border-slate-800/80 flex flex-col z-50 transition-all duration-300
         w-[clamp(4.5rem,6.5vw,5rem)] lg:w-[clamp(13rem,15vw,15.5rem)] select-none shadow-2xl overflow-hidden">
 
             <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-blue-500/2 rounded-full filter blur-[80px] pointer-events-none z-0"/>
+                className="absolute -top-12 left-1/2 -translate-x-1/2 w-56 h-56 bg-blue-500/10 rounded-full filter blur-[80px] pointer-events-none z-0"
+            />
+
+            <div
+                className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-56 h-56 bg-indigo-500/5 rounded-full filter blur-[80px] pointer-events-none z-0"
+            />
 
             <div
                 className="shrink-0 h-[clamp(4.5rem,5vw,5.6rem)] flex items-center justify-center lg:justify-start px-[clamp(0.6rem,1vw,1.5rem)] relative overflow-hidden z-10">
                 <div
-                    className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/5 to-transparent pointer-events-none"/>
+                    className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
 
                 <Link
                     to="/dashboard"

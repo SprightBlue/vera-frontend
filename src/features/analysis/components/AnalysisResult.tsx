@@ -1,4 +1,4 @@
-import {MessageSquareShare} from 'lucide-react';
+import {MessageSquare} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import type {AnalysisDetailResponse} from '@/features/analysis/api/analysisApi';
 
@@ -50,7 +50,7 @@ export function AnalysisResult({result, loading, error, isStartingChat, onStartC
         <ActionButton
             variant="info"
             isLoading={isStartingChat}
-            icon={MessageSquareShare}
+            icon={MessageSquare}
             onClick={handleStartAnalysisChat}
         >
             Iniciar Chat

@@ -54,7 +54,7 @@ export function ItemCard({
                 <div className="flex flex-col gap-1 w-full">
                     {subtitle && (
                         <span
-                            className="text-[clamp(11px,0.65vw,13px)] font-sans font-bold text-slate-400 leading-relaxed tracking-wider select-text uppercase">
+                            className="text-[clamp(11px,0.65vw,13px)] font-display font-bold text-slate-500 leading-none tracking-wider select-text uppercase">
                             {subtitle}
                         </span>
                     )}

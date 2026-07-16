@@ -25,13 +25,14 @@ export interface ChatSessionResponse {
     updatedAt: string;
 }
 
-export interface TrustContactDashboardResponse {
+export interface TrustContactResponse {
     id: number;
     createdAt: string;
     oppositeUserId: number;
     oppositeUserFullName: string;
     oppositeUserRole: 'CARER' | 'PROTECTED';
     oppositeUserEmail: string;
+    oppositeUserPhone: string;
     oppositeUserImage?: string;
 }
 
@@ -44,7 +45,7 @@ export interface DashboardResponse {
     resolvedAlertsCountSince: number;
 
     latestUpdatedChat: ChatSessionResponse | null;
-    latestTrustContact: TrustContactDashboardResponse | null;
+    latestTrustContact: TrustContactResponse | null;
 }
 
 export async function getDashboardData(): Promise<DashboardResponse> {

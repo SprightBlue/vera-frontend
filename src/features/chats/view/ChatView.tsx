@@ -115,7 +115,7 @@ export function ChatView() {
                     )}
 
                     <div
-                        className={`absolute right-0 top-0 bottom-0 xl:relative z-30 transition-[width,opacity] duration-500 cubic-bezier(0.4,0,0.2,1) h-full overflow-hidden shrink-0 border-l border-[#161f37]/90 bg-[#050814] ${
+                        className={`absolute right-0 top-0 bottom-0 xl:relative z-30 transition-[width,opacity] duration-500 cubic-bezier(0.4,0,0.2,1) h-full overflow-hidden shrink-0 border-l border-slate-800/80 bg-linear-to-b from-[#0f172a] via-[#050814] to-[#010204] ${
                             isSidebarOpen ? "w-[clamp(16rem,20vw,24rem)] opacity-100" : "w-0 opacity-0 pointer-events-none"
                         }`}
                     >
