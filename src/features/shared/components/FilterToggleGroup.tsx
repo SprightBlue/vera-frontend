@@ -27,7 +27,7 @@ export function FilterToggleGroup<T extends string>({
     return (
         <div className="flex flex-col gap-2">
             <span
-                className="text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider text-slate-500 uppercase select-none">
+                className="text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider text-slate-500 normal-case select-none">
                 {title}
             </span>
 
@@ -40,7 +40,7 @@ export function FilterToggleGroup<T extends string>({
                         <button
                             key={option.value}
                             onClick={() => onToggle(option.value)}
-                            className={`px-4 h-8 rounded-lg border text-[clamp(10px,0.6vw,11px)] font-sans font-bold tracking-wider uppercase 
+                            className={`px-4 h-8 rounded-lg border text-[clamp(10px,0.6vw,11px)] font-sans font-bold tracking-wider normal-case 
                             transition-all duration-200 cursor-pointer select-none active:scale-[0.97] shadow-md relative group overflow-hidden ${
                                 isActive
                                     ? `${UI_TOGGLE_STYLES[option.variant]} ring-1 ring-inset ring-white/5 text-white`

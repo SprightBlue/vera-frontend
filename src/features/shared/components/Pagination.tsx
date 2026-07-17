@@ -58,7 +58,7 @@ export function Pagination({ page, totalPages, loading, onPageChange, onForceLoa
                     className={`p-2 border rounded-lg transition-all duration-200 active:scale-[0.95] disabled:scale-100 disabled:opacity-10 disabled:cursor-not-allowed h-7.5 min-w-7.5 flex items-center justify-center shadow-sm relative group overflow-hidden text-slate-400 hover:text-white ${UI_TOGGLE_INACTIVE}`}
                 >
                     <div
-                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig.laserColor}/20` || ''}
+                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig?.laserColor ? `via-${neutralConfig.laserColor}/20` : ''}`}
                     />
                     <div
                         className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-75 ${neutralConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`}
@@ -122,7 +122,7 @@ export function Pagination({ page, totalPages, loading, onPageChange, onForceLoa
                     className={`p-2 border rounded-lg transition-all duration-200 active:scale-[0.95] disabled:scale-100 disabled:opacity-10 disabled:cursor-not-allowed h-7.5 min-w-7.5 flex items-center justify-center shadow-sm relative group overflow-hidden text-slate-400 hover:text-white ${UI_TOGGLE_INACTIVE}`}
                 >
                     <div
-                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig.laserColor}/20` || ''}
+                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-200 z-10 via-transparent group-hover:${neutralConfig?.laserColor ? `via-${neutralConfig.laserColor}/20` : ''}`}
                     />
                     <div
                         className={`absolute -top-4 -right-4 w-8 h-8 rounded-full filter blur-sm pointer-events-none transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-75 ${neutralConfig.glowColor} group-hover:opacity-10 group-hover:scale-110`}

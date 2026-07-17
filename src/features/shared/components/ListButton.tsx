@@ -7,7 +7,7 @@ interface BackButtonProps {
     label?: string;
 }
 
-export function ListButton({to, label = "Ir al Historial"}: BackButtonProps) {
+export function ListButton({to, label = "Ir al historial"}: BackButtonProps) {
     const navigate = useNavigate();
     const styleConfig = UI_VARIANTS_MAP.neutral;
 
@@ -16,7 +16,7 @@ export function ListButton({to, label = "Ir al Historial"}: BackButtonProps) {
             <button
                 onClick={() => navigate(to)}
                 className="relative overflow-hidden flex items-center gap-2.5 px-4 py-2 rounded-lg
-                text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider uppercase shadow-md
+                text-[clamp(10px,0.55vw,11px)] font-sans font-semibold tracking-wide normal-case shadow-md
                 bg-[#0a0f1d] border border-[#161f37] hover:border-[#223156] text-slate-400 hover:text-slate-200
                 transition-all duration-300 active:scale-[0.97] cursor-pointer group select-none"
             >

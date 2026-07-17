@@ -23,22 +23,22 @@ export function DashboardView() {
 
     return (
         <div
-            className="flex h-screen w-screen overflow-hidden bg-[#050816] text-slate-100 antialiased select-none"
+            className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 antialiased select-none"
             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
         >
             <Sidebar />
 
-            {/* Margen adaptativo con el Sidebar. En móviles/tablets (ml-16) y en monitores (lg:ml-52) */}
-            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-16 lg:ml-52">
+            {/* Margen adaptativo unificado con el Sidebar del resto de vistas */}
+            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56 relative">
                 <Header
                     userName={user?.fullName ?? "Usuario"}
                     title="Panel Principal"
                 />
 
                 {/* Padding fluido responsivo para el contenedor principal de la vista */}
-                <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1rem,2.5vw,3rem)] py-[clamp(1rem,2vw,2.5rem)] flex flex-col">
+                <main className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between relative z-10">
                     {/* Gap fluido responsivo entre componentes hijos del layout general */}
-                    <div className="mx-auto max-w-5xl w-full flex-1 flex flex-col gap-[clamp(1.2rem,2.2vw,2.5rem)] animate-fade-in justify-center">
+                    <div className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.5rem,2.5vw,3rem)] animate-fade-in justify-center">
 
                         {loading ? (
                             <LoadingScreen />
@@ -60,7 +60,7 @@ export function DashboardView() {
                                 ) : (
                                     <DashboardBanner
                                         title="Tu tranquilidad es lo primero"
-                                        description="¿Dudas con un mensaje o enlace sospechoso? Verificalo acá al instante para saber si es seguro."
+                                        description="¿Dudas con un message o enlace sospechoso? Verificalo acá al instante para saber si es seguro."
                                         buttonLabel="Analizar Mensaje"
                                         buttonIcon={Sparkles}
                                         buttonVariant="info"
