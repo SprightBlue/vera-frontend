@@ -66,7 +66,7 @@ export function DetailHeader({
             >
                 <div className="space-y-2.5 min-w-0 flex-1 w-full">
                     <div className="flex flex-wrap items-center gap-3 w-full">
-                        <h3 className="text-[clamp(1.15rem,1.35vw,1.55rem)] font-display font-extrabold uppercase tracking-wide text-white select-text truncate">
+                        <h3 className="text-[clamp(1.15rem,1.35vw,1.55rem)] font-display font-extraboldm tracking-wide text-white select-text truncate">
                             {title || 'Contenido Analizado'}
                         </h3>
 

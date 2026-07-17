@@ -30,7 +30,7 @@ export function SearchInput({
                     onChange={onChange}
                     placeholder={placeholder}
                     className="h-9 w-full bg-linear-to-b from-[#080d20] to-[#040714] border border-[#161f37] rounded-lg pl-10 pr-4
-                    text-[clamp(12px,0.75vw,14px)] font-sans font-semibold tracking-wide text-slate-200 placeholder:text-slate-600 uppercase outline-hidden
+                    text-[clamp(12px,0.75vw,14px)] font-sans font-semibold tracking-wide text-slate-200 placeholder:text-slate-600 outline-hidden
                     ring-1 ring-inset ring-[#161f35]/20 shadow-lg shadow-black/30 transition-all duration-200
                     hover:border-[#222f50] focus:border-blue-500/30 focus:ring-1 focus:ring-blue-500/10"
                 />
