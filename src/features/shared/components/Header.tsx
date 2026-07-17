@@ -1,9 +1,9 @@
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useNotifications} from "@/features/notification/hooks/useNotifications";
-import {NotificationDropdown} from "@/features/notification/components/NotificationDropdown";
-import {useAuth} from "@/presentation/context/AuthContext";
-import {PersonAvatar} from "@/features/shared/components/PersonAvatar";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useNotifications } from "@/features/notification/hooks/useNotifications";
+import { NotificationDropdown } from "@/features/notification/components/NotificationDropdown";
+import { useAuth } from "@/presentation/context/AuthContext";
+import { PersonAvatar } from "@/features/shared/components/PersonAvatar";
 
 interface HeaderProps {
     userName?: string;
@@ -12,9 +12,9 @@ interface HeaderProps {
     subtitle?: string;
 }
 
-export function Header({userName, userRole, title}: HeaderProps) {
+export function Header({ userName, userRole, title }: HeaderProps) {
     const navigate = useNavigate();
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     const finalUserName = user?.fullName || userName || "Usuario";
     let finalUserRole = "Protector";
@@ -49,31 +49,32 @@ export function Header({userName, userRole, title}: HeaderProps) {
     });
 
     return (
-        <header className="sticky top-0 z-45 w-full flex items-center justify-between h-[clamp(4.5rem,5vw,5.6rem)]
-        bg-[#050814]/90 backdrop-blur-md transition-all duration-300 select-none
-        pl-[clamp(5.8rem,8vw,6.5rem)] lg:pl-[clamp(1.5rem,2vw,2.5rem)] pr-4 sm:pr-6 lg:pr-8">
+        <header
+            className="sticky top-0 z-45 w-full flex items-center justify-between h-16
+            bg-[#050814]/90 backdrop-blur-md transition-all duration-300 select-none
+            pl-20 lg:pl-8 pr-4 sm:pr-6 lg:pr-8"
+        >
+            {/* Línea sutil superior (Igual al Sidebar) */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-white/5 pointer-events-none z-10" />
 
-            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                <div
-                    className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]
-                    bg-size-[2rem_2rem] mask-[radial-gradient(circle_at_0%_center,white_40%,transparent_85%)]
-                    opacity-30"
-                />
-            </div>
+            {/* Línea sutil inferior */}
+            <div className="absolute bottom-0 left-4 right-4 lg:left-8 lg:right-8 h-px bg-white/5 pointer-events-none z-10" />
 
-            <div
-                className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none z-10"/>
-
-            <div className="absolute bottom-0 left-4 sm:left-6 lg:left-8 right-4 sm:right-6 lg:right-8 h-px
-            bg-linear-to-r from-transparent via-[#161f37]/90 to-transparent pointer-events-none z-10"/>
-
+            {/* Título de la sección (Montserrat) */}
             <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left relative z-10">
-                <h2 className="text-[clamp(11px,0.78vw,13px)] font-display font-black tracking-widest uppercase text-slate-400 truncate leading-none">
+                <h2
+                    className="text-base font-bold text-white truncate leading-none normal-case tracking-wide"
+                    style={{ fontFamily: "'Montserrat', system-ui, sans-serif" }}
+                >
                     {displayTitle}
                 </h2>
             </div>
 
-            <div className="flex items-center gap-[clamp(0.8rem,1.2vw,1.5rem)] shrink-0 relative z-10">
+            {/* Bloque de Notificaciones y Usuario (Inter) */}
+            <div
+                className="flex items-center gap-4 shrink-0 relative z-10"
+                style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+            >
                 <NotificationDropdown
                     notifications={notifications}
                     totalPages={totalPages}
@@ -101,14 +102,13 @@ export function Header({userName, userRole, title}: HeaderProps) {
                     }}
                 />
 
-                <div className="flex items-center gap-3 border-l border-[#161f37] pl-[clamp(0.8rem,1.2vw,1.5rem)]">
-                    <div className="hidden sm:flex flex-col items-end leading-none gap-1.5">
-                        <span
-                            className="text-[clamp(10px,0.58vw,11px)] font-display font-black text-slate-400 uppercase tracking-wider">
+                <div className="flex items-center gap-3 border-l border-white/5 pl-4">
+                    {/* Perfil de Usuario con texto normal */}
+                    <div className="hidden sm:flex flex-col items-end leading-tight gap-0.5">
+                        <span className="text-sm font-semibold text-white normal-case tracking-wide">
                             {finalUserName}
                         </span>
-                        <span
-                            className="text-[9px] font-display font-bold uppercase tracking-widest text-slate-500">
+                        <span className="text-xs font-medium text-gray-400 normal-case">
                             {finalUserRole}
                         </span>
                     </div>
