@@ -1,9 +1,9 @@
-import {useNavigate} from "react-router-dom";
-import {ItemCard} from "@/features/shared/components/ItemCard";
-import {EmptyScreen} from "@/features/shared/components/EmptyScreen";
-import {type DashboardResponse} from "@/features/dashboard/api/dashboardApi";
-import {RISK_LABELS_ES} from "@/features/shared/utils/typeConfig";
-import {DashboardColumn} from "@/features/dashboard/components/DashboardColumn";
+import { useNavigate } from "react-router-dom";
+import { ItemCard } from "@/features/shared/components/ItemCard";
+import { EmptyScreen } from "@/features/shared/components/EmptyScreen";
+import { type DashboardResponse } from "@/features/dashboard/api/dashboardApi";
+import { RISK_LABELS_ES } from "@/features/shared/utils/typeConfig";
+import { DashboardColumn } from "@/features/dashboard/components/DashboardColumn";
 
 interface DashboardStatsProps {
     data: DashboardResponse;
@@ -11,52 +11,54 @@ interface DashboardStatsProps {
     fullname: string;
 }
 
-export function DashboardStats({data, role, fullname}: DashboardStatsProps) {
+export function DashboardStats({ data, role, fullname }: DashboardStatsProps) {
     const navigate = useNavigate();
     const isCarer = role === "CARER";
 
     return (
-        <div className="w-full flex flex-col gap-6 animate-fade-in">
+        <div className="w-full flex flex-col gap-[clamp(1rem,1.8vw,2rem)] animate-fade-in">
 
-            <div
-                className="w-full grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] select-none hidden xl:grid">
-
+            {/* Encabezados visibles en pantallas grandes con gap fluido */}
+            <div className="w-full grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] select-none hidden xl:grid">
                 <div
-                    className="xl:col-span-5 relative pb-3.5 flex items-center gap-2 text-[clamp(10px,0.58vw,11px)] uppercase tracking-widest text-slate-500 font-display font-extrabold">
+                    className="xl:col-span-5 relative pb-3.5 flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-semibold text-gray-500 normal-case tracking-wide"
+                    style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                >
                     <span>Actividad reciente</span>
-                    <div
-                        className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5 pointer-events-none" />
                 </div>
 
                 <div
-                    className="xl:col-span-7 relative pb-3.5 flex items-center gap-2 text-[clamp(10px,0.58vw,11px)] uppercase tracking-widest text-slate-500 font-display font-extrabold">
+                    className="xl:col-span-7 relative pb-3.5 flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-semibold text-gray-500 normal-case tracking-wide"
+                    style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                >
                     {isCarer ? (
                         <span>Últimas alertas recibidas</span>
                     ) : (
                         <span>Últimos análisis realizados</span>
                     )}
-                    <div
-                        className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5 pointer-events-none" />
                 </div>
             </div>
 
-            <div className="w-full grid grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] items-center">
-
+            {/* Grid principal fluido */}
+            <div className="w-full grid grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] items-start">
                 <div className="xl:col-span-5 w-full">
-                    <DashboardColumn data={data}/>
+                    <DashboardColumn data={data} />
                 </div>
 
-                <div className="xl:col-span-7 flex flex-col gap-4 w-full">
-
+                <div className="xl:col-span-7 flex flex-col gap-[clamp(0.8rem,1.5vw,1.2rem)] w-full">
+                    {/* Encabezado visible solo en móviles */}
                     <div
-                        className="xl:hidden relative pb-2.5 mb-1 flex items-center gap-2 text-[clamp(10px,0.58vw,11px)] uppercase tracking-widest text-slate-500 font-display font-extrabold select-none">
+                        className="xl:hidden relative pb-2.5 mb-1 flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-semibold text-gray-500 normal-case tracking-wide select-none"
+                        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                    >
                         {isCarer ? (
                             <span>Últimas alertas recibidas</span>
                         ) : (
                             <span>Últimos análisis realizados</span>
                         )}
-                        <div
-                            className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
+                        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5 pointer-events-none" />
                     </div>
 
                     {isCarer ? (
@@ -74,7 +76,7 @@ export function DashboardStats({data, role, fullname}: DashboardStatsProps) {
                                         timestamp={alert.createdAt || "Ahora mismo"}
                                         primaryVariant={cardVariant}
                                         badges={[
-                                            {label: `Riesgo ${RISK_LABELS_ES[level]}`, variant: cardVariant},
+                                            { label: `Riesgo ${RISK_LABELS_ES[level]}`, variant: cardVariant },
                                             {
                                                 label: alert.isResolved ? "Resuelta" : "Pendiente",
                                                 variant: alert.isResolved ? "success" : "warning"
@@ -87,7 +89,7 @@ export function DashboardStats({data, role, fullname}: DashboardStatsProps) {
                                 );
                             })
                         ) : (
-                            <EmptyScreen label="NO SE ENCONTRARON ALERTAS REGISTRADAS"/>
+                            <EmptyScreen label="No se encontraron alertas registradas" />
                         )
                     ) : (
                         data.top3Analysis && data.top3Analysis.length > 0 ? (
@@ -102,14 +104,14 @@ export function DashboardStats({data, role, fullname}: DashboardStatsProps) {
                                         description={analysis.contentSummary || "Consejos y análisis automáticos para garantizar tus interacciones cotidianas."}
                                         timestamp={analysis.createdAt || "Hace poco"}
                                         primaryVariant={cardVariant}
-                                        badges={[{label: `Riesgo ${RISK_LABELS_ES[level]}`, variant: cardVariant}]}
+                                        badges={[{ label: `Riesgo ${RISK_LABELS_ES[level]}`, variant: cardVariant }]}
                                         onActionClick={() => navigate(`/analysis/${analysis.id}`)}
                                         actionLabel="Ver Detalles"
                                     />
                                 );
                             })
                         ) : (
-                            <EmptyScreen label="NO SE ENCONTRARON ANÁLISIS REGISTRADOS"/>
+                            <EmptyScreen label="No se encontraron análisis registrados" />
                         )
                     )}
                 </div>

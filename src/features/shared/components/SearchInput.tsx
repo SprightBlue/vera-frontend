@@ -11,13 +11,13 @@ interface SearchInputProps {
 export function SearchInput({
                                 value,
                                 onChange,
-                                placeholder = "INGRESÁ EL TEXTO A BUSCAR...",
-                                label = "Motor de Búsqueda"
+                                placeholder = "Ingresá el texto a buscar...",
+                                label = "Motor de búsqueda"
                             }: SearchInputProps) {
     return (
         <form onSubmit={(e: SyntheticEvent) => e.preventDefault()} className="flex flex-col gap-2 md:w-1/2 w-full">
             <span
-                className="text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider text-slate-500 uppercase select-none">
+                className="text-[clamp(10px,0.55vw,11px)] font-sans font-bold tracking-wider text-slate-500 normal-case select-none">
                 {label}
             </span>
             <div className="relative flex items-center w-full group">

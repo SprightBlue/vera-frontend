@@ -73,15 +73,17 @@ export function AlertsList() {
 
     return (
         <div
-            className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
+            className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none"
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+        >
             <Sidebar/>
 
             <div
-                className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
+                className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56 relative">
                 <Header userName={user?.fullName ?? "Usuario"} title="Historial de Alertas"/>
 
                 <main
-                    className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between">
+                    className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between relative z-10">
                     <div
                         className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.5rem,2.5vw,3rem)] animate-fade-in">
 
@@ -94,9 +96,9 @@ export function AlertsList() {
                                          placeholder="Buscar por título o resumen..."/>
 
                             <div className="flex flex-wrap items-center gap-[clamp(1rem,1.5vw,2rem)]">
-                                <FilterToggleGroup title="Estado De Alerta" options={STATUS_FILTER_OPTIONS}
+                                <FilterToggleGroup title="Estado de alerta" options={STATUS_FILTER_OPTIONS}
                                                    activeValue={activeStatus} onToggle={handleStatusToggle}/>
-                                <FilterToggleGroup title="Nivel de Riesgo" options={RISK_FILTER_OPTIONS}
+                                <FilterToggleGroup title="Nivel de riesgo" options={RISK_FILTER_OPTIONS}
                                                    activeValue={activeRisk} onToggle={handleRiskToggle}/>
                             </div>
                         </div>
@@ -139,7 +141,7 @@ export function AlertsList() {
                                         })}
                                     </div>
                                 ) : (
-                                    <EmptyScreen label="NO SE ENCONTRARON ALERTAS DISPONIBLES"/>
+                                    <EmptyScreen label="No se encontraron alertas disponibles"/>
                                 )}
                             </div>
                         )}

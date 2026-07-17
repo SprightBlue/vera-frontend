@@ -31,19 +31,21 @@ export function AnalysisDetail() {
 
     return (
         <div
-            className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none">
+            className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 font-sans antialiased select-none"
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+        >
             <Sidebar/>
 
             <div
-                className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56">
+                className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 ml-20 lg:ml-56 relative">
                 <Header userName={user?.fullName ?? "Usuario"} title="Detalle del Análisis"/>
 
                 <main
-                    className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between">
+                    className="flex-1 overflow-y-auto no-scrollbar px-[clamp(1.5rem,3vw,3.5rem)] py-[clamp(1.5rem,2.5vw,3rem)] flex flex-col justify-between relative z-10">
                     <div
                         className="mx-auto max-w-7xl w-full flex-1 flex flex-col gap-[clamp(1.2rem,1.8vw,2rem)] animate-fade-in">
 
-                        <ListButton to="/analysis-list"/>
+                        <ListButton to="/analysis-list" label="Ir al historial de análisis"/>
 
                         {loading ? (
                             <LoadingScreen/>
@@ -84,7 +86,7 @@ export function AnalysisDetail() {
 
                                 <div className="w-full space-y-[clamp(1.2rem,1.5vw,2rem)]">
                                     <DetailContentBox
-                                        title="Resumen analítico del Contenido"
+                                        title="Resumen analítico del contenido"
                                         content={detail.contentSummary || 'No se pudo generar un resumen conceptual.'}
                                         variant="info"
                                     />
@@ -92,12 +94,12 @@ export function AnalysisDetail() {
                                     <div
                                         className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(1.2rem,1.5vw,2rem)] items-stretch">
                                         <DetailContentBox
-                                            title="Patrones Sospechosos Detectados"
+                                            title="Patrones sospechosos detectados"
                                             content={detail.suspiciousPatterns || 'Sin patrones de riesgo explícitos identificados.'}
                                             variant="danger"
                                         />
                                         <DetailContentBox
-                                            title="Recomendación Sugerida"
+                                            title="Recomendación sugerida"
                                             content={detail.recommendation || 'No se requieren acciones complejas.'}
                                             variant="success"
                                         />
