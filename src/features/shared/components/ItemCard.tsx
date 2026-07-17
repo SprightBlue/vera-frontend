@@ -54,11 +54,11 @@ export function ItemCard({
                 <div className="flex flex-col gap-1 w-full">
                     {subtitle && (
                         <span
-                            className="text-[clamp(11px,0.65vw,13px)] font-display font-bold text-slate-500 leading-none tracking-wider select-text uppercase">
+                            className="text-[clamp(11px,0.65vw,13px)] font-display font-bold text-slate-500 leading-none tracking-wider select-text">
                             {subtitle}
                         </span>
                     )}
-                    <h3 className="text-[clamp(14px,1vw,17px)] font-display font-extrabold text-white line-clamp-2 select-text tracking-wide w-full uppercase">
+                    <h3 className="text-[clamp(14px,1vw,17px)] font-display font-extrabold text-white line-clamp-2 select-text tracking-wide w-full">
                         {title}
                     </h3>
                 </div>
@@ -70,7 +70,7 @@ export function ItemCard({
             <div
                 className="flex flex-col items-start sm:items-end justify-between gap-4 shrink-0 w-full sm:w-auto border-t sm:border-t-0 border-[#161f37] pt-4 sm:pt-0 relative z-10">
                 <span
-                    className="text-[clamp(11px,0.65vw,13px)] font-display font-bold text-slate-500 leading-none tracking-wider sm:text-right select-text uppercase">
+                    className="text-[clamp(11px,0.65vw,13px)] font-display font-bold text-slate-500 leading-none tracking-wider sm:text-right select-text">
                     {timestamp}
                 </span>
 

@@ -38,7 +38,7 @@ export function OptionCard({title, description, to, buttonLabel, variant}: Optio
                     </span>
                 </div>
 
-                <h3 className="text-[clamp(1.15rem,1.4vw,1.55rem)] font-display font-black uppercase text-white select-text tracking-wide pt-0.5 leading-tight">
+                <h3 className="text-[clamp(1.15rem,1.4vw,1.55rem)] font-display font-black text-white select-text tracking-wide pt-0.5 leading-tight">
                     {title}
                 </h3>
 
