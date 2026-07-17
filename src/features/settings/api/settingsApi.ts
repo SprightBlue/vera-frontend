@@ -1,4 +1,4 @@
-import {apiClient as api} from "@/infrastructure/api/auth.repository";
+import {apiClient as api} from "@/presentation/api/auth.repository";
 
 export interface ProfileResponse {
     id: number;

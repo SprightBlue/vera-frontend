@@ -4,7 +4,7 @@ import Sidebar from "../../../features/shared/components/Sidebar.tsx";
 import Header from "../../../features/shared/components/Header.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getProtectedPersons, updateProtectedPerson } from "../../../infrastructure/api/protected-person-api";
+import { getProtectedPersons, updateProtectedPerson } from "@/presentation/api/protected-person-api";
 import { toast } from "react-hot-toast/headless";
 import {ActionButton} from "@/features/shared/components/ActionButton.tsx";
 

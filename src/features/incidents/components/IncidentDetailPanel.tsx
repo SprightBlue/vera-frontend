@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, Phone, ChevronDown, ChevronUp, Shield, ChevronLeft } from "lucide-react";
-import type { IncidentDetail } from "../../../domain/models/Incident";
-import { ACTION_TYPE_LABELS, SHARED_DATA_TYPE_LABELS } from "../../../domain/models/Incident";
+import type { IncidentDetail } from "@/presentation/api/Incident.ts";
+import { ACTION_TYPE_LABELS, SHARED_DATA_TYPE_LABELS } from "@/presentation/api/Incident.ts";
 import { BANK_STEP_KEYS, BANK_CATALOG, fmtDateTime, fmtTime } from "../utils/incidentConfig";
 import { StatusBadge } from "./IncidentBadges";
 

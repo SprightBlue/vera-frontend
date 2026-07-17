@@ -1,4 +1,4 @@
-import { apiClient } from "@/infrastructure/api/auth.repository";
+import {apiClient} from "@/presentation/api/auth.repository";
 
 export interface AnalysisResponse {
     id: string;
@@ -15,8 +15,7 @@ export interface AlertsResponse {
     contentSummary: string;
     isResolved: boolean;
     riskLevel: 'LOW' | 'MEDIUM' | 'HIGH';
-    protectedFullName?: string;
-    carerFullName?: string;
+    trustContact: TrustContactResponse | null;
 }
 
 export interface ChatSessionResponse {
@@ -50,6 +49,5 @@ export interface DashboardResponse {
 
 export async function getDashboardData(): Promise<DashboardResponse> {
     const response = await apiClient.get<DashboardResponse>('/api/dashboard');
-
     return response.data;
 }

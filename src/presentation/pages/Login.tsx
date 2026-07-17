@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authRepository } from '../../infrastructure/api/auth.repository';
+import { authRepository } from '@/presentation/api/auth.repository';
 import { useAuth } from '../context/AuthContext';
 import veraLogo from '../../assets/Isologo_Vera.png';
 import { GoogleLogin } from '@react-oauth/google';

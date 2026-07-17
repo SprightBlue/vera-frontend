@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { getProtectedPersons } from "../../../infrastructure/api/protected-person-api";
+import { getProtectedPersons } from "@/presentation/api/protected-person-api";
 import {
     getIncidentsByTrustContact,
     getIncidentDetail,
     getMyIncidents,
-} from "../../../infrastructure/api/incidents-api";
-import type { IncidentSummary, IncidentDetail } from "../../../domain/models/Incident";
+} from "@/presentation/api/incidents-api";
+import type { IncidentSummary, IncidentDetail } from "@/presentation/api/Incident.ts";
 import { useAuth } from "../../../presentation/context/AuthContext";
 import toast from "react-hot-toast";
-import type {ProtectedPerson} from "@/domain/models/ProtectedPerson.ts";
+import type {ProtectedPerson} from "@/presentation/api/ProtectedPerson.ts";
 
 export const PAGE_SIZE = 5;
 

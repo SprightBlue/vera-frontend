@@ -119,7 +119,7 @@ export function AlertsList() {
                                                 <ItemCard
                                                     key={alert.id}
                                                     title={alert.title}
-                                                    subtitle={alert.protectedFullName ?? "Sistema Central"}
+                                                    subtitle={alert.trustContact?.oppositeUserFullName ?? "Sistema Central"}
                                                     description={alert.contentSummary || 'Sin sumario descriptivo de anomalías anexado al registro.'}
                                                     timestamp={alert.createdAt}
                                                     primaryVariant={riskVariant}

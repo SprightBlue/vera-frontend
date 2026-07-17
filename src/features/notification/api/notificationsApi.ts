@@ -1,4 +1,4 @@
-import { apiClient } from "@/infrastructure/api/auth.repository.ts";
+import { apiClient } from "@/presentation/api/auth.repository.ts";
 
 export type NotificationType =
     | 'ALERT'

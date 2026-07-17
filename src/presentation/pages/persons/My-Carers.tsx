@@ -3,7 +3,7 @@ import Sidebar from "../../../features/shared/components/Sidebar.tsx";
 import Header from "../../../features/shared/components/Header.tsx";
 import { useAuth } from "../../context/AuthContext";
 import { ShieldCheck } from "lucide-react";
-import { getMyCarers } from "../../../infrastructure/api/protected-person-api";
+import { getMyCarers } from "@/presentation/api/protected-person-api";
 import toast from "react-hot-toast";
 import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 

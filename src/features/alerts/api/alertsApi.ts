@@ -1,21 +1,32 @@
-import { apiClient as api } from "@/infrastructure/api/auth.repository.ts";
+import {apiClient as api} from "@/presentation/api/auth.repository";
 
 export type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH';
+export type Role = 'CARER' | 'PROTECTED';
+
+export interface TrustContactResponse {
+    id: number;
+    createdAt: string;
+    oppositeUserId: number;
+    oppositeUserFullName: string;
+    oppositeUserRole: Role;
+    oppositeUserEmail: string;
+    oppositeUserPhone: string;
+    oppositeUserImage: string | null;
+}
 
 export interface AlertsResponse {
     id: string;
     createdAt: string;
-    protectedFullName: string | null;
     title: string;
     contentSummary: string;
     isResolved: boolean;
     riskLevel: RiskLevel;
+    trustContact: TrustContactResponse | null;
 }
 
 export interface AlertsDetailResponse {
     id: string;
     createdAt: string;
-    protectedFullName: string | null;
     title: string;
     source: string;
     contentSummary: string;
@@ -25,6 +36,7 @@ export interface AlertsDetailResponse {
     suspiciousPatterns: string;
     isResolved: boolean;
     resolvedAt: string | null;
+    trustContact: TrustContactResponse | null;
 }
 
 export interface PagedResponse<T> {

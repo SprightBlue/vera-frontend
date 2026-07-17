@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Mail, Phone, Trash2, CheckCircle2, Clock} from "lucide-react";
-import type {Contact} from "../../../domain/models/Contact";
+import type {Contact} from "@/presentation/api/Contact.ts";
 import toast from "react-hot-toast";
 import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 import { ActionButton } from "@/features/shared/components/ActionButton";

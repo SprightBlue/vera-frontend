@@ -7,7 +7,7 @@ import {useAlertDetail} from "@/features/alerts/hooks/useAlertDetail";
 import {getRiskVariant, RISK_LABELS_ES} from "@/features/shared/utils/typeConfig";
 import {type RiskLevel} from "@/features/alerts/api/alertsApi";
 
-import {Trash2, Clock, Check} from "lucide-react";
+import {Trash2, Clock, Check, User} from "lucide-react";
 
 import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
 import {RetryScreen} from "@/features/shared/components/RetryScreen";
@@ -16,6 +16,7 @@ import {DetailMetaRow} from "@/features/shared/components/DetailMetaRow";
 import {DetailContentBox} from "@/features/shared/components/DetailContentBox";
 import {ActionButton} from "@/features/shared/components/ActionButton";
 import {ListButton} from "@/features/shared/components/ListButton";
+import {DetailContactRow} from "@/features/shared/components/DetailContactRow";
 
 export function AlertDetail() {
     const {alertId} = useParams<{ alertId: string }>();
@@ -92,6 +93,22 @@ export function AlertDetail() {
                                                 Eliminar
                                             </ActionButton>
                                         </>
+                                    }
+                                />
+
+                                <DetailContactRow
+                                    contact={detail.trustContact}
+                                    actions={
+                                        detail.trustContact?.oppositeUserRole === "PROTECTED" && (
+                                            <ActionButton
+                                                variant="info"
+                                                icon={User}
+                                                onClick={() => navigate(`/persons/${detail.trustContact?.id}`)}
+                                                className="w-full md:w-36 h-8.5 font-sans font-black tracking-wider uppercase rounded-md shadow-[0_4px_15px_rgba(0,0,0,0.4)] text-[10px]"
+                                            >
+                                                Ver Perfil
+                                            </ActionButton>
+                                        )
                                     }
                                 />
 

@@ -10,7 +10,7 @@ import ContactTips from "../../components/contacts/ContactTips";
 import { useAuth } from "../../context/AuthContext";
 import { useProtectedPersonSelector } from "../../hooks/contacts/useProtectedPersonSelector";
 import { useContacts } from "../../hooks/contacts/useContacts";
-import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
+import type { AddContactRequest } from "@/presentation/api/contacts-api";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 
 function TrustedContacts() {

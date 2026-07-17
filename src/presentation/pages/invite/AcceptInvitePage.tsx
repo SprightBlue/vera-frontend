@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ShieldCheck, AlertTriangle, Clock, CheckCircle2, LogIn } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { apiClient } from "../../../infrastructure/api/auth.repository";
+import { apiClient } from "@/presentation/api/auth.repository";
 
 interface InvitationDetails {
     id: number;

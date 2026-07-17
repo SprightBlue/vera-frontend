@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getIncidentDetail } from "../../../infrastructure/api/incidents-api";
-import type { IncidentDetail } from "../../../domain/models/Incident";
+import { getIncidentDetail } from "@/presentation/api/incidents-api";
+import type { IncidentDetail } from "@/presentation/api/Incident.ts";
 
 export function useIncidentDetail(incidentId: string | undefined) {
     const [incident, setIncident] = useState<IncidentDetail | null>(null);

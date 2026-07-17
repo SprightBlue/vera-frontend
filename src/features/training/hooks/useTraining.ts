@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { getProgressForProtected, getScenarios, assignScenario, type TrainingProgressDto, type TrainingScenarioDto,} from "../api/training-api";
-import { getProtectedPersons } from "@/infrastructure/api/protected-person-api";
-import type { ProtectedPerson } from "@/domain/models/ProtectedPerson";
+import { getProtectedPersons } from "@/presentation/api/protected-person-api";
+import type { ProtectedPerson } from "@/presentation/api/ProtectedPerson.ts";
 
 export function useTraining() {
     const [persons, setPersons] = useState<ProtectedPerson[]>([]);

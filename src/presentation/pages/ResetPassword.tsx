@@ -4,7 +4,7 @@ import {
   useNavigate,
   useSearchParams
 } from 'react-router-dom';
-import { authRepository } from '../../infrastructure/api/auth.repository';
+import { authRepository } from '@/presentation/api/auth.repository';
 import veraLogo from '../../assets/Isologo_Vera.png';
 
 /* ---------------- ICONOS ---------------- */

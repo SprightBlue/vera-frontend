@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
-import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
+import type { AddContactRequest } from "@/presentation/api/contacts-api";
 import AddContactForm from "./AddContactForm";
 import toast from "react-hot-toast";
 import { ActionButton } from "@/features/shared/components/ActionButton";

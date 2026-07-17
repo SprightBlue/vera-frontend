@@ -6,8 +6,8 @@ import {
     removeContact,
     type AddContactRequest,
     type InviteContactResponse,
-} from "../../../infrastructure/api/contacts-api";
-import type { Contact } from "../../../domain/models/Contact";
+} from "@/presentation/api/contacts-api";
+import type { Contact } from "@/presentation/api/Contact.ts";
 
 interface Result {
     contacts: Contact[];
