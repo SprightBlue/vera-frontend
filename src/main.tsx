@@ -11,7 +11,7 @@ import App from './App';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GoogleOAuthProvider
-      clientId="864823467452-lmkbghnfj5r49gbij0spnehcu9du3d80.apps.googleusercontent.com"
+      clientId="185939255537-ru087mediutqc35buc54ssmaca2t6p1c.apps.googleusercontent.com"
     >
       <AuthProvider>
           <Toaster
