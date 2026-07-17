@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getIncidentsByTrustContact } from "../../../infrastructure/api/incidents-api";
-import type { IncidentSummary } from "../../../domain/models/Incident";
+import { getIncidentsByTrustContact } from "@/presentation/api/incidents-api";
+import type { IncidentSummary } from "@/presentation/api/Incident.ts";
 
 export function useIncidentsByTrustContact(trustContactId: number | null) {
     const [incidents, setIncidents] = useState<IncidentSummary[]>([]);

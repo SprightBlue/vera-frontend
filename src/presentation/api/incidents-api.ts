@@ -1,5 +1,5 @@
-import { apiClient } from "./auth.repository";
-import type { IncidentDetail, IncidentSummary } from "../../domain/models/Incident";
+import { apiClient } from "./auth.repository.ts";
+import type { IncidentDetail, IncidentSummary } from "./Incident.ts";
 
 export interface PagedResponse<T> {
     content: T[];

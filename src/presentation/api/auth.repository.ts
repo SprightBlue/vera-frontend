@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { LoginRequest, RegisterRequest, AuthResponse } from '@/infrastructure/auth.types';
+import type { LoginRequest, RegisterRequest, AuthResponse } from '@/presentation/api/auth.types.ts';
 
 const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080';
 

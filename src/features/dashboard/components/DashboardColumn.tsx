@@ -209,24 +209,37 @@ export function DashboardColumn({data}: DashboardColumnProps) {
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 w-full">
                                 <div className="flex items-center gap-4.5 min-w-0 flex-1">
                                     {renderContactAvatar()}
-                                    <div className="flex flex-col gap-1 min-w-0 flex-1 select-text">
-                                        <h3 className="text-[clamp(14px,0.9vw,16px)] font-display font-black text-white line-clamp-1 tracking-wide uppercase leading-tight">
-                                            {latestTrustContact.oppositeUserFullName}
-                                        </h3>
+                                    <div className="flex flex-col gap-1.5 min-w-0 flex-1 select-text">
+
                                         <div
-                                            className="flex flex-col gap-1 text-[11.5px] md:text-xs text-slate-300 font-sans font-medium tracking-wide">
-                                            <div className="flex items-center gap-2 text-slate-400">
-                                                <Mail className="w-3.5 h-3.5 text-slate-500 shrink-0"/>
-                                                <span className="truncate">{latestTrustContact.oppositeUserEmail}</span>
+                                            className="flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-sans text-slate-400 leading-none">
+                                            <User size={14} className="text-slate-500 shrink-0"/>
+                                            <strong
+                                                className="text-slate-200 font-sans font-bold tracking-wider uppercase">
+                                                {latestTrustContact.oppositeUserFullName}
+                                            </strong>
+                                        </div>
+
+                                        <div
+                                            className="flex flex-col gap-1 text-[clamp(11px,0.65vw,13px)] font-sans text-slate-400">
+                                            <div className="flex items-center gap-2">
+                                                <Mail size={14} className="text-slate-500 shrink-0"/>
+                                                <strong
+                                                    className="text-slate-200 font-sans font-medium tracking-normal lowercase">
+                                                    {latestTrustContact.oppositeUserEmail}
+                                                </strong>
                                             </div>
                                             {latestTrustContact.oppositeUserPhone && (
-                                                <div className="flex items-center gap-2 text-slate-400">
-                                                    <Phone className="w-3.5 h-3.5 text-slate-500 shrink-0"/>
-                                                    <span
-                                                        className="truncate">{latestTrustContact.oppositeUserPhone}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <Phone size={14} className="text-slate-500 shrink-0"/>
+                                                    <strong
+                                                        className="text-slate-200 font-sans font-bold tracking-wider">
+                                                        {latestTrustContact.oppositeUserPhone}
+                                                    </strong>
                                                 </div>
                                             )}
                                         </div>
+
                                     </div>
                                 </div>
                                 {latestTrustContact.oppositeUserRole === "PROTECTED" && (

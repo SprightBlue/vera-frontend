@@ -69,7 +69,7 @@ export function DashboardStats({data, role, fullname}: DashboardStatsProps) {
                                     <ItemCard
                                         key={alert.id}
                                         title={alert.title}
-                                        subtitle={alert.protectedFullName || "Familiar Protegido"}
+                                        subtitle={alert.trustContact?.oppositeUserFullName || "Familiar Protegido"}
                                         description={alert.contentSummary || "El sistema detectó un mensaje inusual."}
                                         timestamp={alert.createdAt || "Ahora mismo"}
                                         primaryVariant={cardVariant}

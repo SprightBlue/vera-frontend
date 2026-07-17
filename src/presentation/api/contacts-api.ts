@@ -1,5 +1,5 @@
-import { apiClient } from "./auth.repository";
-import type { Contact } from "../../domain/models/Contact";
+import { apiClient } from "./auth.repository.ts";
+import type { Contact } from "./Contact.ts";
 
 export interface AddContactRequest {
     fullName: string;

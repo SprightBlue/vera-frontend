@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { ProtectedPerson, UpdateProtectedInfo } from "@/domain/models/ProtectedPerson";
-import { uploadImage } from "../../../infrastructure/api/protected-person-api";
+import type { ProtectedPerson, UpdateProtectedInfo } from "@/presentation/api/ProtectedPerson.ts";
+import { uploadImage } from "@/presentation/api/protected-person-api";
 import toast from "react-hot-toast";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 

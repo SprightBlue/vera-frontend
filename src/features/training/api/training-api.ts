@@ -1,4 +1,4 @@
-import api from "@/infrastructure/api/api";
+import api from "@/presentation/api/api";
 
 export interface ScenarioOptionDto {
     id: string;

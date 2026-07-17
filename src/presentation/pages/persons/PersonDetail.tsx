@@ -5,8 +5,8 @@ import Sidebar from "../../../features/shared/components/Sidebar.tsx";
 import Header from "../../../features/shared/components/Header.tsx";
 
 import { useAuth } from "../../context/AuthContext";
-import type { ProtectedPerson, UpdateProtectedInfo } from "../../../domain/models/ProtectedPerson.ts";
-import { getProtectedPersonById, updateProtectedPersonInfo } from "../../../infrastructure/api/protected-person-api";
+import type { ProtectedPerson, UpdateProtectedInfo } from "@/presentation/api/ProtectedPerson.ts";
+import { getProtectedPersonById, updateProtectedPersonInfo } from "@/presentation/api/protected-person-api";
 import EditPersonModal from "../../components/persons/EditPersonModal";
 import { LocationCard } from "../../../features/location/component/LocationCard.tsx";
 import toast from "react-hot-toast";

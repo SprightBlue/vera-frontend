@@ -1,6 +1,6 @@
 import { AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
-import type { IncidentSummary } from "../../../domain/models/Incident";
-import { ACTION_TYPE_LABELS } from "../../../domain/models/Incident";
+import type { IncidentSummary } from "@/presentation/api/Incident.ts";
+import { ACTION_TYPE_LABELS } from "@/presentation/api/Incident.ts";
 import { PAGE_SIZE } from "../hooks/useIncidents";
 import { fmtDate, fmtTime } from "../utils/incidentConfig";
 import { StatusBadge, TypeChip } from "./IncidentBadges";

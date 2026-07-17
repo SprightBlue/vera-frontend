@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { authRepository } from '../../infrastructure/api/auth.repository';
+import { authRepository } from '@/presentation/api/auth.repository';
 import veraLogo from '../../assets/Isologo_Vera.png';
 
 export default function VerifyEmail() {

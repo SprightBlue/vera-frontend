@@ -1,4 +1,4 @@
-import type { ProtectedPerson } from "@/domain/models/ProtectedPerson";
+import type { ProtectedPerson } from "@/presentation/api/ProtectedPerson.ts";
 import {PersonAvatar} from "@/features/shared/components/PersonAvatar.tsx";
 
 interface Props {

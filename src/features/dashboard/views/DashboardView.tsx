@@ -68,7 +68,7 @@ export function DashboardView() {
                                                     buttonLabel="Analizar Mensaje"
                                                     buttonIcon={Sparkles}
                                                     buttonVariant="info"
-                                                    onClickAction={() => navigate("/ai-center")}
+                                                    onClickAction={() => navigate("/analysis")}
                                                 />
                                             )}
 

@@ -1,4 +1,4 @@
-import { apiClient as api } from "@/infrastructure/api/auth.repository.ts";
+import { apiClient as api } from "@/presentation/api/auth.repository.ts";
 
 export type ChatRole = 'USER' | 'MODEL';
 

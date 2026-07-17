@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import axios from "axios";
-import type { AddContactRequest } from "../../../infrastructure/api/contacts-api";
+import type { AddContactRequest } from "@/presentation/api/contacts-api";
 import { ActionButton } from "@/features/shared/components/ActionButton";
 
 interface Props {

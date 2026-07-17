@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ProtectedPersonForm from "./ProtectedPersonForm.tsx";
-import { createProtectedPerson, type CreateProtectedPersonRequest } from "../../../infrastructure/api/protected-person-api.ts";
+import { createProtectedPerson, type CreateProtectedPersonRequest } from "@/presentation/api/protected-person-api.ts";
 import { CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { ActionButton } from "@/features/shared/components/ActionButton.tsx";
