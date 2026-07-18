@@ -1,6 +1,6 @@
-import {ActionButton} from "@/features/shared/components/ActionButton";
-import {User, Phone, Edit2, Save, RotateCcw, AlertCircle} from "lucide-react";
-import {type SettingsErrors} from "@/features/settings/hooks/useSettings";
+import { ActionButton } from "@/features/shared/components/ActionButton";
+import { User, Phone, Edit2, Save, RotateCcw, AlertCircle } from "lucide-react";
+import { type SettingsErrors } from "@/features/settings/hooks/useSettings";
 
 interface ProfileDataForm {
     fullName: string;
@@ -34,7 +34,7 @@ export function ProfileDataSection({
                                    }: ProfileDataSectionProps) {
 
     const handleCancel = () => {
-        onChange({fullName: staticName, phone: staticPhone ?? ""});
+        onChange({ fullName: staticName, phone: staticPhone ?? "" });
         onClearError("fullName");
         onClearError("phone");
         onEditToggle(false);
@@ -80,9 +80,9 @@ export function ProfileDataSection({
     const handleInputChange = (field: keyof ProfileDataForm, value: string) => {
         if (field === "phone") {
             const formattedPhone = formatPhoneNumber(value);
-            onChange({...form, phone: formattedPhone});
+            onChange({ ...form, phone: formattedPhone });
         } else {
-            onChange({...form, [field]: value});
+            onChange({ ...form, [field]: value });
         }
         onClearError(field);
     };
@@ -91,12 +91,14 @@ export function ProfileDataSection({
         <section className="w-full flex flex-col gap-6 select-none relative z-10">
 
             <div className="w-full text-center sm:text-left">
-                <h3 className="text-[13px] sm:text-sm font-display font-black uppercase text-white tracking-wider leading-none mb-2.5">
-                    Datos Personales
+                {/* Aplicando la clase heading-md en formato normal */}
+                <h3 className="heading-md normal-case mb-2.5">
+                    Datos personales
                 </h3>
-                <p className="text-[clamp(13px,0.75vw,14px)] text-slate-400 font-sans font-medium">
+                {/* Aplicando la clase body-text */}
+                <p className="body-text">
                     Modificá tu nombre público y tus vías de comunicación directa. <span
-                    className="text-slate-500 italic">(El teléfono es opcional)</span>.
+                    className="text-gray-500 italic">(El teléfono es opcional)</span>.
                 </p>
             </div>
 
@@ -133,14 +135,15 @@ export function ProfileDataSection({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[clamp(1.2rem,1.5vw,1.8rem)]">
 
-                <div className="flex flex-col gap-2">
+                {/* Los inputs y labels de abajo siguen heredando la fuente 'Inter' del Sidebar/Body de manera fluida */}
+                <div className="flex flex-col gap-2" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                     <label
-                        className="text-[10px] font-display font-extrabold tracking-widest text-slate-500 uppercase pl-1">
-                        Nombre de Usuario
+                        className="text-xs font-semibold tracking-wide text-gray-500 normal-case pl-1">
+                        Nombre de usuario
                     </label>
                     <div className="relative flex items-center w-full">
                         <span className="absolute left-4 text-slate-500">
-                            <User className="w-4 h-4"/>
+                            <User className="w-4 h-4" />
                         </span>
                         {isEditing ? (
                             <input
@@ -148,7 +151,7 @@ export function ProfileDataSection({
                                 value={form.fullName}
                                 onChange={e => handleInputChange("fullName", e.target.value)}
                                 disabled={saving}
-                                className={`h-11 w-full bg-[#03050c]/90 text-slate-100 rounded-lg pl-11 pr-4 text-[13.5px] font-sans font-semibold outline-hidden transition-all shadow-inner border ${
+                                className={`h-11 w-full bg-[#03050c]/90 text-slate-100 rounded-lg pl-11 pr-4 text-[13.5px] font-semibold outline-hidden transition-all shadow-inner border ${
                                     errors.fullName
                                         ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
                                         : "border-slate-800/80 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
@@ -157,33 +160,33 @@ export function ProfileDataSection({
                             />
                         ) : (
                             <div
-                                className="h-11 w-full flex items-center pl-11 pr-4 bg-[#03050c]/40 border border-slate-800/20 rounded-lg text-[13.5px] font-sans font-semibold text-slate-300 select-text">
+                                className="h-11 w-full flex items-center pl-11 pr-4 bg-[#03050c]/40 border border-slate-800/20 rounded-lg text-[13.5px] font-semibold text-slate-300 select-text">
                                 {staticName}
                             </div>
                         )}
                     </div>
                     {errors.fullName ? (
                         <span
-                            className="text-[11.5px] text-red-500 font-sans font-semibold leading-normal pl-1 flex items-center gap-1.5 animate-fadeIn">
-                            <AlertCircle className="w-3.5 h-3.5 shrink-0"/>
+                            className="text-[11.5px] text-red-500 font-semibold leading-normal pl-1 flex items-center gap-1.5 animate-fadeIn">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                             {errors.fullName}
                         </span>
                     ) : (
-                        <span className="text-[11.5px] text-slate-500 font-sans font-medium leading-normal pl-1">
+                        <span className="text-[11.5px] text-gray-400 font-medium leading-normal pl-1">
                             Tu nombre o alias público que se mostrará a otros usuarios dentro de la plataforma.
                         </span>
                     )}
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                     <label
-                        className="text-[10px] font-display font-extrabold tracking-widest text-slate-500 uppercase pl-1">
-                        Teléfono de Contacto <span
-                        className="text-[9px] text-slate-600 italic font-medium lowercase">(opcional)</span>
+                        className="text-xs font-semibold tracking-wide text-gray-500 normal-case pl-1">
+                        Teléfono de contacto <span
+                        className="text-[11px] text-gray-600 italic font-medium">(opcional)</span>
                     </label>
                     <div className="relative flex items-center w-full">
                         <span className="absolute left-4 text-slate-500">
-                            <Phone className="w-4 h-4"/>
+                            <Phone className="w-4 h-4" />
                         </span>
                         {isEditing ? (
                             <input
@@ -193,7 +196,7 @@ export function ProfileDataSection({
                                 value={form.phone}
                                 onChange={e => handleInputChange("phone", e.target.value)}
                                 disabled={saving}
-                                className={`h-11 w-full bg-[#03050c]/90 text-slate-100 rounded-lg pl-11 pr-4 text-[13.5px] font-sans font-semibold outline-hidden transition-all shadow-inner border ${
+                                className={`h-11 w-full bg-[#03050c]/90 text-slate-100 rounded-lg pl-11 pr-4 text-[13.5px] font-semibold outline-hidden transition-all shadow-inner border ${
                                     errors.phone
                                         ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
                                         : "border-slate-800/80 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
@@ -202,19 +205,19 @@ export function ProfileDataSection({
                             />
                         ) : (
                             <div
-                                className="h-11 w-full flex items-center pl-11 pr-4 bg-[#03050c]/40 border border-slate-800/20 rounded-lg text-[13.5px] font-sans font-semibold text-slate-300 select-text">
+                                className="h-11 w-full flex items-center pl-11 pr-4 bg-[#03050c]/40 border border-slate-800/20 rounded-lg text-[13.5px] font-semibold text-slate-300 select-text">
                                 {staticPhone || "No registrado"}
                             </div>
                         )}
                     </div>
                     {errors.phone ? (
                         <span
-                            className="text-[11.5px] text-red-500 font-sans font-semibold leading-normal pl-1 flex items-center gap-1.5 animate-fadeIn">
-                            <AlertCircle className="w-3.5 h-3.5 shrink-0"/>
+                            className="text-[11.5px] text-red-500 font-semibold leading-normal pl-1 flex items-center gap-1.5 animate-fadeIn">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                             {errors.phone}
                         </span>
                     ) : (
-                        <span className="text-[11.5px] text-slate-500 font-sans font-medium leading-normal pl-1">
+                        <span className="text-[11.5px] text-gray-400 font-medium leading-normal pl-1">
                             Número telefónico para avisos importantes y verificaciones de cuenta.
                         </span>
                     )}

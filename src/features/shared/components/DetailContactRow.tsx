@@ -20,35 +20,38 @@ export function DetailContactRow({ contact, actions }: DetailContactRowProps) {
     };
 
     return (
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 bg-linear-to-b from-[#080d20] to-[#040714]
-        border border-white/5 rounded-xl px-5 py-3.5 text-[clamp(11px,0.65vw,13px)] font-sans text-slate-400
-        ring-1 ring-inset ring-white/5 shadow-xl select-none w-full relative overflow-hidden">
-
+        <div
+            className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 bg-linear-to-b from-[#080d20] to-[#040714]
+            border border-white/5 rounded-xl px-5 py-3.5 text-[clamp(13px,0.8vw,14.5px)] font-sans text-slate-400
+            ring-1 ring-inset ring-white/5 shadow-xl w-full relative overflow-hidden"
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+        >
             <div
                 className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/5 to-transparent pointer-events-none"
             />
 
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 relative z-10 flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 relative z-10 flex-1 min-w-0 select-none">
 
                 <div className="shrink-0 relative">
                     {contact.oppositeUserImage ? (
                         <img
                             src={contact.oppositeUserImage}
                             alt={contact.oppositeUserFullName}
-                            className="w-8 h-8 rounded-full object-cover border border-white/5 ring-2 ring-white/5 shadow-md shrink-0"
+                            className="w-8.5 h-8.5 rounded-full object-cover border border-white/5 ring-2 ring-white/5 shadow-md shrink-0"
                         />
                     ) : (
                         <div
-                            className="w-8 h-8 rounded-full bg-linear-to-br from-[#1e293b] to-[#0f172a] border border-white/10 ring-2 ring-white/5 flex items-center justify-center text-slate-300 font-sans font-bold text-[10px] shrink-0 shadow-md">
+                            className="w-8.5 h-8.5 rounded-full bg-linear-to-br from-[#1e293b] to-[#0f172a] border border-white/10 ring-2 ring-white/5 flex items-center justify-center text-slate-300 font-bold text-[11px] shrink-0 shadow-md"
+                        >
                             {getInitials(contact.oppositeUserFullName)}
                         </div>
                     )}
                 </div>
 
                 <div className="flex items-center gap-2 min-w-0">
-                    <User size={14} className="text-slate-500 shrink-0"/>
+                    <User size={15} className="text-slate-500 shrink-0"/>
                     <span>
-                        Protegido: <strong className="text-slate-200 font-sans font-semibold select-text normal-case">
+                        Protegido: <strong className="text-slate-200 font-semibold select-text normal-case">
                             {contact.oppositeUserFullName}
                         </strong>
                     </span>
@@ -57,9 +60,9 @@ export function DetailContactRow({ contact, actions }: DetailContactRowProps) {
                 <div className="w-1 h-1 bg-slate-800 rounded-full shrink-0 hidden sm:block"/>
 
                 <div className="flex items-center gap-2 min-w-0">
-                    <Mail size={14} className="text-slate-500 shrink-0"/>
+                    <Mail size={15} className="text-slate-500 shrink-0"/>
                     <span>
-                        Email: <strong className="text-slate-200 font-sans font-medium select-text lowercase">
+                        Email: <strong className="text-slate-200 font-medium select-text lowercase">
                             {contact.oppositeUserEmail}
                         </strong>
                     </span>
@@ -70,9 +73,9 @@ export function DetailContactRow({ contact, actions }: DetailContactRowProps) {
                         <div className="w-1 h-1 bg-slate-800 rounded-full shrink-0 hidden md:block"/>
 
                         <div className="flex items-center gap-2 min-w-0">
-                            <Phone size={14} className="text-slate-500 shrink-0"/>
+                            <Phone size={15} className="text-slate-500 shrink-0"/>
                             <span>
-                                Teléfono: <strong className="text-slate-200 font-sans font-semibold select-text normal-case">
+                                Teléfono: <strong className="text-slate-200 font-semibold select-text normal-case">
                                     {contact.oppositeUserPhone}
                                 </strong>
                             </span>
@@ -81,9 +84,12 @@ export function DetailContactRow({ contact, actions }: DetailContactRowProps) {
                 )}
             </div>
 
+            {/* z-40 e inyección limpia. Si el botón se rompe por prop-drilling, forzamos su opacidad con selectores arbitrarios de Tailwind */}
             {actions && (
-                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full md:w-auto shrink-0 z-20">
-                    {actions}
+                <div className="mt-2 md:mt-0 flex items-center justify-center shrink-0 w-full md:w-auto min-w-[clamp(180px,15vw,240px)] z-40 relative select-text pointer-events-auto [&_button]:opacity-100! [&_button]:cursor-pointer [&_button]:pointer-events-auto">
+                    <div className="flex flex-wrap items-center justify-start md:justify-end gap-2.5 w-full">
+                        {actions}
+                    </div>
                 </div>
             )}
         </div>

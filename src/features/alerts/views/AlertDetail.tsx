@@ -106,7 +106,8 @@ export function AlertDetail() {
                                                 variant="info"
                                                 icon={User}
                                                 onClick={() => navigate(`/persons/${detail.trustContact?.id}`)}
-                                                className="w-full md:w-36 h-8.5 font-sans font-semibold tracking-wide normal-case rounded-md shadow-[0_4px_15px_rgba(0,0,0,0.4)] text-[12px]"
+                                                // Reemplazamos h-8.5 por h-[34px] para que tenga el tamaño exacto que buscás sin romper el botón
+                                                className="w-full md:w-36 h-[34px] font-sans font-semibold tracking-wide normal-case rounded-md shadow-[0_4px_15px_rgba(0,0,0,0.4)] text-[12px]"
                                             >
                                                 Ver perfil
                                             </ActionButton>

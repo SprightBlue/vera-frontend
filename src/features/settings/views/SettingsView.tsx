@@ -1,15 +1,15 @@
-import {useRef, type ChangeEvent, type ComponentType} from "react";
+import { useRef, type ChangeEvent, type ComponentType } from "react";
 import Sidebar from "@/features/shared/components/Sidebar";
 import Header from "@/features/shared/components/Header";
-import {LoadingScreen} from "@/features/shared/components/LoadingScreen";
-import {RetryScreen} from "@/features/shared/components/RetryScreen";
-import {useSettings} from "@/features/settings/hooks/useSettings";
-import {User, ContactRound, Mail, KeyRound, Trash2} from "lucide-react";
-import {ProfileImageSection} from "@/features/settings/components/ProfileImageSection";
-import {ProfileDataSection} from "@/features/settings/components/ProfileDataSection";
-import {ProfileEmailSection} from "@/features/settings/components/ProfileEmailSection";
-import {ProfilePasswordSection} from "@/features/settings/components/ProfilePasswordSection";
-import {ProfileDeleteSection} from "@/features/settings/components/ProfileDeleteSection";
+import { LoadingScreen} from "@/features/shared/components/LoadingScreen";
+import { RetryScreen} from "@/features/shared/components/RetryScreen";
+import { useSettings} from "@/features/settings/hooks/useSettings";
+import { User, ContactRound, Mail, KeyRound, Trash2 } from "lucide-react";
+import { ProfileImageSection } from "@/features/settings/components/ProfileImageSection";
+import { ProfileDataSection } from "@/features/settings/components/ProfileDataSection";
+import { ProfileEmailSection } from "@/features/settings/components/ProfileEmailSection";
+import { ProfilePasswordSection } from "@/features/settings/components/ProfilePasswordSection";
+import { ProfileDeleteSection } from "@/features/settings/components/ProfileDeleteSection";
 
 type SectionKey = "imagen" | "datos" | "correo" | "clave" | "eliminar";
 
@@ -71,11 +71,11 @@ export function SettingsView() {
     };
 
     const navItems: NavigationItem[] = [
-        {id: "imagen", label: "Imagen de Perfil", icon: User},
-        {id: "datos", label: "Datos Personales", icon: ContactRound},
-        {id: "correo", label: "Correo Electrónico", icon: Mail},
-        {id: "clave", label: "Contraseña de Ingreso", icon: KeyRound},
-        {id: "eliminar", label: "Eliminar Cuenta", icon: Trash2, isDanger: true}
+        { id: "imagen", label: "Imagen de perfil", icon: User },
+        { id: "datos", label: "Datos personales", icon: ContactRound },
+        { id: "correo", label: "Correo electrónico", icon: Mail },
+        { id: "clave", label: "Contraseña de ingreso", icon: KeyRound },
+        { id: "eliminar", label: "Eliminar cuenta", icon: Trash2, isDanger: true }
     ];
 
     if (isLoadingProfile) {
@@ -125,6 +125,7 @@ export function SettingsView() {
                         <div
                             className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-[clamp(1.5rem,3vw,4rem)] items-start w-full">
 
+                            {/* El contenedor principal de las secciones mantiene intacta la cuadrícula bg-size */}
                             <div
                                 className="relative w-full overflow-hidden px-[clamp(1rem,3vw,2.5rem)] py-[clamp(1.5rem,4vw,3.5rem)]">
                                 <div
@@ -208,53 +209,61 @@ export function SettingsView() {
                                 </div>
                             </div>
 
+                            {/* Menú de Índice Lateral Ajustado al estilo Vera Sidebar */}
                             <div className="hidden lg:block sticky top-6 space-y-4 w-full">
                                 <div
-                                    className="rounded-xl border border-slate-800/80 bg-linear-to-b from-[#0f172a] to-[#020617] p-[clamp(1.1rem,1.5vw,1.8rem)] shadow-2xl relative overflow-hidden ring-1 ring-inset ring-slate-700/10 w-full select-none">
+                                    className="rounded-xl border border-white/5 bg-[#0B0D17] p-4 shadow-2xl relative overflow-hidden select-none"
+                                    style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                                >
                                     <div
                                         className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-size-[3.5rem_3.5rem] mask-[radial-gradient(circle_at_center,white_45%,transparent_85%)] opacity-30 pointer-events-none"/>
                                     <div
-                                        className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-slate-500 filter blur-3xl opacity-10 pointer-events-none"/>
+                                        className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-blue-500/5 filter blur-3xl pointer-events-none"/>
                                     <div
-                                        className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none"/>
+                                        className="absolute top-0 left-0 right-0 h-px bg-white/5 pointer-events-none"/>
 
-                                    <div className="flex items-center select-none mb-4 relative z-10">
+                                    <div className="flex items-center select-none mb-3 relative z-10 px-1">
                                         <span
-                                            className="text-[clamp(10px,0.58vw,11px)] font-display font-extrabold text-slate-500 tracking-widest uppercase leading-none">
-                                            Índice • Configuración
+                                            className="text-xs font-semibold text-gray-500 tracking-wide normal-case leading-none">
+                                            Índice de configuración
                                         </span>
                                     </div>
 
                                     <div
-                                        className="h-px bg-linear-to-r from-transparent via-slate-500/10 to-transparent pointer-events-none mb-4 relative z-10"/>
+                                        className="h-px bg-white/5 pointer-events-none mb-3 relative z-10"/>
 
-                                    <nav className="flex flex-col gap-2 relative z-10">
+                                    <nav className="flex flex-col gap-1 relative z-10">
                                         {navItems.map((item) => {
                                             const Icon = item.icon;
                                             return (
                                                 <button
                                                     key={item.id}
                                                     onClick={() => handleScrollTo(item.id)}
-                                                    className={`group w-full flex items-center gap-[clamp(0.5rem,0.8vw,0.88rem)] px-[clamp(0.75rem,1vw,1.2rem)] py-[clamp(0.65rem,0.8vw,0.85rem)] rounded-lg text-left text-[clamp(10px,0.58vw,11px)] font-display font-black tracking-wider uppercase border relative select-none cursor-pointer active:scale-[0.97] transition-all duration-300 z-10 overflow-hidden outline-hidden
+                                                    className={`group w-full flex items-center gap-3 px-3 h-10 rounded-xl text-left text-sm font-medium normal-case tracking-wide border relative select-none cursor-pointer active:scale-[0.98] transition-all duration-200 z-10 overflow-hidden outline-hidden
                                                         ${item.isDanger
-                                                        ? "text-slate-400 border-transparent hover:border-red-950/40 hover:bg-linear-to-b hover:from-red-950/10 hover:to-red-950/5 hover:text-red-400"
-                                                        : "text-slate-400 border-transparent hover:border-[#161f37] hover:bg-linear-to-b hover:from-[#080d20]/50 hover:to-[#040714]/30 hover:text-slate-200"
+                                                        ? "text-gray-400 border-transparent hover:text-red-400 hover:bg-red-500/5 hover:border-red-500/10"
+                                                        : "text-gray-400 border-transparent hover:text-white hover:bg-white/5"
                                                     }`}
                                                 >
+                                                    {/* Línea superior sutil */}
                                                     <div
-                                                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${item.isDanger ? "group-hover:via-red-500/20" : "group-hover:via-slate-500/20"}`}/>
+                                                        className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${item.isDanger ? "group-hover:via-red-500/20" : "group-hover:via-white/10"}`}/>
+
+                                                    {/* Glow de esquina */}
                                                     <div
-                                                        className={`absolute -top-6 -right-6 w-16 h-16 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 opacity-0 scale-75 ${item.isDanger ? "bg-red-500 group-hover:opacity-10 group-hover:scale-110" : "bg-blue-500 group-hover:opacity-10 group-hover:scale-110"}`}/>
+                                                        className={`absolute -top-6 -right-6 w-16 h-16 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 opacity-0 scale-75 ${item.isDanger ? "bg-red-500 group-hover:opacity-5 group-hover:scale-110" : "bg-blue-500 group-hover:opacity-5 group-hover:scale-110"}`}/>
+
+                                                    {/* Indicador izquierdo barra de color */}
                                                     <span
-                                                        className={`absolute left-0 top-1.5 bottom-1.5 w-0.75 rounded-r transition-all duration-300 z-20 bg-transparent ${item.isDanger ? "group-hover:bg-red-500 group-hover:shadow-[0_0_12px_#ef4444]" : "group-hover:bg-blue-500 group-hover:shadow-[0_0_12px_#3b82f6]"}`}/>
+                                                        className={`absolute left-0 top-2 bottom-2 w-1 rounded-r transition-all duration-300 z-20 bg-transparent ${item.isDanger ? "group-hover:bg-red-500/50" : "group-hover:bg-white/20"}`}/>
 
                                                     <span
-                                                        className="shrink-0 transition-all duration-300 relative z-10">
+                                                        className="shrink-0 transition-all duration-200 relative z-10">
                                                         <Icon
-                                                            className={`w-3.5 h-3.5 transition-all duration-300 ${item.isDanger ? "text-slate-500 group-hover:text-red-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" : "text-slate-500 group-hover:text-blue-400 group-hover:scale-105 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]"}`}/>
+                                                            className={`w-4 h-4 transition-all duration-200 ${item.isDanger ? "text-gray-500 group-hover:text-red-400" : "text-gray-400 group-hover:text-white"}`}/>
                                                     </span>
                                                     <span
-                                                        className="truncate relative z-10 transition-colors duration-300">
+                                                        className="truncate relative z-10 transition-colors duration-200">
                                                         {item.label}
                                                     </span>
                                                 </button>

@@ -32,7 +32,7 @@ export function ChatInput({
 
     return (
         <div
-            className={`w-full flex items-center gap-3 bg-linear-to-b from-[#080d20] to-[#040714] border border-[#161f37] rounded-2xl px-4 py-3 shadow-xl ring-1 ring-inset ring-[#161f35]/20 transition-all duration-200 hover:border-[#222f50] focus-within:ring-1 focus-within:ring-blue-500/10 focus-within:border-[#222f50] ${className}`}
+            className={`w-full flex items-center gap-3 bg-linear-to-b from-[#080d20] to-[#040714] border border-white/5 rounded-2xl px-4 py-3 shadow-xl ring-1 ring-inset ring-white/5 transition-all duration-200 hover:border-slate-700 focus-within:ring-1 focus-within:ring-blue-500/10 focus-within:border-slate-700 ${className}`}
         >
             <input
                 type="text"
@@ -42,7 +42,7 @@ export function ChatInput({
                 disabled={disabled}
                 placeholder={placeholder}
                 autoComplete="off"
-                className="flex-1 bg-transparent text-slate-200 text-[clamp(12px,0.78vw,14px)] font-sans font-medium outline-hidden placeholder:text-slate-600 disabled:opacity-40 min-w-0"
+                className="flex-1 bg-transparent text-slate-200 text-[clamp(13px,0.8vw,14px)] font-sans font-medium outline-hidden placeholder:text-slate-600 disabled:opacity-40 min-w-0 normal-case"
             />
 
             <button
@@ -51,7 +51,7 @@ export function ChatInput({
                 onClick={() => {
                     if (!isButtonDisabled) onSubmit();
                 }}
-                style={{WebkitTapHighlightColor: 'transparent'}}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
                 className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 select-none outline-none focus:outline-none focus:ring-0 active:ring-0 border-0 shadow-md ${
                     isButtonDisabled
                         ? "text-slate-600 bg-transparent cursor-not-allowed opacity-50"

@@ -75,12 +75,12 @@ export const UI_VARIANTS_MAP: Record<UIVariant, CoreUIStyleConfig> = {
 };
 
 export const UI_BUTTON_STYLES: Record<UIVariant, string> = {
-    danger: 'bg-red-600 hover:bg-red-500 shadow-red-600/10',
-    success: 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10',
-    warning: 'bg-amber-600 hover:bg-amber-500 shadow-amber-600/10',
-    info: 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/10',
-    purple: 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-600/10',
-    neutral: 'bg-slate-600 hover:bg-slate-500 shadow-slate-600/10'
+    danger: 'bg-red-600 hover:bg-red-500 text-white shadow-red-600/10',
+    success: 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/10',
+    warning: 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/10',
+    info: 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/10', // <--- Agregado text-white
+    purple: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/10',
+    neutral: 'bg-slate-600 hover:bg-slate-500 text-white shadow-slate-600/10'
 };
 
 export const UI_TOGGLE_STYLES: Record<UIVariant, string> = {

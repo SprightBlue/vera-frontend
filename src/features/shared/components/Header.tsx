@@ -54,13 +54,9 @@ export function Header({ userName, userRole, title }: HeaderProps) {
             bg-[#050814]/90 backdrop-blur-md transition-all duration-300 select-none
             pl-20 lg:pl-8 pr-4 sm:pr-6 lg:pr-8"
         >
-            {/* Línea sutil superior (Igual al Sidebar) */}
             <div className="absolute top-0 left-0 right-0 h-px bg-white/5 pointer-events-none z-10" />
-
-            {/* Línea sutil inferior */}
             <div className="absolute bottom-0 left-4 right-4 lg:left-8 lg:right-8 h-px bg-white/5 pointer-events-none z-10" />
 
-            {/* Título de la sección (Montserrat) */}
             <div className="flex flex-col min-w-0 pr-2 justify-center h-full py-2 items-start text-left relative z-10">
                 <h2
                     className="text-base font-bold text-white truncate leading-none normal-case tracking-wide"
@@ -70,40 +66,41 @@ export function Header({ userName, userRole, title }: HeaderProps) {
                 </h2>
             </div>
 
-            {/* Bloque de Notificaciones y Usuario (Inter) */}
             <div
                 className="flex items-center gap-4 shrink-0 relative z-10"
                 style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
             >
-                <NotificationDropdown
-                    notifications={notifications}
-                    totalPages={totalPages}
-                    totalElements={totalElements}
-                    page={notificationPage}
-                    setPage={(newPageFn) => setNotificationPage(newPageFn)}
-                    unreadCount={unreadCount}
-                    isRinging={isRinging}
-                    loading={loading}
-                    isBackgroundLoading={isBackgroundLoading}
-                    isProcessingAll={isProcessingAll}
-                    error={error}
-                    retry={retry}
-                    isDropdownOpen={isDropdownOpen}
-                    dropdownRef={dropdownRef}
-                    toggleDropdown={toggleDropdown}
-                    forceLoading={forceLoading}
-                    handleAction={handleAction}
-                    onDeleteAllNotifications={handleDeleteAllNotifications}
-                    onSelect={(n) => {
-                        if (n.type === 'ALERT') {
-                            const p = n.payload as { alertId?: string } | null;
-                            if (p?.alertId) navigate(`/alerts/${p.alertId}`);
-                        }
-                    }}
-                />
+                {/* ID para el tour */}
+                <div id="notification-bell">
+                    <NotificationDropdown
+                        notifications={notifications}
+                        totalPages={totalPages}
+                        totalElements={totalElements}
+                        page={notificationPage}
+                        setPage={(newPageFn) => setNotificationPage(newPageFn)}
+                        unreadCount={unreadCount}
+                        isRinging={isRinging}
+                        loading={loading}
+                        isBackgroundLoading={isBackgroundLoading}
+                        isProcessingAll={isProcessingAll}
+                        error={error}
+                        retry={retry}
+                        isDropdownOpen={isDropdownOpen}
+                        dropdownRef={dropdownRef}
+                        toggleDropdown={toggleDropdown}
+                        forceLoading={forceLoading}
+                        handleAction={handleAction}
+                        onDeleteAllNotifications={handleDeleteAllNotifications}
+                        onSelect={(n) => {
+                            if (n.type === 'ALERT') {
+                                const p = n.payload as { alertId?: string } | null;
+                                if (p?.alertId) navigate(`/alerts/${p.alertId}`);
+                            }
+                        }}
+                    />
+                </div>
 
                 <div className="flex items-center gap-3 border-l border-white/5 pl-4">
-                    {/* Perfil de Usuario con texto normal */}
                     <div className="hidden sm:flex flex-col items-end leading-tight gap-0.5">
                         <span className="text-sm font-semibold text-white normal-case tracking-wide">
                             {finalUserName}
@@ -113,7 +110,9 @@ export function Header({ userName, userRole, title }: HeaderProps) {
                         </span>
                     </div>
 
+                    {/* ID para el tour */}
                     <button
+                        id="user-profile-menu"
                         type="button"
                         onClick={() => navigate("/settings")}
                         title="Ir a configuración"
