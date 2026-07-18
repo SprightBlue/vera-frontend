@@ -19,40 +19,40 @@ export function DashboardView() {
     const [showModal, setShowModal] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    // Leemos de localStorage de forma segura solo en la inicialización
-    const [isFirstVisit] = useState<boolean>(() => {
-        const visited = localStorage.getItem("dashboard_first_visit_completed");
-        return !visited;
+    const currentRole = (user?.role === 'PROTECTED' || user?.role === 'CARER') ? user.role : 'CARER';
+
+    // 100% Local: Controla si el usuario ya vio el Hero/interactuó con el modal
+    const [firstVisitCompleted, setFirstVisitCompleted] = useState<boolean>(() => {
+        return localStorage.getItem("dashboard_first_visit_completed") === "true";
     });
 
-    // Disparamos el tour SOLO si no se ha completado previamente en el navegador
+    // Si no se completó la visita localmente, se muestra el Hero
+    const shouldShowHero = !firstVisitCompleted;
+
+    // Disparador del Tour automático basado estrictamente en LocalStorage
     useEffect(() => {
         if (user?.role && !loading && data) {
-            const tourCompleted = localStorage.getItem("tour_dashboard_completed");
+            const tourCompleted = localStorage.getItem("tour_dashboard_completed") === "true";
 
-            // Si el tour NO está completado, lo iniciamos automáticamente
             if (!tourCompleted) {
                 const timer = setTimeout(() => {
-                    startDashboardTour(user.role);
+                    try {
+                        startDashboardTour(user.role);
+                    } catch (err) {
+                        console.error("Error iniciando el tour:", err);
+                    }
                 }, 600);
                 return () => clearTimeout(timer);
             }
         }
     }, [user?.role, loading, data]);
 
-    const currentRole = (user?.role === 'PROTECTED' || user?.role === 'CARER') ? user.role : 'CARER';
-
-    // CORRECCIÓN 1: Usamos encadenamiento opcional (?.) para evaluar de forma segura antes de que llegue la data
-    const hasContact = !!data?.latestTrustContact;
-
-    // Acción para cuando se abre el modal o se avanza: guardamos que ya no es la primera vez
+    // En cuanto el usuario interactúa para abrir el modal, el Hero se oculta de inmediato
     const handleAddContactClick = () => {
         localStorage.setItem("dashboard_first_visit_completed", "true");
+        setFirstVisitCompleted(true);
         setShowModal(true);
     };
-
-    // Condición limpia: Solo se muestra el Hero si no tiene contactos Y es su primera vez absoluta
-    const shouldShowHero = !hasContact && isFirstVisit;
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-[#050814] text-slate-100 antialiased" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
@@ -67,30 +67,38 @@ export function DashboardView() {
                             <LoadingScreen />
                         ) : error ? (
                             <RetryScreen onRetry={refetch} />
-                        ) : shouldShowHero ? (
-                            <DashboardHero onAddProtectedClick={handleAddContactClick} />
                         ) : (
                             <>
-                                <DashboardBanner
-                                    title={currentRole === "CARER" ? "Cuidá a los que más querés" : "Tu tranquilidad es lo primero"}
-                                    description={currentRole === "CARER" ? "Agregá a un familiar para protegerlo." : "¿Dudas con un mensaje? Verificalo acá."}
-                                    buttonLabel={currentRole === "CARER" ? "Agregar Contacto" : "Analizar Mensaje"}
-                                    buttonIcon={currentRole === "CARER" ? UserPlus : Sparkles}
-                                    buttonVariant="info"
-                                    onClickAction={() => currentRole === "CARER" ? handleAddContactClick() : navigate("/analysis")}
-                                />
-                                {/* CORRECCIÓN 2: Le agregamos '!' a data indicando a TS que estamos 100% seguros de que aquí ya no es null */}
-                                <DashboardStats data={data!} role={currentRole} fullname={user?.fullName ?? "Usuario"} />
+                                {shouldShowHero ? (
+                                    /* Primer login: muestra el Hero en pantalla y el Tour corre por encima */
+                                    <DashboardHero onAddProtectedClick={handleAddContactClick} />
+                                ) : (
+                                    /* Una vez clickeado el modal: panel base permanente */
+                                    <div className="flex flex-col gap-[clamp(1.5rem,2.5vw,3rem)] w-full">
+                                        <DashboardBanner
+                                            title={currentRole === "CARER" ? "Cuidá a los que más querés" : "Tu tranquilidad es lo primero"}
+                                            description={currentRole === "CARER" ? "Agregá a un familiar para protegerlo." : "¿Dudas con un mensaje? Verificalo acá."}
+                                            buttonLabel={currentRole === "CARER" ? "Agregar Contacto" : "Analizar Mensaje"}
+                                            buttonIcon={currentRole === "CARER" ? UserPlus : Sparkles}
+                                            buttonVariant="info"
+                                            onClickAction={() => currentRole === "CARER" ? handleAddContactClick() : navigate("/analysis")}
+                                        />
+                                        <DashboardStats data={data!} role={currentRole} fullname={user?.fullName ?? "Usuario"} />
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>
                 </main>
             </div>
+
             {showModal && (
                 <CreateProtectedPersonModal
                     onClose={() => setShowModal(false)}
                     onSuccess={() => {
+                        localStorage.setItem("tour_dashboard_completed", "true");
                         localStorage.setItem("dashboard_first_visit_completed", "true");
+                        setFirstVisitCompleted(true);
                         setShowModal(false);
                         void refetch();
                     }}

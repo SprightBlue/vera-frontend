@@ -1,320 +1,251 @@
-import {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import {authRepository} from '@/presentation/api/auth.repository';
-import {useAuth} from '../context/AuthContext';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { authRepository } from '@/presentation/api/auth.repository';
+import { useAuth } from '../context/AuthContext';
 import veraLogo from '../../assets/Isologo_Vera.png';
-import {GoogleLogin} from '@react-oauth/google';
-import type {CredentialResponse} from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
+import type { CredentialResponse } from '@react-oauth/google';
 import toast from "react-hot-toast";
+import { Eye, EyeOff, Check, Shield, Users } from 'lucide-react';
 
-/* ---------------- ICONOS ---------------- */
+/* ---------------- FEATURE ROW ---------------- */
 
-const CheckIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path
-          d="M20 6L9 17L4 12"
-          stroke="#0D6EFD"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-      />
-    </svg>
-);
-
-const ShieldIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path
-          d="M12 3L19 6V11C19 16 15.5 20 12 21C8.5 20 5 16 5 11V6L12 3Z"
-          stroke="#0D6EFD"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-      />
-    </svg>
-);
-
-const UsersIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path
-          d="M16 21V19C16 17.9 15.1 17 14 17H6C4.9 17 4 17.9 4 19V21"
-          stroke="#0D6EFD"
-          strokeWidth="2"
-      />
-      <circle cx="10" cy="9" r="3" stroke="#0D6EFD" strokeWidth="2"/>
-      <path d="M20 21V19C20 18.2 19.5 17.5 18.8 17.2" stroke="#0D6EFD" strokeWidth="2"/>
-    </svg>
-);
-
-/* ---------------- FEATURE ---------------- */
-
-const FeatureRow = ({
-                      icon,
-                      text,
-                      subtext
-                    }: any) => (
+const FeatureRow = ({ icon, text, subtext }: { icon: React.ReactNode; text: string; subtext: string }) => (
     <div className="flex items-start gap-4">
-      <div className="w-11 h-11 rounded-xl bg-blue-600/10 flex items-center justify-center border border-blue-500/20">
-        {icon}
-      </div>
-
-      <div>
-        <div className="text-lg font-bold text-white">{text}</div>
-        <div className="text-sm text-gray-400">{subtext}</div>
-      </div>
+        <div className="w-11 h-11 rounded-xl bg-blue-600/10 flex items-center justify-center border border-blue-500/20 shrink-0 text-blue-500">
+            {icon}
+        </div>
+        <div>
+            <div className="heading-md !text-lg normal-case">{text}</div>
+            <div className="text-sm text-gray-400 font-normal">{subtext}</div>
+        </div>
     </div>
 );
 
-/* ---------------- LOGIN ---------------- */
+/* ---------------- LOGIN MAIN ---------------- */
 
 export default function Login() {
-  const navigate = useNavigate();
-  const {login} = useAuth();
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
-  const [form, setForm] = useState({email: '', password: ''});
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+    const [form, setForm] = useState({ email: '', password: '' });
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
-  const handleChange = (
-      e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+    };
 
-  const handleSubmit = async (
-      e: React.FormEvent
-  ) => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const data = await authRepository.login(form);
+            login(data, rememberMe);
+            navigate('/dashboard');
+        } catch {
+            toast.error("El email o la contraseña no son correctos");
+        }
+    };
 
-    e.preventDefault();
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+        try {
+            if (!credentialResponse.credential) {
+                throw new Error('No se recibió credential');
+            }
+            const data = await authRepository.googleLogin(credentialResponse.credential);
+            login(data, rememberMe);
+            navigate('/dashboard');
+        } catch {
+            toast.error("Error al iniciar sesión con Google");
+        }
+    };
 
-    try {
+    return (
+        // Unificamos el comportamiento: el scroll general se maneja de forma natural a nivel global
+        <div className="w-full min-h-screen flex bg-[#05070D] text-white">
 
-      const data =
-          await authRepository.login(form);
+            {/* PANEL IZQUIERDO: Estático, se acopla al alto disponible */}
+            <div className="hidden lg:flex lg:w-1/2 justify-center bg-[#0B0D17] border-r border-white/5 px-8 xl:px-16">
+                <div className="max-w-[520px] w-full py-12 flex flex-col justify-between min-h-screen sticky top-0">
+                    <div>
+                        <img
+                            src={veraLogo}
+                            alt="Vera"
+                            className="w-[160px] md:w-[185px] mb-8 lg:mb-12"
+                        />
 
-      login(
-          data,
-          rememberMe
-      );
+                        <h1 className="heading-xl normal-case mb-4">
+                            Tu guardián digital contra estafas
+                        </h1>
 
-      navigate('/dashboard');
+                        <p className="body-text max-w-[470px]">
+                            Protección inteligente que analiza mensajes, emails y links para mantenerte seguro online.
+                        </p>
+                    </div>
 
-    } catch {
-
-      toast.error("El email o la contraseña no son correctos");
-
-    }
-  };
-
-  const handleGoogleSuccess = async (
-      credentialResponse: CredentialResponse
-  ) => {
-
-    try {
-
-      if (!credentialResponse.credential) {
-
-        throw new Error(
-            'No se recibió credential'
-        );
-      }
-
-      const data =
-          await authRepository.googleLogin(
-              credentialResponse.credential
-          );
-
-      login(
-          data,
-          rememberMe
-      );
-
-      navigate('/dashboard');
-
-    } catch {
-
-      toast.error("Error al inciar sesión con Google");
-
-    }
-  };
-
-  return (
-      <div className="w-full min-h-screen flex bg-[#05070D] text-white">
-
-        {/* IZQUIERDA */}
-        <div className="hidden lg:flex w-1/2 justify-center bg-[#0B0D17] border-r border-white/5">
-          <div className="max-w-[520px] pt-[100px]">
-
-            <img
-                src={veraLogo}
-                alt="Vera"
-                className="w-[185px]"
-            />
-
-            <h1 className="text-[58px] font-bold leading-[1] mb-3 max-w-[550px]">
-              Tu guardián digital
-              contra estafas
-            </h1>
-
-            <p className="text-gray-400 text-[17px] leading-8 mb-10 max-w-[470px]">
-              Protección inteligente que analiza mensajes, emails y links
-              para mantenerte seguro online.
-            </p>
-
-            <div className="w-full h-px bg-white/10 mb-8"/>
-
-            <div className="space-y-6">
-              <FeatureRow
-                  icon={<CheckIcon/>}
-                  text="99.2%"
-                  subtext="Precisión de detección"
-              />
-
-              <FeatureRow
-                  icon={<ShieldIcon/>}
-                  text="24/7"
-                  subtext="Protección activa"
-              />
-
-              <FeatureRow
-                  icon={<UsersIcon/>}
-                  text="50K+"
-                  subtext="Usuarios protegidos"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* DERECHA */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center px-14">
-          <div className="w-full max-w-[420px]">
-
-            <h2 className="text-[44px] font-bold mb-3">
-              Iniciar sesión
-            </h2>
-
-            <p className="text-gray-400 mb-10">
-              Ingresá tus credenciales para acceder a tu cuenta
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-
-              <Input
-                  label="Email"
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  autoComplete="email"
-              />
-
-              <div>
-                <label className="block mb-2 font-medium">
-                  Contraseña
-                </label>
-
-                <div className="relative">
-                  <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      value={form.password}
-                      onChange={handleChange}
-                      autoComplete="current-password"
-                      className="w-full h-14 rounded-2xl px-5 pr-14 bg-[#12141C] border border-white/10"
-                  />
-
-                  <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2"
-                  >
-                    👁
-                  </button>
+                    <div className="w-full mt-6">
+                        <div className="w-full h-px bg-white/10 mb-6" />
+                        <div className="space-y-5">
+                            <FeatureRow
+                                icon={<Check className="w-5 h-5 stroke-[2.5]" />}
+                                text="99.2%"
+                                subtext="Precisión de detección"
+                            />
+                            <FeatureRow
+                                icon={<Shield className="w-5 h-5 stroke-[2]" />}
+                                text="24/7"
+                                subtext="Protección activa"
+                            />
+                            <FeatureRow
+                                icon={<Users className="w-5 h-5 stroke-[2]" />}
+                                text="50K+"
+                                subtext="Usuarios protegidos"
+                            />
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div className="flex justify-end mt-2">
-                  <Link
-                      to="/forgot-password"
-                      className="text-sm text-blue-500 hover:text-blue-400"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </Link>
+            {/* PANEL DERECHO: Eliminados los overflows internos para matar el doble scroll */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 sm:px-16 md:px-24 lg:px-12 xl:px-20 min-h-screen">
+                <div className="w-full max-w-[400px] flex flex-col justify-center">
+
+                    {/* Logo Mobile */}
+                    <img
+                        src={veraLogo}
+                        alt="Vera"
+                        className="w-[130px] mb-6 lg:hidden self-start"
+                    />
+
+                    <h2 className="heading-lg normal-case mb-1">
+                        Iniciar sesión
+                    </h2>
+
+                    <p className="body-text !text-gray-400 mb-8">
+                        Ingresá tus credenciales para acceder a tu cuenta
+                    </p>
+
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <Input
+                            label="Email"
+                            type="email"
+                            name="email"
+                            value={form.email}
+                            onChange={handleChange}
+                            autoComplete="email"
+                            required
+                        />
+
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-semibold tracking-wide text-gray-200">
+                                Contraseña
+                            </label>
+
+                            <div className="relative flex items-center">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    value={form.password}
+                                    onChange={handleChange}
+                                    autoComplete="current-password"
+                                    required
+                                    className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl px-4 pr-12 bg-[#12141C] border border-white/10 text-sm sm:text-base text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors p-2.5 z-10 focus:outline-none flex items-center justify-center"
+                                    title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="w-5 h-5" />
+                                    ) : (
+                                        <Eye className="w-5 h-5" />
+                                    )}
+                                </button>
+                            </div>
+
+                            <div className="flex justify-end mt-0.5">
+                                <Link
+                                    to="/forgot-password"
+                                    className="text-xs sm:text-sm font-medium text-blue-500 hover:text-blue-400 transition-colors"
+                                >
+                                    ¿Olvidaste tu contraseña?
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2.5 pt-0.5">
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                                className="w-4 h-4 rounded border-white/10 bg-[#12141C] text-blue-500 focus:ring-0 accent-blue-500 cursor-pointer"
+                            />
+                            <label htmlFor="rememberMe" className="text-xs sm:text-sm text-gray-400 cursor-pointer select-none">
+                                Recordarme por 30 días
+                            </label>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-[#0D6EFD] font-semibold text-sm sm:text-base cursor-pointer hover:bg-[#0B5ED7] transition-all duration-300 shadow-lg shadow-blue-500/10 active:scale-[0.99]"
+                        >
+                            Iniciar sesión
+                        </button>
+                    </form>
+
+                    <div className="flex items-center gap-4 my-6 sm:my-8">
+                        <div className="flex-1 h-px bg-white/10" />
+                        <span className="text-[10px] sm:text-xs text-gray-500 font-medium tracking-wider uppercase whitespace-nowrap">
+                            O continuar con
+                        </span>
+                        <div className="flex-1 h-px bg-white/10" />
+                    </div>
+
+                    <div className="flex justify-center w-full min-h-[44px]">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => toast.error('Error al iniciar sesión con Google')}
+                            theme="filled_black"
+                            shape="pill"
+                            size="large"
+                            text="continue_with"
+                            width="400px"
+                        />
+                    </div>
+
+                    <p className="text-center text-xs sm:text-sm text-gray-400 mt-8">
+                        ¿No tenés cuenta?{' '}
+                        <Link to="/register" className="text-blue-500 font-semibold hover:text-blue-400 transition-colors">
+                            Crear cuenta gratis
+                        </Link>
+                    </p>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-
-                <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) =>
-                        setRememberMe(
-                            e.target.checked
-                        )
-                    }
-                />
-
-                <label className="text-sm text-gray-400">
-                  Recordarme por 30 días
-                </label>
-
-              </div>
-
-              <button
-                  type="submit"
-                  className="w-full h-14 rounded-2xl bg-[#0D6EFD] cursor-pointer hover:bg-[#0B5ED7] transition-all duration-300"
-              >
-                Iniciar sesión
-              </button>
-            </form>
-
-            <div className="flex items-center gap-4 my-8">
-              <div className="flex-1 h-px bg-white/10"/>
-              <span className="text-xs text-gray-500">
-              O continuar con
-            </span>
-              <div className="flex-1 h-px bg-white/10"/>
             </div>
-
-            <div className="flex justify-center">
-
-              <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() =>
-                      alert(
-                          'Error al iniciar sesión con Google'
-                      )
-                  }
-                  theme="filled_black"
-                  shape="pill"
-                  size="large"
-                  text="continue_with"
-              />
-
-            </div>
-
-            <p className="text-center text-sm text-gray-400 mt-8">
-              ¿No tenés cuenta?{' '}
-              <Link to="/register" className="text-blue-500">
-                Crear cuenta gratis
-              </Link>
-            </p>
-          </div>
         </div>
-      </div>
-  );
+    );
 }
 
-function Input(props: any) {
-  return (
-      <div>
-        <label className="block mb-2 font-medium">{props.label}</label>
-        <input
-            {...props}
-            className="w-full h-14 rounded-2xl px-5 bg-[#12141C] border border-white/10"
-        />
-      </div>
-  );
+/* ---------------- INTERFACE COMPONENTE INPUT ---------------- */
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    label: string;
+}
+
+function Input({ label, ...props }: InputProps) {
+    return (
+        <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-semibold tracking-wide text-gray-200">{label}</label>
+            <input
+                {...props}
+                className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl px-4 sm:px-5 bg-[#12141C] border border-white/10 text-sm sm:text-base text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+            />
+        </div>
+    );
 }
