@@ -18,19 +18,19 @@ export function DashboardStats({ data, role, fullname }: DashboardStatsProps) {
     return (
         <div className="w-full flex flex-col gap-[clamp(1rem,1.8vw,2rem)] animate-fade-in">
 
-            {/* Encabezados visibles en pantallas grandes con gap fluido */}
-            <div className="w-full grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] select-none hidden xl:grid">
+            {/* Encabezados visibles en pantallas grandes con gap fluido y Montserrat */}
+            <div className="w-full grid-cols-1 xl:grid-cols-12 gap-[clamp(1.2rem,2vw,2.5rem)] hidden xl:grid">
                 <div
-                    className="xl:col-span-5 relative pb-3.5 flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-semibold text-gray-500 normal-case tracking-wide"
-                    style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                    className="xl:col-span-5 relative pb-3.5 flex items-center gap-2 text-[clamp(0.75rem,1.2vw,0.85rem)] font-semibold text-gray-500 normal-case tracking-wide"
+                    style={{ fontFamily: "'Montserrat', system-ui, sans-serif" }}
                 >
                     <span>Actividad reciente</span>
                     <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5 pointer-events-none" />
                 </div>
 
                 <div
-                    className="xl:col-span-7 relative pb-3.5 flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-semibold text-gray-500 normal-case tracking-wide"
-                    style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                    className="xl:col-span-7 relative pb-3.5 flex items-center gap-2 text-[clamp(0.75rem,1.2vw,0.85rem)] font-semibold text-gray-500 normal-case tracking-wide"
+                    style={{ fontFamily: "'Montserrat', system-ui, sans-serif" }}
                 >
                     {isCarer ? (
                         <span>Últimas alertas recibidas</span>
@@ -48,10 +48,10 @@ export function DashboardStats({ data, role, fullname }: DashboardStatsProps) {
                 </div>
 
                 <div className="xl:col-span-7 flex flex-col gap-[clamp(0.8rem,1.5vw,1.2rem)] w-full">
-                    {/* Encabezado visible solo en móviles */}
+                    {/* Encabezado visible solo en móviles con Montserrat */}
                     <div
-                        className="xl:hidden relative pb-2.5 mb-1 flex items-center gap-2 text-[clamp(11px,0.65vw,13px)] font-semibold text-gray-500 normal-case tracking-wide select-none"
-                        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+                        className="xl:hidden relative pb-2.5 mb-1 flex items-center gap-2 text-[clamp(0.75rem,1.2vw,0.85rem)] font-semibold text-gray-500 normal-case tracking-wide"
+                        style={{ fontFamily: "'Montserrat', system-ui, sans-serif" }}
                     >
                         {isCarer ? (
                             <span>Últimas alertas recibidas</span>
