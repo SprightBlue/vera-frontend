@@ -1,7 +1,7 @@
-import {type ChangeEvent, useRef} from "react";
-import {PersonAvatar} from "@/features/shared/components/PersonAvatar";
-import {ActionButton} from "@/features/shared/components/ActionButton";
-import {UploadCloud, Trash2} from "lucide-react";
+import { type ChangeEvent, useRef } from "react";
+import { PersonAvatar } from "@/features/shared/components/PersonAvatar";
+import { ActionButton } from "@/features/shared/components/ActionButton";
+import { UploadCloud, Trash2 } from "lucide-react";
 
 interface ProfileImageSectionProps {
     fullName: string;
@@ -41,11 +41,13 @@ export function ProfileImageSection({
                 <div
                     className="flex-1 flex flex-col items-center sm:items-start text-center sm:text-left gap-3.5 w-full">
 
-                    <h3 className="text-[13px] sm:text-sm font-display font-black uppercase text-white tracking-wider leading-none">
-                        Imagen de Perfil
+                    {/* Implementando la clase heading-md en formato normal */}
+                    <h3 className="heading-md normal-case">
+                        Imagen de perfil
                     </h3>
 
-                    <p className="text-[clamp(13px,0.75vw,14px)] text-slate-400 leading-relaxed font-sans font-medium max-w-xl">
+                    {/* Implementando la clase body-text */}
+                    <p className="body-text max-w-xl">
                         Esta imagen te identificará frente al resto de los usuarios dentro de la plataforma de manera
                         pública.
                     </p>

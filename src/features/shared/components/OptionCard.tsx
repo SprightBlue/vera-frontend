@@ -41,7 +41,8 @@ export function OptionCard({ title, description, to, buttonLabel, variant }: Opt
                     </span>
                 </div>
 
-                <h3 className="text-[clamp(1.1rem,1.3vw,1.4rem)] font-bold text-white select-text tracking-wide pt-0.5 leading-snug normal-case">
+                {/* Título unificado usando el escalado fluido semántico */}
+                <h3 className="text-[clamp(1.15rem,1.35vw,1.45rem)] font-bold text-white select-text tracking-wide pt-0.5 leading-snug normal-case">
                     {title}
                 </h3>
 

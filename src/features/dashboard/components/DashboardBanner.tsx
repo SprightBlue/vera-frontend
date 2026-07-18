@@ -64,7 +64,11 @@ export function DashboardBanner({
             {/* Contenedor del Botón Fluido */}
             <div
                 className="mt-2 md:mt-0 flex items-center justify-center shrink-0 w-full md:w-auto min-w-[clamp(180px,15vw,240px)] relative z-10">
-                <div className="w-full">
+                {/* ID condicional que sólo se aplica si el botón contiene "Agregar" (así evitamos el ID en otros banners) */}
+                <div
+                    id={buttonLabel.toLowerCase().includes("agregar") ? "add-protected-btn" : undefined}
+                    className="w-full"
+                >
                     <ActionButton
                         variant={buttonVariant}
                         icon={Icon}

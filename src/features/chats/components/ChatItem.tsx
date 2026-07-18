@@ -26,35 +26,40 @@ export function ChatItem({
         <button
             onClick={() => !isDeleting && onSelectChat(session.id)}
             disabled={isDeleting}
-            className={`w-full flex items-center justify-between gap-[clamp(0.5rem,0.8vw,0.88rem)] px-[clamp(0.6rem,0.8vw,1rem)] py-[clamp(0.65rem,0.8vw,0.85rem)] rounded-lg border relative group transition-all duration-300 overflow-hidden active:scale-[0.97] ${
+            className={`w-full flex items-center justify-between gap-[clamp(0.5rem,0.8vw,0.88rem)] px-[clamp(0.6rem,0.8vw,1rem)] py-[clamp(0.65rem,0.8vw,0.85rem)] rounded-xl border relative group transition-all duration-200 overflow-hidden active:scale-[0.98] ${
                 isActive
-                    ? "bg-linear-to-b from-[#0e1630] to-[#060a18] text-white border-[#22356b] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-inset ring-blue-500/20"
-                    : "text-slate-400 border-transparent hover:border-[#161f37] hover:bg-linear-to-b hover:from-[#080d20]/50 hover:to-[#040714]/30 hover:text-slate-200"
+                    ? "bg-[#0D6EFD]/10 text-[#0D6EFD] border-[#0D6EFD]/20 shadow-[0_0_12px_rgba(13,110,253,0.05)] font-semibold"
+                    : "text-gray-400 border-transparent hover:text-white hover:bg-white/5 font-medium"
             } ${
                 isDeleting
-                    ? "cursor-wait bg-[#0d1326]/20 text-slate-500 border-slate-800/30 pointer-events-none opacity-40"
+                    ? "cursor-wait bg-white/5 text-gray-500 border-white/5 pointer-events-none opacity-40"
                     : "cursor-pointer"
             }`}
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
             title={session.title}
         >
+            {/* Línea brillante superior sutil */}
             <div
                 className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent to-transparent pointer-events-none transition-all duration-500 z-20 ${
-                    isActive ? "via-blue-400/40" : "via-transparent group-hover:via-slate-500/20"
+                    isActive ? "via-blue-400/40" : "via-transparent group-hover:via-white/10"
                 }`}/>
 
+            {/* Esquina con Glow de fondo */}
             <div
                 className={`absolute -top-6 -right-6 w-16 h-16 rounded-full filter blur-md pointer-events-none transform origin-top-right transition-all duration-500 ease-out z-0 ${
                     isActive
-                        ? "opacity-20 scale-125 bg-blue-500"
-                        : "opacity-0 scale-75 bg-slate-500 group-hover:opacity-10 group-hover:scale-110"
+                        ? "opacity-10 scale-125 bg-blue-500"
+                        : "opacity-0 scale-75 bg-blue-500 group-hover:opacity-5 group-hover:scale-110"
                 }`}/>
 
-            <span className={`absolute left-0 top-1 bottom-1 w-0.75 rounded-r transition-all duration-300 z-20 ${
-                isActive ? "bg-blue-500 shadow-[0_0_12px_#3b82f6]" : "bg-transparent group-hover:bg-slate-700"
+            {/* Indicador visual izquierdo */}
+            <span className={`absolute left-0 top-2 bottom-2 w-1 rounded-r transition-all duration-300 z-20 ${
+                isActive ? "bg-[#0D6EFD]" : "bg-transparent group-hover:bg-white/20"
             }`}/>
 
+            {/* Texto truncado sin mayúsculas forzadas */}
             <span
-                className="truncate flex-1 text-left relative z-10 font-sans font-medium text-[clamp(12px,0.78vw,13px)] tracking-wide transition-colors duration-300">
+                className="truncate flex-1 text-left relative z-10 text-[clamp(12px,0.78vw,13.5px)] normal-case tracking-wide transition-colors duration-200">
                 {session.title}
             </span>
 

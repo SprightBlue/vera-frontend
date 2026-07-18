@@ -43,8 +43,8 @@ export function DashboardHero({ onAddProtectedClick }: DashboardHeroProps) {
                     mensajes, agregá a tu primer contacto de confianza.
                 </p>
 
-                {/* Contenedor del Botón con Brackets Decorativos */}
-                <div className="relative p-1">
+                {/* Contenedor del Botón con Brackets Decorativos y el ID para el tour */}
+                <div id="add-protected-btn" className="relative p-1">
                     <div
                         className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-blue-500/20 pointer-events-none"
                     />

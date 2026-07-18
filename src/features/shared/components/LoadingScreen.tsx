@@ -1,22 +1,21 @@
-import {Loader2} from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface LoadingScreenProps {
     label?: string;
 }
 
-export function LoadingScreen({label = "CARGANDO SISTEMA..."}: LoadingScreenProps) {
+export function LoadingScreen({ label = "Cargando sistema..." }: LoadingScreenProps) {
     return (
         <div
             className="w-full flex-1 flex flex-col items-center justify-center py-[clamp(4rem,8vw,12rem)] select-none animate-fade-in mx-auto max-w-7xl relative overflow-hidden">
 
-            <div
-                className="absolute w-32 h-32 bg-blue-500/10 rounded-full filter blur-2xl pointer-events-none animate-pulse"/>
-
+            {/* Icono agrandado a un mínimo de 32px hasta 44px */}
             <Loader2
-                className="text-slate-500 animate-spin stroke-[1.5] mb-3 w-[clamp(24px,1.8vw,32px)] h-[clamp(24px,1.8vw,32px)] relative z-10"/>
+                className="text-slate-500 animate-spin stroke-[1.5] mb-4 w-[clamp(32px,2.2vw,44px)] h-[clamp(32px,2.2vw,44px)] relative z-10" />
 
+            {/* Fuente adaptada a un tamaño más legible sin mayúsculas forzadas */}
             <span
-                className="text-[clamp(10px,0.6vw,14px)] font-sans font-bold text-slate-500 tracking-wider uppercase animate-pulse text-center px-4 relative z-10">
+                className="text-[clamp(14px,0.85vw,16px)] font-sans font-medium text-slate-400 tracking-wide animate-pulse text-center px-4 relative z-10 normal-case">
                 {label}
             </span>
         </div>
