@@ -12,7 +12,6 @@ interface OptionCardProps {
 
 export function OptionCard({ title, description, to, buttonLabel, variant }: OptionCardProps) {
     const config = UI_VARIANTS_MAP[variant];
-
     const variantBorderHover = config.borderColor || "hover:border-white/10";
     const variantDotColor = config.bgColor || "bg-slate-500";
 
@@ -21,32 +20,25 @@ export function OptionCard({ title, description, to, buttonLabel, variant }: Opt
             className={`group rounded-xl border border-white/5 bg-[#0B0D17] p-[clamp(1.2rem,2vw,2rem)] 
             shadow-xl relative overflow-hidden flex flex-col justify-between transition-all duration-300 
             ring-1 ring-inset ring-white/5 ${variantBorderHover} w-full`}
-            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
         >
-            {/* Resplandor elástico ambiental de fondo */}
-            <div
-                className={`absolute -top-20 -right-20 w-[clamp(200px,20vw,320px)] h-[clamp(200px,20vw,320px)] rounded-full ${config.glowColor} filter blur-3xl opacity-10 pointer-events-none transform origin-top-right transition-opacity duration-300`}
-            />
-
-            {/* Divisor superior de acento láser estilizado */}
-            <div
-                className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-${variant === 'neutral' ? 'slate' : variant}-500/20 to-transparent pointer-events-none z-10`}
-            />
+            <div className={`absolute -top-20 -right-20 w-[clamp(200px,20vw,320px)] h-[clamp(200px,20vw,320px)] rounded-full ${config.glowColor} filter blur-3xl opacity-10 pointer-events-none transform origin-top-right transition-opacity duration-300`} />
+            <div className={`absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-${variant === 'neutral' ? 'slate' : variant}-500/20 to-transparent pointer-events-none z-10`} />
 
             <div className="relative z-10 w-full space-y-3">
-                <div className="flex items-center gap-2 select-none">
+                <div className="flex items-center gap-2">
                     <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)] ${variantDotColor}`} />
-                    <span className="text-[clamp(10px,0.55vw,11px)] font-semibold tracking-wide text-slate-500 normal-case">
+                    <span className="text-[clamp(11px,0.6vw,12px)] font-semibold tracking-wide text-slate-500 normal-case select-text">
                         Módulo activo
                     </span>
                 </div>
 
-                {/* Título unificado usando el escalado fluido semántico */}
-                <h3 className="text-[clamp(1.15rem,1.35vw,1.45rem)] font-bold text-white select-text tracking-wide pt-0.5 leading-snug normal-case">
+                {/* Usando tu clase nativa heading-lg (o heading-md si preferís que no sea tan gigante) */}
+                <h3 className="heading-lg select-text w-full normal-case">
                     {title}
                 </h3>
 
-                <p className="text-[clamp(12.5px,0.78vw,13.5px)] text-slate-400 leading-relaxed font-normal select-text max-w-prose">
+                {/* Usando tu clase nativa body-text */}
+                <p className="body-text select-text max-w-prose">
                     {description}
                 </p>
             </div>
@@ -55,7 +47,7 @@ export function OptionCard({ title, description, to, buttonLabel, variant }: Opt
                 <Link to={to} className="w-full sm:w-auto block">
                     <ActionButton
                         variant={variant}
-                        className="w-full sm:w-auto px-5 shadow-md text-[12px] font-medium tracking-wide normal-case h-9.5 rounded-lg"
+                        className="w-full sm:w-auto px-5 shadow-md text-[12px] font-semibold tracking-wide normal-case h-9.5 rounded-lg"
                     >
                         {buttonLabel}
                     </ActionButton>

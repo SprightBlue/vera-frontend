@@ -33,7 +33,6 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
             ${cardStyle.bgColor} ${cardStyle.borderColor} ${cardStyle.textColor} ${
                 preventActions ? "opacity-60 pointer-events-none" : ""
             }`}
-            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
         >
             {/* Brillo ambiental elástico integrado */}
             <div
@@ -57,7 +56,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                         }
                     }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
-                    className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-300 select-none outline-none focus:outline-none border-0 shadow-sm ${
+                    className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-300 outline-none focus:outline-none border-0 shadow-sm ${
                         preventActions && !isDeleting
                             ? "text-slate-600 bg-transparent cursor-not-allowed opacity-50"
                             : `${dangerButtonStyle} text-white shadow-sm active:scale-90 cursor-pointer`
@@ -79,10 +78,12 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                 </span>
 
                 <div className="flex flex-col gap-0.5 w-full">
-                    <h4 className="text-[clamp(13px,0.85vw,14.5px)] font-bold text-white line-clamp-2 tracking-wide w-full normal-case">
+                    {/* Usando tu clase nativa heading-md */}
+                    <h4 className="heading-md line-clamp-2 select-text w-full normal-case">
                         {notif.title}
                     </h4>
-                    <p className="text-[clamp(12px,0.75vw,13px)] text-slate-400 leading-relaxed line-clamp-2 pr-1 font-normal w-full">
+                    {/* Usando tu clase nativa body-text */}
+                    <p className="body-text line-clamp-2 pr-1 w-full">
                         {notif.message}
                     </p>
                 </div>
@@ -99,7 +100,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                                     icon={Check}
                                     onClick={() => !preventActions && onAction(notif, 'ACCEPT')}
                                     disabled={preventActions}
-                                    className="px-3 h-7 text-[11px] font-medium tracking-wide normal-case rounded-lg shadow-sm disabled:opacity-50"
+                                    className="px-3 h-7 text-[11px] font-semibold tracking-wide normal-case rounded-lg shadow-sm disabled:opacity-50"
                                 >
                                     Aceptar
                                 </ActionButton>
@@ -108,7 +109,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                                     icon={X}
                                     onClick={() => !preventActions && onAction(notif, 'REJECT')}
                                     disabled={preventActions}
-                                    className="px-3 h-7 text-[11px] font-medium tracking-wide normal-case rounded-lg shadow-sm disabled:opacity-50"
+                                    className="px-3 h-7 text-[11px] font-semibold tracking-wide normal-case rounded-lg shadow-sm disabled:opacity-50"
                                 >
                                     Rechazar
                                 </ActionButton>
@@ -121,7 +122,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                                 icon={ArrowRight}
                                 onClick={() => !preventActions && onSelect(notif)}
                                 disabled={preventActions}
-                                className="px-3.5 h-7 text-[11px] font-medium tracking-wide normal-case rounded-lg shadow-sm disabled:opacity-50"
+                                className="px-3.5 h-7 text-[11px] font-semibold tracking-wide normal-case rounded-lg shadow-sm disabled:opacity-50"
                             >
                                 Ver Detalles
                             </ActionButton>
