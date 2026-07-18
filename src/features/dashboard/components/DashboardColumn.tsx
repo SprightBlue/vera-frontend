@@ -66,7 +66,8 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                     {/* Sección Resumen Semanal */}
                     <div className="flex flex-col gap-3.5 w-full">
                         <div className="flex flex-col gap-0.5 w-full pb-1">
-                            <h3 className="heading-md normal-case">
+                            {/* Optimizado: de heading-md a text-base responsivo equilibrado */}
+                            <h3 className="text-[clamp(15px,1vw,16.5px)] font-semibold text-slate-100 normal-case">
                                 Resumen de la última semana
                             </h3>
                         </div>
@@ -83,7 +84,6 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                                         Análisis
                                     </span>
                                 </div>
-                                {/* El número hereda Montserrat de forma natural a través de heading-lg adaptado */}
                                 <span className="text-[clamp(1.3rem,2.5vw,1.8rem)] font-extrabold text-white mt-1">
                                     {data.analysisCountSince}
                                 </span>
@@ -128,11 +128,11 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                     {/* Sección Último Chat */}
                     <div className="flex flex-col gap-3 w-full">
                         <div className="flex items-center justify-between w-full pb-1 gap-2">
-                            <span className="text-[clamp(0.75rem,1.2vw,0.85rem)] font-semibold text-gray-500 tracking-wide normal-case">
+                            <span className="text-[clamp(11.5px,0.7vw,12.5px)] font-semibold text-slate-500 tracking-wide normal-case">
                                 Último chat utilizado
                             </span>
                             {latestUpdatedChat && (
-                                <span className="text-[11px] font-medium text-gray-500 normal-case">
+                                <span className="text-[11px] font-medium text-slate-500 normal-case">
                                     {latestUpdatedChat.updatedAt}
                                 </span>
                             )}
@@ -141,7 +141,8 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                         {latestUpdatedChat ? (
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full border border-white/5 bg-[#040714]/40 rounded-xl p-[clamp(0.8rem,1.8vw,1.2rem)]">
                                 <div className="min-w-0 flex-1">
-                                    <h4 className="text-[clamp(0.85rem,1.5vw,1rem)] font-semibold text-white line-clamp-1 tracking-wide normal-case">
+                                    {/* Ajustado a text-sm intermedio */}
+                                    <h4 className="text-[clamp(13.5px,0.8vw,14.5px)] font-semibold text-slate-200 line-clamp-1 tracking-wide normal-case">
                                         {latestUpdatedChat.title}
                                     </h4>
                                 </div>
@@ -149,13 +150,14 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                                     variant="info"
                                     icon={MessageSquare}
                                     onClick={() => navigate(latestUpdatedChat.id ? `/chat?currentChatId=${latestUpdatedChat.id}` : "/chat")}
-                                    className="w-full sm:w-32 h-[clamp(2.1rem,2.5vw,2.4rem)] text-xs shrink-0"
+                                    className="w-full sm:w-32 h-[clamp(2rem,2.2vw,2.3rem)] text-[11px] font-semibold shrink-0"
                                 >
                                     Abrir Chat
                                 </ActionButton>
                             </div>
                         ) : (
-                            <p className="body-text">
+                            /* Ajustado de body-text a text-sm limpio */
+                            <p className="text-[clamp(13px,0.8vw,14.5px)] text-slate-400 leading-relaxed select-text">
                                 No tenés chats registrados recientemente
                             </p>
                         )}
@@ -166,11 +168,11 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                     {/* Sección Último Contacto */}
                     <div className="flex flex-col gap-3 w-full">
                         <div className="flex items-center justify-between w-full pb-1 gap-2">
-                            <span className="text-[clamp(0.75rem,1.2vw,0.85rem)] font-semibold text-gray-500 tracking-wide normal-case">
+                            <span className="text-[clamp(11.5px,0.7vw,12.5px)] font-semibold text-slate-500 tracking-wide normal-case">
                                 Último contacto agregado
                             </span>
                             {latestTrustContact && (
-                                <span className="text-[11px] font-medium text-gray-500 normal-case">
+                                <span className="text-[11px] font-medium text-slate-500 normal-case">
                                     {latestTrustContact.createdAt}
                                 </span>
                             )}
@@ -181,12 +183,14 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                                 <div className="flex items-center gap-[clamp(0.8rem,1.8vw,1.2rem)] min-w-0 flex-1">
                                     {renderContactAvatar()}
                                     <div className="flex flex-col gap-1 min-w-0 flex-1">
-                                        <div className="flex items-center gap-2 text-[clamp(0.85rem,1.5vw,1rem)] font-semibold text-slate-200 normal-case">
+                                        {/* Ajustado a text-sm intermedio */}
+                                        <div className="flex items-center gap-2 text-[clamp(13.5px,0.85vw,15px)] font-semibold text-slate-200 normal-case">
                                             <User size={14} className="text-slate-500 shrink-0" />
                                             <span className="truncate">{latestTrustContact.oppositeUserFullName}</span>
                                         </div>
 
-                                        <div className="flex flex-col gap-0.5 text-[clamp(0.75rem,1.2vw,0.85rem)] text-slate-400">
+                                        {/* Ajustado a text-xs cómodo */}
+                                        <div className="flex flex-col gap-0.5 text-[clamp(12px,0.7vw,13px)] text-slate-400">
                                             <div className="flex items-center gap-2">
                                                 <Mail size={14} className="text-slate-500 shrink-0" />
                                                 <span className="lowercase truncate">{latestTrustContact.oppositeUserEmail}</span>
@@ -205,14 +209,15 @@ export function DashboardColumn({ data }: DashboardColumnProps) {
                                         variant="info"
                                         icon={User}
                                         onClick={() => navigate(`/persons/${latestTrustContact.id}`)}
-                                        className="w-full lg:w-32 h-[clamp(2.1rem,2.5vw,2.4rem)] text-xs shrink-0"
+                                        className="w-full lg:w-32 h-[clamp(2rem,2.2vw,2.3rem)] text-[11px] font-semibold shrink-0"
                                     >
                                         Ver Perfil
                                     </ActionButton>
                                 )}
                             </div>
                         ) : (
-                            <p className="body-text">
+                            /* Ajustado de body-text a text-sm limpio */
+                            <p className="text-[clamp(13px,0.8vw,14.5px)] text-slate-400 leading-relaxed select-text">
                                 No registrás contactos de confianza agregados
                             </p>
                         )}

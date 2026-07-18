@@ -29,7 +29,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
 
     return (
         <div
-            className={`group rounded-xl border p-[clamp(0.9rem,1.4vw,1.3rem)] shadow-lg relative overflow-hidden flex flex-col gap-4 transition-all duration-200 ring-1 ring-inset ring-white/5 w-full 
+            className={`group rounded-xl border p-[clamp(1rem,1.4vw,1.3rem)] shadow-lg relative overflow-hidden flex flex-col gap-3.5 transition-all duration-200 ring-1 ring-inset ring-white/5 w-full 
             ${cardStyle.bgColor} ${cardStyle.borderColor} ${cardStyle.textColor} ${
                 preventActions ? "opacity-60 pointer-events-none" : ""
             }`}
@@ -56,7 +56,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                         }
                     }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
-                    className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-300 outline-none focus:outline-none border-0 shadow-sm ${
+                    className={`shrink-0 w-6.5 h-6.5 flex items-center justify-center rounded-full transition-all duration-300 outline-none focus:outline-none border-0 shadow-sm ${
                         preventActions && !isDeleting
                             ? "text-slate-600 bg-transparent cursor-not-allowed opacity-50"
                             : `${dangerButtonStyle} text-white shadow-sm active:scale-90 cursor-pointer`
@@ -64,7 +64,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
                     title="Eliminar notificación"
                 >
                     {isDeleting ? (
-                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-2.5 h-2.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                         <Trash2 className="w-3.5 h-3.5 stroke-[2]" />
                     )}
@@ -73,17 +73,17 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
 
             {/* Contenido Principal */}
             <div className="flex flex-col justify-between min-w-0 flex-1 relative z-10 gap-2 items-start pr-6 select-text">
-                <span className="text-[clamp(10px,0.6vw,11.5px)] font-medium text-slate-500 tracking-wide normal-case">
+                <span className="text-[clamp(11px,0.6vw,12px)] font-medium text-slate-500 tracking-wide normal-case">
                     {notif.createdAt}
                 </span>
 
-                <div className="flex flex-col gap-0.5 w-full">
-                    {/* Usando tu clase nativa heading-md */}
-                    <h4 className="heading-md line-clamp-2 select-text w-full normal-case">
+                <div className="flex flex-col gap-1 w-full">
+                    {/* Título de Notificación intermedio */}
+                    <h4 className="text-[clamp(15px,0.9vw,16.5px)] font-semibold text-slate-100 leading-snug line-clamp-2 select-text w-full normal-case">
                         {notif.title}
                     </h4>
-                    {/* Usando tu clase nativa body-text */}
-                    <p className="body-text line-clamp-2 pr-1 w-full">
+                    {/* Mensaje intermedio */}
+                    <p className="text-[clamp(12.5px,0.75vw,14px)] text-slate-400 leading-relaxed line-clamp-2 pr-1 w-full">
                         {notif.message}
                     </p>
                 </div>
@@ -91,7 +91,7 @@ export function NotificationItem({ notif, onAction, onSelect, isDisabled = false
 
             {/* Barra de Acciones del Item */}
             {hasActions && (
-                <div className="flex flex-col gap-3 shrink-0 w-full border-t border-white/5 pt-3 relative z-10">
+                <div className="flex flex-col gap-2.5 shrink-0 w-full border-t border-white/5 pt-2.5 relative z-10">
                     <div className="w-full flex items-center justify-end gap-2">
                         {notifType === 'INVITATION' && invitationId && (
                             <>

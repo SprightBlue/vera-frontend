@@ -35,8 +35,8 @@ export function ItemCard({
     return (
         <div
             className="group rounded-xl border border-white/5 bg-linear-to-b from-[#080d20] to-[#040714]
-            p-[clamp(1.2rem,2vw,1.8rem)] shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-stretch
-            justify-between gap-[clamp(1.2rem,1.8vw,1.8rem)] transition-all duration-200 ring-1 ring-inset ring-white/5 w-full"
+            p-[clamp(1.2rem,2vw,1.6rem)] shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-stretch
+            justify-between gap-[clamp(1.2rem,1.8vw,1.6rem)] transition-all duration-200 ring-1 ring-inset ring-white/5 w-full"
         >
             <div className={`absolute -top-16 -right-16 w-[clamp(180px,18vw,280px)] h-[clamp(180px,18vw,280px)] rounded-full filter blur-3xl opacity-10 pointer-events-none ${config.glowColor}`} />
 
@@ -44,24 +44,24 @@ export function ItemCard({
             <div className="flex flex-col justify-between min-w-0 flex-1 relative z-10 gap-3">
                 <div className="flex flex-col gap-1 w-full">
                     {subtitle && (
-                        <span className="text-[clamp(12px,0.7vw,13.5px)] font-semibold text-gray-400 normal-case tracking-wide select-text">
+                        <span className="text-[clamp(12px,0.7vw,13.5px)] font-semibold text-slate-400 normal-case tracking-wide select-text">
                             {subtitle}
                         </span>
                     )}
-                    {/* Usando tu clase nativa heading-md */}
-                    <h3 className="heading-md line-clamp-2 select-text w-full normal-case">
+                    {/* Título intermedio: Equilibrado en text-base */}
+                    <h3 className="text-[clamp(15.5px,1vw,17.5px)] font-semibold text-slate-100 leading-snug line-clamp-2 select-text w-full normal-case">
                         {title}
                     </h3>
                 </div>
-                {/* Usando tu clase nativa body-text */}
-                <p className="body-text line-clamp-2 pr-2 select-text w-full">
+                {/* Descripción intermedia: Cómoda en text-sm */}
+                <p className="text-[clamp(13px,0.8vw,14.5px)] text-slate-400 leading-relaxed line-clamp-2 pr-2 select-text w-full">
                     {description}
                 </p>
             </div>
 
             {/* Contenido Derecho / Acciones */}
             <div className="flex flex-col items-start sm:items-end justify-between gap-4 shrink-0 w-full sm:w-auto border-t sm:border-t-0 border-white/5 pt-4 sm:pt-0 relative z-10">
-                <span className="text-[clamp(11px,0.65vw,12.5px)] font-medium text-gray-400 normal-case sm:text-right select-text">
+                <span className="text-[clamp(11px,0.65vw,12.5px)] font-medium text-slate-500 normal-case sm:text-right select-text">
                     {timestamp}
                 </span>
 
@@ -88,7 +88,7 @@ export function ItemCard({
                     variant={actionVariant}
                     icon={ArrowRight}
                     onClick={onActionClick}
-                    className="sm:w-[clamp(130px,10vw,160px)] h-[clamp(2.2rem,2.5vw,2.5rem)] text-xs font-semibold"
+                    className="sm:w-[clamp(130px,10vw,150px)] h-[clamp(2.1rem,2.3vw,2.4rem)] text-xs font-semibold"
                 >
                     {actionLabel}
                 </ActionButton>
